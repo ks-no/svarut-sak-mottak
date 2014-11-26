@@ -1,0 +1,10 @@
+.vagrant
+vagrant/d20*
+vagrant/vagrant*
+.idea
+*.iml
+target
+
+/.project
+.settings
+.checkstyle

@@ -1,0 +1,58 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>no.ks.svarut-sakimport</groupId>
+	<artifactId>svarut-sakimport</artifactId>
+	<version>1.0.0-SNAPSHOT</version>
+	<packaging>pom</packaging>
+
+	<name>KS Sakimport fra SvarUt</name>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<jetty.version>9.2.0.v20140526</jetty.version>
+	</properties>
+
+	<modules>
+		<module>fakeServices</module>
+		<module>fakeServices-pkg</module>
+		<module>svarut-sak-import</module>
+    </modules>
+
+	<dependencies>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.10</version>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.1</version>
+				<configuration>
+					<source>1.7</source>
+					<target>1.7</target>
+					<encoding>UTF-8</encoding>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+	<repositories>
+		<repository>
+				<id>central</id>
+				<name>libs-release</name>
+				<url>http://jenkins.usrv.ubergenkom.no/artifactory/libs-release</url>
+				<snapshots>
+						<enabled>false</enabled>
+				</snapshots>
+		</repository>
+	</repositories>
+
+</project>
+
