@@ -5,7 +5,8 @@ public enum KommandoParametre {
     BRUKER_STR("username"),
     PASSORD_STR("password"),
     HJELP_STR("help"),
-    VERSJON_STR("version");
+    VERSJON_STR("version"),
+    URL_STR("url");
 
     private final String value;
 

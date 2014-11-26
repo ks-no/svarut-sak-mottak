@@ -52,12 +52,15 @@ public class TestWebservice {
         //Brukernavn og passord fra itest SetUpDataForSakImport
         String brukernavn = "be3627dd-a0ff-455c-892e-642c266308ef";
         String passord = "djEg#j.&qx.EtF9}PIlxqTi~&fJ2TB{KJmWewViUDrcY~JLZ}4";
+        String url = "http://localhost:8102/tjenester/svarut";
 
-        String[] args = new String[4];
+        String[] args = new String[6];
         args[0] = "-username";
         args[1] = brukernavn;
         args[2] = "-password";
         args[3] = passord;
+        args[4] = "-url";
+        args[5] = url;
         Forsendelsesnedlaster nedlaster = new Forsendelsesnedlaster(args);
         List<Forsendelse> forsendelser = nedlaster.hentNyeForsendelser();
         for (Forsendelse forsendelse : forsendelser) {

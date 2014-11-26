@@ -28,6 +28,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Type;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.security.KeyStore;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,10 +37,11 @@ import java.util.Properties;
 
 public class Forsendelsesnedlaster {
 
-    String host = "https://localhost:8102";
-    String url = "/tjenester/svarinn/mottaker/hentNyeForsendelser";
+    String host = "localhost";
+    String urlSti = "/tjenester/svarinn/mottaker/hentNyeForsendelser";
     int port = 9443;
     String[] args;
+    private String protokoll = "https";
 
     public Forsendelsesnedlaster(String[] args) {
         this.args = args;
@@ -55,15 +58,31 @@ public class Forsendelsesnedlaster {
 
         String brukernavn = settBrukernavn(properties, cmdLine);
         String passord = settPassord(properties, cmdLine);
+        String url = settUrl(properties, cmdLine);
+        konfigurerSvarUt(url);
 
         DefaultHttpClient httpClient = getDefaultHttpClient(brukernavn, passord);
         return hentForsendelser(httpClient);
     }
 
+    private void konfigurerSvarUt(String urlStr) {
+        URL url = null;
+        try {
+            url = new URL(urlStr);
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+        this.port = url.getPort();
+        this.urlSti = url.getPath();
+        this.host = url.getHost();
+        this.protokoll = url.getProtocol();
+
+    }
+
     private List<Forsendelse> hentForsendelser(DefaultHttpClient httpClient) {
         HttpResponse response = null;
         try {
-            HttpGet get = new HttpGet(host + url);
+            HttpGet get = new HttpGet(protokoll + "://" + host + ":" + port + urlSti);
 
             response = httpClient.execute(get);
 
@@ -79,7 +98,7 @@ public class Forsendelsesnedlaster {
             }
 
             String json = EntityUtils.toString(response.getEntity());
-            System.out.println(json);
+            System.out.println("JSon " + json);
             List<Forsendelse> forsendelser = konverterTilObjekt(json);
             return forsendelser;
         } catch (Exception e) {
@@ -93,12 +112,15 @@ public class Forsendelsesnedlaster {
     private DefaultHttpClient getDefaultHttpClient(String brukernavn, String passord) {
         DefaultHttpClient httpClient = settOppHttpKlientMedSSL();
         httpClient.getCredentialsProvider().setCredentials(
-                new AuthScope("localhost", port),
+                new AuthScope(this.host, this.port),
                 new UsernamePasswordCredentials(brukernavn, passord));
         return httpClient;
     }
 
     public DefaultHttpClient settOppHttpKlientMedSSL(){
+        if (this.protokoll == "http") {
+            return new DefaultHttpClient();
+        }
         try {
             KeyStore trustStore = KeyStore.getInstance(KeyStore.getDefaultType());
             trustStore.load(null, null);
@@ -170,5 +192,13 @@ public class Forsendelsesnedlaster {
             passord = cmdLine.getOptionValue(KommandoParametre.PASSORD_STR.getValue());
         }
         return passord;
+    }
+
+    private String settUrl(Properties properties, CommandLine cmdLine) {
+        String url = properties.getProperty(KommandoParametre.URL_STR.getValue());
+        if (cmdLine.hasOption(KommandoParametre.URL_STR.getValue())) {
+            url = cmdLine.getOptionValue(KommandoParametre.URL_STR.getValue());
+        }
+        return url;
     }
 }

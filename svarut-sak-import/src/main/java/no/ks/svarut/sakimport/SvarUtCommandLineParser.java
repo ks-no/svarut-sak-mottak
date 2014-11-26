@@ -74,10 +74,16 @@ public class SvarUtCommandLineParser {
                 .withDescription("Passord for svarut-pålogging")
                 .create(KommandoParametre.PASSORD_STR.getValue());
 
+        Option url = OptionBuilder.withArgName(KommandoParametre.URL_STR.getValue())
+                .hasArg()
+                .withDescription("URL til SvarUt")
+                .create(KommandoParametre.URL_STR.getValue());
+
         options.addOption(brukernavn);
         options.addOption(passord);
         options.addOption(hjelp);
         options.addOption(versjon);
+        options.addOption(url);
 
         return options;
     }
@@ -95,8 +101,14 @@ public class SvarUtCommandLineParser {
                 .withDescription("Passord for svarut-pålogging")
                 .create(KommandoParametre.PASSORD_STR.getValue());
 
+        Option url = OptionBuilder.withArgName(KommandoParametre.URL_STR.getValue())
+                .hasArg()
+                .withDescription("URL til SvarUt")
+                .create(KommandoParametre.URL_STR.getValue());
+
         options.addOption(brukernavn);
         options.addOption(passord);
+        options.addOption(url);
 
         return options;
     }
