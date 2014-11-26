@@ -5,8 +5,10 @@ import no.geointegrasjon.rep.arkiv.kjerne.xml_schema._2012_01.Journalpost;
 import no.geointegrasjon.rep.arkiv.kjerne.xml_schema._2012_01.Korrespondansepart;
 import no.geointegrasjon.rep.arkiv.kjerne.xml_schema._2012_01.KorrespondansepartListe;
 import no.geointegrasjon.rep.arkiv.oppdatering.xml_wsdl._2012_01_31.SakArkivOppdateringPort;
+import no.ks.svarut.sakimport.Avsender;
 import no.ks.svarut.sakimport.Forsendelse;
 import no.ks.svarut.sakimport.Forsendelsesnedlaster;
+import no.ks.svarut.sakimport.Mottaker;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -26,11 +28,15 @@ public class TestWebservice {
 
         KorrespondansepartListe korrespondansepartListe = new KorrespondansepartListe();
 
-        Korrespondansepart avsender = importer.lagAvsender("Avsenders kontakt navn");
-        korrespondansepartListe.getListe().add(avsender);
+        Avsender avsender = new Avsender();
+        avsender.setNavn("Avsenders kontaktnavn");
+        Korrespondansepart korrespondansepart1 = importer.lagAvsender(avsender);
+        korrespondansepartListe.getListe().add(korrespondansepart1);
 
-        Korrespondansepart mottaker = importer.lagMottaker();
-        korrespondansepartListe.getListe().add(mottaker);
+        Mottaker mottaker = new Mottaker();
+        mottaker.setNavn("Mottakers navn");
+        Korrespondansepart korrespondansepart = importer.lagMottaker(mottaker);
+        korrespondansepartListe.getListe().add(korrespondansepart);
 
         generertJournalpost.setKorrespondansepart(korrespondansepartListe);
 
@@ -49,7 +55,6 @@ public class TestWebservice {
     @Test
     @Ignore
     public void testKanImportereForsendelse() {
-        //Brukernavn og passord fra itest SetUpDataForSakImport
         String brukernavn = "be3627dd-a0ff-455c-892e-642c266308ef";
         String passord = "djEg#j.&qx.EtF9}PIlxqTi~&fJ2TB{KJmWewViUDrcY~JLZ}4";
         String url = "http://localhost:8102/tjenester/svarut";
@@ -63,8 +68,12 @@ public class TestWebservice {
         args[5] = url;
         Forsendelsesnedlaster nedlaster = new Forsendelsesnedlaster(args);
         List<Forsendelse> forsendelser = nedlaster.hentNyeForsendelser();
+
+        Saksimporter saksimporter = new Saksimporter();
+
         for (Forsendelse forsendelse : forsendelser) {
             System.out.println(forsendelse.getId());
+            saksimporter.importer(forsendelse);
         }
     }
 }

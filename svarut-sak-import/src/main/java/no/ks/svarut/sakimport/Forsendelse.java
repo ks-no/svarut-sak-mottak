@@ -13,6 +13,8 @@ public class Forsendelse implements Comparable<Forsendelse> {
     private String serverUrl;
     private String status;
     private String downloadUrl;
+    private Avsender avsender;
+    private Mottaker mottaker;
 
     public Forsendelse() {
     }
@@ -84,6 +86,22 @@ public class Forsendelse implements Comparable<Forsendelse> {
 
     public void setMetadataIMottakendeSystem(NoarkMetadata metadataIMottakendeSystem) {
         this.metadataIMottakendeSystem = metadataIMottakendeSystem;
+    }
+
+    public Avsender getAvsender() {
+        return avsender;
+    }
+
+    public void setAvsender(Avsender avsender) {
+        this.avsender = avsender;
+    }
+
+    public Mottaker getMottaker() {
+        return mottaker;
+    }
+
+    public void setMottaker(Mottaker mottaker) {
+        this.mottaker = mottaker;
     }
 
     @Override

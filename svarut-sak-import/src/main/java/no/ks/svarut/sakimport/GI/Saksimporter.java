@@ -1,13 +1,16 @@
 package no.ks.svarut.sakimport.GI;
 
 import no.geointegrasjon.rep.arkiv.dokument.xml_schema._2012_01.Dokument;
+import no.geointegrasjon.rep.arkiv.dokument.xml_schema._2012_01.Dokumentstatus;
 import no.geointegrasjon.rep.arkiv.dokument.xml_schema._2012_01.Filinnhold;
 import no.geointegrasjon.rep.arkiv.felles.xml_schema._2012_01.Saksnummer;
 import no.geointegrasjon.rep.arkiv.kjerne.xml_schema._2012_01.*;
-import no.geointegrasjon.rep.arkiv.oppdatering.xml_wsdl._2012_01_31.SakArkivOppdateringPort;
+import no.geointegrasjon.rep.arkiv.oppdatering.xml_wsdl._2012_01_31.*;
 import no.geointegrasjon.rep.felles.kontakt.xml_schema._2012_01.Kontakt;
 import no.geointegrasjon.rep.felles.teknisk.xml_schema._2012_01.ArkivKontekst;
+import no.ks.svarut.sakimport.Avsender;
 import no.ks.svarut.sakimport.Forsendelse;
+import no.ks.svarut.sakimport.Mottaker;
 import org.apache.cxf.endpoint.Client;
 import org.apache.cxf.frontend.ClientProxy;
 import org.apache.cxf.jaxws.JaxWsProxyFactoryBean;
@@ -35,8 +38,78 @@ public class Saksimporter {
     }
 
     public void importer(Forsendelse forsendelse) {
-        Journalpost journalpost = lagJournalpost(forsendelse.getTittel());
-        //Korrespondansepart avsender = lagAvsender(forsendelse.ge)
+        Journalpost generertJournalpost = lagJournalpost(forsendelse.getTittel());
+
+        fyllInnKorrespondanseparter(forsendelse, generertJournalpost);
+
+        generertJournalpost.setReferanseEksternNoekkel(lagEksternNoekkel());
+        generertJournalpost.setSaksnr(lagSaksnummer());
+
+        SakArkivOppdateringPort service = createSakarkivService();
+
+        Journalpost returnertJournalpost = opprettEphorteJournalpost(generertJournalpost, service);
+        Dokument dokument = hentTomtDokumentFraReturnertJournalpost(returnertJournalpost);
+
+        sendDokumentTilEphorte(service, dokument);
+    }
+
+    private void sendDokumentTilEphorte(SakArkivOppdateringPort service, Dokument dokument) {
+        try {
+            Dokument returnertDokument = service.nyDokument(dokument, false, getArkivKontekst());
+        } catch (ValidationException e) {
+            e.printStackTrace();
+        } catch (FinderException e) {
+            e.printStackTrace();
+        } catch (SystemException e) {
+            e.printStackTrace();
+        } catch (ImplementationException e) {
+            e.printStackTrace();
+        } catch (OperationalException e) {
+            e.printStackTrace();
+        } catch (ApplicationException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private Dokument hentTomtDokumentFraReturnertJournalpost(Journalpost returnertJournalpost) {
+        Dokument dokument = null;
+        try {
+            dokument = lagDokument(returnertJournalpost);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return dokument;
+    }
+
+    private Journalpost opprettEphorteJournalpost(Journalpost generertJournalpost, SakArkivOppdateringPort service) {
+        Journalpost returnertJournalpost = null;
+        try {
+            returnertJournalpost = service.nyJournalpost(generertJournalpost, getArkivKontekst());
+        } catch (ValidationException e) {
+            e.printStackTrace();
+        } catch (FinderException e) {
+            e.printStackTrace();
+        } catch (SystemException e) {
+            e.printStackTrace();
+        } catch (ImplementationException e) {
+            e.printStackTrace();
+        } catch (OperationalException e) {
+            e.printStackTrace();
+        } catch (ApplicationException e) {
+            e.printStackTrace();
+        }
+        return returnertJournalpost;
+    }
+
+    private void fyllInnKorrespondanseparter(Forsendelse forsendelse, Journalpost generertJournalpost) {
+        Korrespondansepart avsender = lagAvsender(forsendelse.getAvsender());
+        Korrespondansepart mottaker = lagMottaker(forsendelse.getMottaker());
+
+        KorrespondansepartListe korrespondansepartListe = new KorrespondansepartListe();
+        korrespondansepartListe.getListe().add(avsender);
+        korrespondansepartListe.getListe().add(mottaker);
+
+        generertJournalpost.setKorrespondansepart(korrespondansepartListe);
     }
 
     Journalpost lagJournalpost(String tittel) {
@@ -50,39 +123,39 @@ public class Saksimporter {
         return journalpost;
     }
 
-    Korrespondansepart lagAvsender(String navn) {
-        Korrespondansepart avs = new Korrespondansepart();
+    Korrespondansepart lagAvsender(Avsender avsender) {
+        Korrespondansepart avsenderKorrespondent = new Korrespondansepart();
 
         final Korrespondanseparttype korrespondanseparttype = new Korrespondanseparttype();
         korrespondanseparttype.setKodeverdi("Avsender");
-        avs.setKorrespondanseparttype(korrespondanseparttype);
-        //avs.setKortnavn("Bergen kommune");
+        avsenderKorrespondent.setKorrespondanseparttype(korrespondanseparttype);
+        //avsenderKorrespondent.setKortnavn("Bergen kommune");
         final Kontakt kontakt = new Kontakt();
-        kontakt.setNavn(navn);
-        avs.setKontakt(kontakt);
-        return avs;
+        kontakt.setNavn(avsender.getNavn());
+        avsenderKorrespondent.setKontakt(kontakt);
+        return avsenderKorrespondent;
     }
 
 
-    Korrespondansepart lagMottaker() {
-        Korrespondansepart mott = new Korrespondansepart();
-        final Korrespondanseparttype korrespondanseparttype2 = new Korrespondanseparttype();
-        korrespondanseparttype2.setKodeverdi("Mottaker");
-        mott.setKortnavn("Mottaker navn");
-        final Kontakt value2 = new Kontakt();
-        value2.setNavn("Mottakers kontakt navn");
-        mott.setKontakt(value2);
-        mott.setKorrespondanseparttype(korrespondanseparttype2);
-        return mott;
+    Korrespondansepart lagMottaker(Mottaker mottaker) {
+        Korrespondansepart mottakerKorrespondent = new Korrespondansepart();
+        final Korrespondanseparttype korrespondanseparttype = new Korrespondanseparttype();
+        korrespondanseparttype.setKodeverdi("Mottaker");
+        mottakerKorrespondent.setKortnavn(mottaker.getNavn());
+        Kontakt kontakt = new Kontakt();
+        kontakt.setNavn("Mottakers kontakt navn");
+        mottakerKorrespondent.setKontakt(kontakt);
+        mottakerKorrespondent.setKorrespondanseparttype(korrespondanseparttype);
+        return mottakerKorrespondent;
     }
 
     Dokument lagDokument(Journalpost returnertJournalpost) throws IOException {
         final Dokument dokument = new Dokument();
-        final Filinnhold value1 = new Filinnhold();
-        value1.setFilnavn("test.pdf");
-        value1.setMimeType("applicaton/pdf");
-        value1.setBase64(IOUtils.toByteArray(FileLoadUtil.loadPdfFromClasspath("small.pdf").getInputStream()));
-        dokument.setFil(value1);
+        final Filinnhold filinnhold = new Filinnhold();
+        filinnhold.setFilnavn("test.pdf");
+        filinnhold.setMimeType("applicaton/pdf");
+        filinnhold.setBase64(IOUtils.toByteArray(FileLoadUtil.loadPdfFromClasspath("small.pdf").getInputStream()));
+        dokument.setFil(filinnhold);
         dokument.setReferanseJournalpostSystemID(returnertJournalpost.getSystemID());
         return dokument;
     }
