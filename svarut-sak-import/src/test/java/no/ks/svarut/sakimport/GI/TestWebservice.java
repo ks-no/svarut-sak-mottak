@@ -55,8 +55,8 @@ public class TestWebservice {
     @Test
     @Ignore
     public void testKanImportereForsendelse() {
-        String brukernavn = "be3627dd-a0ff-455c-892e-642c266308ef";
-        String passord = "djEg#j.&qx.EtF9}PIlxqTi~&fJ2TB{KJmWewViUDrcY~JLZ}4";
+        String brukernavn = "gyldigBruker";
+        String passord = "EtGyldigPassord";
         String url = "http://localhost:8102/tjenester/svarut";
 
         String[] args = new String[6];
@@ -73,7 +73,7 @@ public class TestWebservice {
 
         for (Forsendelse forsendelse : forsendelser) {
             System.out.println(forsendelse.getId());
-            saksimporter.importer(forsendelse);
+            //saksimporter.importer(forsendelse);
         }
     }
 }

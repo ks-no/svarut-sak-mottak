@@ -86,15 +86,25 @@ public class Forsendelsesnedlaster {
 
             response = httpClient.execute(get);
 
+            if (response.getStatusLine().getStatusCode() == HttpStatus.SC_NOT_FOUND) {
+                throw new RuntimeException("Finner ikke tjenestesiden, sjekk at oppgitt url er riktig.");
+            }
+
             if (response.getStatusLine().getStatusCode() == HttpStatus.SC_UNAUTHORIZED || response.getStatusLine().getStatusCode() == HttpStatus.SC_FORBIDDEN) {
                 System.out.println("Bruker har ikke tilgang til SvarUt eller bruker/passord er feil.");
+                System.out.println(response);
+                throw new RuntimeException("Bruker har ikke tilgang til SvarUt eller bruker/passord er feil.");
+            }
+
+            if (response.getStatusLine().getStatusCode() == HttpStatus.SC_SERVICE_UNAVAILABLE) {
+                System.out.println("SvarUt er ikke tilgjengelig på dette tidspunkt.");
                 System.out.println(response);
                 System.exit(-1);
             }
 
             if (response.getStatusLine().getStatusCode() != HttpStatus.SC_OK) {
                 System.out.println("Noe gikk galt ved henting av filer.");
-                System.exit(-1);
+                throw new RuntimeException("noe gikk galt");
             }
 
             String json = EntityUtils.toString(response.getEntity());

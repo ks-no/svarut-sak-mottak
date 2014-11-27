@@ -1,7 +1,6 @@
 package no.ks.svarut.sakimport.GI;
 
 import no.geointegrasjon.rep.arkiv.dokument.xml_schema._2012_01.Dokument;
-import no.geointegrasjon.rep.arkiv.dokument.xml_schema._2012_01.Dokumentstatus;
 import no.geointegrasjon.rep.arkiv.dokument.xml_schema._2012_01.Filinnhold;
 import no.geointegrasjon.rep.arkiv.felles.xml_schema._2012_01.Saksnummer;
 import no.geointegrasjon.rep.arkiv.kjerne.xml_schema._2012_01.*;
@@ -11,12 +10,12 @@ import no.geointegrasjon.rep.felles.teknisk.xml_schema._2012_01.ArkivKontekst;
 import no.ks.svarut.sakimport.Avsender;
 import no.ks.svarut.sakimport.Forsendelse;
 import no.ks.svarut.sakimport.Mottaker;
+import org.apache.commons.io.IOUtils;
 import org.apache.cxf.endpoint.Client;
 import org.apache.cxf.frontend.ClientProxy;
 import org.apache.cxf.jaxws.JaxWsProxyFactoryBean;
 import org.apache.cxf.transport.http.HTTPConduit;
 import org.apache.cxf.transports.http.configuration.HTTPClientPolicy;
-import org.apache.commons.io.IOUtils;
 
 import java.io.IOException;
 import java.math.BigInteger;
