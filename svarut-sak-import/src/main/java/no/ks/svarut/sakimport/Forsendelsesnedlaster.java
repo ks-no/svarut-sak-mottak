@@ -2,35 +2,42 @@ package no.ks.svarut.sakimport;
 
 import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
-import no.ks.svarut.sakimport.util.MySSLSocketFactory;
 import org.apache.commons.cli.CommandLine;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
-import org.apache.http.HttpVersion;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
+import org.apache.http.client.CredentialsProvider;
+import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
-import org.apache.http.conn.ClientConnectionManager;
-import org.apache.http.conn.scheme.PlainSocketFactory;
-import org.apache.http.conn.scheme.Scheme;
-import org.apache.http.conn.scheme.SchemeRegistry;
-import org.apache.http.conn.ssl.SSLSocketFactory;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
-import org.apache.http.params.BasicHttpParams;
-import org.apache.http.params.HttpParams;
-import org.apache.http.params.HttpProtocolParams;
-import org.apache.http.protocol.HTTP;
+import org.apache.http.config.Registry;
+import org.apache.http.config.RegistryBuilder;
+import org.apache.http.conn.HttpClientConnectionManager;
+import org.apache.http.conn.socket.ConnectionSocketFactory;
+import org.apache.http.conn.socket.PlainConnectionSocketFactory;
+import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
+import org.apache.http.impl.client.BasicCredentialsProvider;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.apache.http.util.EntityUtils;
 import org.joda.time.DateTime;
 
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManagerFactory;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Type;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.security.KeyManagementException;
 import java.security.KeyStore;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.cert.Certificate;
+import java.security.cert.CertificateException;
+import java.security.cert.CertificateFactory;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -42,6 +49,7 @@ public class Forsendelsesnedlaster {
     int port = 9443;
     String[] args;
     private String protokoll = "https";
+    private SSLContext sslContext;
 
     public Forsendelsesnedlaster(String[] args) {
         this.args = args;
@@ -61,7 +69,7 @@ public class Forsendelsesnedlaster {
         String url = settUrl(properties, cmdLine);
         konfigurerSvarUt(url);
 
-        DefaultHttpClient httpClient = getDefaultHttpClient(brukernavn, passord);
+        HttpClient httpClient = getDefaultHttpClient(brukernavn, passord);
         return hentForsendelser(httpClient);
     }
 
@@ -79,10 +87,12 @@ public class Forsendelsesnedlaster {
 
     }
 
-    private List<Forsendelse> hentForsendelser(DefaultHttpClient httpClient) {
+    private List<Forsendelse> hentForsendelser(HttpClient httpClient) {
         HttpResponse response = null;
         try {
             HttpGet get = new HttpGet(protokoll + "://" + host + ":" + port + urlSti);
+
+
 
             response = httpClient.execute(get);
 
@@ -119,39 +129,72 @@ public class Forsendelsesnedlaster {
         }
     }
 
-    private DefaultHttpClient getDefaultHttpClient(String brukernavn, String passord) {
-        DefaultHttpClient httpClient = settOppHttpKlientMedSSL();
-        httpClient.getCredentialsProvider().setCredentials(
-                new AuthScope(this.host, this.port),
-                new UsernamePasswordCredentials(brukernavn, passord));
-        return httpClient;
+    private HttpClient getDefaultHttpClient(String brukernavn, String passord) {
+        HttpClientBuilder clientBuilder = HttpClientBuilder.create();
+
+        AuthScope authScope = new AuthScope(this.host, this.port);
+        UsernamePasswordCredentials credentials = new UsernamePasswordCredentials(brukernavn, passord);
+
+        CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
+        credentialsProvider.setCredentials(authScope, credentials);
+
+        clientBuilder.setDefaultCredentialsProvider(credentialsProvider);
+
+        return settOppHttpKlient(clientBuilder);
+
     }
 
-    public DefaultHttpClient settOppHttpKlientMedSSL(){
-        if (this.protokoll == "http") {
-            return new DefaultHttpClient();
+    public CloseableHttpClient settOppHttpKlient(HttpClientBuilder clientBuilder){
+        if (this.protokoll.equals("http")) {
+            return clientBuilder.build();
         }
         try {
-            KeyStore trustStore = KeyStore.getInstance(KeyStore.getDefaultType());
-            trustStore.load(null, null);
+            KeyStore trustStore = lastKeyStore();
 
-            SSLSocketFactory sf = new MySSLSocketFactory(trustStore);
-            sf.setHostnameVerifier(SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
+            SSLConnectionSocketFactory sslsf = new SSLConnectionSocketFactory(sslContext, SSLConnectionSocketFactory.STRICT_HOSTNAME_VERIFIER);
+            ConnectionSocketFactory plainsf = PlainConnectionSocketFactory.getSocketFactory();
 
-            HttpParams params = new BasicHttpParams();
-            HttpProtocolParams.setVersion(params, HttpVersion.HTTP_1_1);
-            HttpProtocolParams.setContentCharset(params, HTTP.UTF_8);
-
-            SchemeRegistry registry = new SchemeRegistry();
-            registry.register(new Scheme("http", PlainSocketFactory.getSocketFactory(), 80));
-            registry.register(new Scheme("https", sf, port));
-
-            ClientConnectionManager ccm = new ThreadSafeClientConnManager(params, registry);
-
-            return new DefaultHttpClient(ccm, params);
+            Registry<ConnectionSocketFactory> r = RegistryBuilder.<ConnectionSocketFactory>create()
+                    .register("http", plainsf)
+                    .register("https", sslsf)
+                    .build();
+            HttpClientConnectionManager cm = new PoolingHttpClientConnectionManager(r);
+            clientBuilder.setConnectionManager(cm);
+            return clientBuilder.build();
         } catch (Exception e) {
-            return new DefaultHttpClient();
+            return clientBuilder.build();
         }
+    }
+
+    private KeyStore lastKeyStore() throws KeyStoreException, IOException, NoSuchAlgorithmException, CertificateException, KeyManagementException {
+
+        CertificateFactory cf = CertificateFactory.getInstance("X.509");
+        KeyStore keyStore = hentSvarUtSertifikat(cf);
+
+        String tmfAlgorithm = TrustManagerFactory.getDefaultAlgorithm();
+        TrustManagerFactory tmf = TrustManagerFactory.getInstance(tmfAlgorithm);
+        tmf.init(keyStore);
+
+        sslContext = SSLContext.getInstance("TLS");
+        sslContext.init(null, tmf.getTrustManagers(), null);
+
+        return keyStore;
+    }
+
+    private KeyStore hentSvarUtSertifikat(CertificateFactory cf) throws CertificateException, IOException, KeyStoreException, NoSuchAlgorithmException {
+        InputStream inputStream = Thread.currentThread().getContextClassLoader().getResourceAsStream("svarut-utvikling-cert.pem");
+        Certificate certificate;
+        try {
+            certificate = cf.generateCertificate(inputStream);
+        } finally {
+            inputStream.close();
+        }
+
+        String keyStoreType = KeyStore.getDefaultType();
+        KeyStore keyStore = KeyStore.getInstance(keyStoreType);
+        keyStore.load(null, null);
+        keyStore.setCertificateEntry("svarut-utvikling", certificate);
+        return keyStore;
     }
 
     private Properties getDefaultProperties() {

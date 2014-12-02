@@ -23,14 +23,20 @@ public class TestSvarUt {
         brukernavn = "gyldigBruker";
         passord = "EtGyldigPassord";
         url = "http://localhost:8102/tjenester/svarut";
-        
+
         args[0] = "-username";
         args[1] = brukernavn;
         args[2] = "-password";
         args[3] = passord;
         args[4] = "-url";
         args[5] = url;
+    }
 
+    @Test
+    public void testRiktigBrukerOgPassordGirForsendelse() throws Exception {
+        Forsendelsesnedlaster nedlaster = new Forsendelsesnedlaster(args);
+        List<Forsendelse> forsendelser = nedlaster.hentNyeForsendelser();
+        assertEquals(1, forsendelser.size());
     }
 
     @Test
@@ -44,13 +50,6 @@ public class TestSvarUt {
         } catch(RuntimeException e) {
             assertTrue(e.getCause().getMessage().contains("tilgang"));
         }
-    }
-
-    @Test
-    public void testRiktigBrukerOgPassordGirForsendelse() throws Exception {
-        Forsendelsesnedlaster nedlaster = new Forsendelsesnedlaster(args);
-        List<Forsendelse> forsendelser = nedlaster.hentNyeForsendelser();
-        assertEquals(1, forsendelser.size());
     }
 
     @Test
