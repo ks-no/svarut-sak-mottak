@@ -17,8 +17,9 @@ public class Main {
         for (Forsendelse forsendelse : forsendelser) {
             System.out.println(forsendelse.getId());
 
-            final Journalpost journalpost = importer.importerJournalPost(forsendelse);
             final Fil fil = nedlaster.hentForsendelseFil(forsendelse);
+
+            final Journalpost journalpost = importer.importerJournalPost(forsendelse);
             importer.importerDokument(journalpost,forsendelse.getTittel(), fil.getFilename(), fil.getMimetype(), fil.getBytes(), true);
             nedlaster.kvitterForsendelse(forsendelse);
         }

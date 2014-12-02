@@ -6,6 +6,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
 import org.apache.http.util.EntityUtils;
 import org.joda.time.DateTime;
 
@@ -16,7 +17,8 @@ import java.util.List;
 
 public class Forsendelsesnedlaster {
 
-    String urlSti = "/tjenester/svarinn/mottaker/hentNyeForsendelser";
+    String urlStiNyeForsendelser = "/tjenester/svarinn/mottaker/hentNyeForsendelser";
+    String urlStiKvitterMottak = "/tjenester/svarinn/kvitterMottak/forsendelse/";
 
     private SakImportConfig config;
 
@@ -31,7 +33,7 @@ public class Forsendelsesnedlaster {
     private List<Forsendelse> hentForsendelser(HttpClient httpClient) {
         HttpResponse response = null;
         try {
-            HttpGet get = new HttpGet(config.svarUtHost() + urlSti);
+            HttpGet get = new HttpGet(config.svarUtHost() + urlStiNyeForsendelser);
 
 
 
@@ -109,6 +111,13 @@ public class Forsendelsesnedlaster {
     }
 
     public void kvitterForsendelse(Forsendelse forsendelse) {
-        throw new IllegalArgumentException();
+        final HttpPost httpPost = new HttpPost(config.svarUtHost() + urlStiKvitterMottak + forsendelse.getId());
+        try {
+            final HttpResponse execute = config.httpClientForSvarUt().execute(httpPost);
+            if(execute.getStatusLine().getStatusCode() == HttpStatus.SC_OK) return;
+            throw new RuntimeException("Feil status " + execute.getStatusLine().getStatusCode() + " på kvittering av mottat forsendelse");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
