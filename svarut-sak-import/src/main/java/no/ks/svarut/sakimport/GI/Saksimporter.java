@@ -186,10 +186,6 @@ public class Saksimporter {
         final Dokument dokument = new Dokument();
         dokument.setTittel(tittel);
 
-        final Format format = new Format();
-        format.setKodeverdi("RA-PDF");
-        dokument.setFormat(format); //nødvendig
-
         final Filinnhold filinnhold = new Filinnhold();
         filinnhold.setFilnavn(filnavn);
         filinnhold.setMimeType(mimeType);
