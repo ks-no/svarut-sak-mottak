@@ -55,9 +55,13 @@ public class Saksimporter {
 
     }
 
-    public Dokument importerDokument(Journalpost journalpost, String tittel, String filnavn, String mimeType, byte[] dokumentData, boolean hoveddokument) throws IOException, ApplicationException, ImplementationException, ValidationException, SystemException, FinderException, OperationalException {
-        final Dokument dokument = lagDokument(journalpost, tittel, filnavn, mimeType, dokumentData, hoveddokument);
-        return service.nyDokument(dokument, false, getArkivKontekst());
+    public Dokument importerDokument(Journalpost journalpost, String tittel, String filnavn, String mimeType, byte[] dokumentData, boolean hoveddokument) {
+        try {
+            final Dokument dokument = lagDokument(journalpost, tittel, filnavn, mimeType, dokumentData, hoveddokument);
+            return service.nyDokument(dokument, false, getArkivKontekst());
+        }catch (Exception e){
+            throw new RuntimeException(e);
+        }
     }
 
     private void sendDokumentTilEphorte(SakArkivOppdateringPort service, Dokument dokument) {

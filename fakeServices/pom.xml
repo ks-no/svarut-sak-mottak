@@ -4,11 +4,12 @@
 	<groupId>no.ks.sakimport</groupId>
 	<artifactId>fakeServices</artifactId>
 	<packaging>war</packaging>
+	<version>${project.parent.version}</version>
 	<name>ILS - ${project.artifactId}</name>
 	<description>Fakes for integrasjonstester</description>
 	<parent>
-		<groupId>no.ks.sakimport</groupId>
-		<artifactId>sakimport</artifactId>
+		<groupId>no.ks.svarut-sakimport</groupId>
+		<artifactId>svarut-sakimport</artifactId>
 		<version>1.0.0-SNAPSHOT</version>
 	</parent>
 	<build>

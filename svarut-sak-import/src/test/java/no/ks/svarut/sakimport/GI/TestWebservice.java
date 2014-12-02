@@ -5,10 +5,7 @@ import no.geointegrasjon.rep.arkiv.kjerne.xml_schema._2012_01.Journalpost;
 import no.geointegrasjon.rep.arkiv.kjerne.xml_schema._2012_01.Korrespondansepart;
 import no.geointegrasjon.rep.arkiv.kjerne.xml_schema._2012_01.KorrespondansepartListe;
 import no.geointegrasjon.rep.arkiv.oppdatering.xml_wsdl._2012_01_31.SakArkivOppdateringPort;
-import no.ks.svarut.sakimport.Avsender;
-import no.ks.svarut.sakimport.Forsendelse;
-import no.ks.svarut.sakimport.Forsendelsesnedlaster;
-import no.ks.svarut.sakimport.Mottaker;
+import no.ks.svarut.sakimport.*;
 import org.apache.commons.io.IOUtils;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -96,7 +93,7 @@ public class TestWebservice {
         args[3] = passord;
         args[4] = "-url";
         args[5] = url;
-        Forsendelsesnedlaster nedlaster = new Forsendelsesnedlaster(args);
+        Forsendelsesnedlaster nedlaster = new Forsendelsesnedlaster(new SakImportConfig(args));
         List<Forsendelse> forsendelser = nedlaster.hentNyeForsendelser();
 
         Saksimporter saksimporter = new Saksimporter();

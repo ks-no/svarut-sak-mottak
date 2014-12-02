@@ -5,6 +5,7 @@
 
 	<groupId>no.ks.svarut-sakimport</groupId>
 	<artifactId>fakeService-pkg</artifactId>
+	<version>${project.parent.version}</version>
 	<parent>
 		<groupId>no.ks.svarut-sakimport</groupId>
 		<artifactId>svarut-sakimport</artifactId>

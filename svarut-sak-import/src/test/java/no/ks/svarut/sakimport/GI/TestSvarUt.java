@@ -2,6 +2,7 @@ package no.ks.svarut.sakimport.GI;
 
 import no.ks.svarut.sakimport.Forsendelse;
 import no.ks.svarut.sakimport.Forsendelsesnedlaster;
+import no.ks.svarut.sakimport.SakImportConfig;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -34,7 +35,7 @@ public class TestSvarUt {
 
     @Test
     public void testRiktigBrukerOgPassordGirForsendelse() throws Exception {
-        Forsendelsesnedlaster nedlaster = new Forsendelsesnedlaster(args);
+        Forsendelsesnedlaster nedlaster = new Forsendelsesnedlaster(new SakImportConfig(args));
         List<Forsendelse> forsendelser = nedlaster.hentNyeForsendelser();
         assertEquals(1, forsendelser.size());
     }
@@ -44,7 +45,7 @@ public class TestSvarUt {
         brukernavn = "ikkeGyldigBruker";
         args[1] = brukernavn;
 
-        Forsendelsesnedlaster nedlaster = new Forsendelsesnedlaster(args);
+        Forsendelsesnedlaster nedlaster = new Forsendelsesnedlaster(new SakImportConfig(args));
         try {
             List<Forsendelse> forsendelser = nedlaster.hentNyeForsendelser();
         } catch(RuntimeException e) {
@@ -55,7 +56,7 @@ public class TestSvarUt {
     @Test
     public void testFeilURLGirForbidden() throws Exception {
         args[5] = "http://localhost:8102/feil/svarut";
-        Forsendelsesnedlaster nedlaster = new Forsendelsesnedlaster(args);
+        Forsendelsesnedlaster nedlaster = new Forsendelsesnedlaster(new SakImportConfig(args));
 
         try {
             List<Forsendelse> forsendelser = nedlaster.hentNyeForsendelser();

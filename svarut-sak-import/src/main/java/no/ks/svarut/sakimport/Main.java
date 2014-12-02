@@ -1,5 +1,6 @@
 package no.ks.svarut.sakimport;
 
+import no.geointegrasjon.rep.arkiv.kjerne.xml_schema._2012_01.Journalpost;
 import no.ks.svarut.sakimport.GI.Saksimporter;
 
 import java.util.List;
@@ -7,7 +8,8 @@ import java.util.List;
 public class Main {
 
     public static void main(String... args) {
-        Forsendelsesnedlaster nedlaster = new Forsendelsesnedlaster(args);
+        SakImportConfig config = new SakImportConfig(args);
+        Forsendelsesnedlaster nedlaster = new Forsendelsesnedlaster(config);
         List<Forsendelse> forsendelser = nedlaster.hentNyeForsendelser();
 
         Saksimporter importer = new Saksimporter();
@@ -15,8 +17,10 @@ public class Main {
         for (Forsendelse forsendelse : forsendelser) {
             System.out.println(forsendelse.getId());
 
-            //importer.importerJournalPost(forsendelse);
-            nedlaster.hentForsendelseFil(forsendelse);
+            final Journalpost journalpost = importer.importerJournalPost(forsendelse);
+            final Fil fil = nedlaster.hentForsendelseFil(forsendelse);
+            importer.importerDokument(journalpost,forsendelse.getTittel(), fil.getFilename(), fil.getMimetype(), fil.getBytes(), true);
+            nedlaster.kvitterForsendelse(forsendelse);
         }
     }
 }
