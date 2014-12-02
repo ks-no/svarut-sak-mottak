@@ -31,16 +31,18 @@ public class Saksimporter {
     private String username = "GEO-SakArkivOppdatering-SVARUT";
     private String password = "SVARUT42";
     private ArkivKontekst arkivKontekst = new ArkivKontekst();
+    private SakArkivOppdateringPort service;
 
     public Saksimporter() {
         arkivKontekst.setKlientnavn("SVARUT");
+        service = createSakarkivService();
     }
 
     public ArkivKontekst getArkivKontekst() {
         return arkivKontekst;
     }
 
-    public void importer(Forsendelse forsendelse) {
+    public Journalpost importerJournalPost(Forsendelse forsendelse) {
         Journalpost generertJournalpost = lagJournalpost(forsendelse.getTittel());
 
         fyllInnKorrespondanseparter(forsendelse, generertJournalpost);
@@ -48,13 +50,13 @@ public class Saksimporter {
         generertJournalpost.setReferanseEksternNoekkel(lagEksternNoekkel());
         generertJournalpost.setSaksnr(lagSaksnummer());
 
-        SakArkivOppdateringPort service = createSakarkivService();
+        return opprettEphorteJournalpost(generertJournalpost, service);
 
-        Journalpost returnertJournalpost = opprettEphorteJournalpost(generertJournalpost, service);
+    }
 
-        //Dokument dokument = lagDokument(returnertJournalpost,forsendelse.getTittel(), forsendelse.getDownloadUrl());
-
-        //sendDokumentTilEphorte(service, dokument);
+    public Dokument importerDokument(Journalpost journalpost, String tittel, String filnavn, String mimeType, byte[] dokumentData, boolean hoveddokument) throws IOException, ApplicationException, ImplementationException, ValidationException, SystemException, FinderException, OperationalException {
+        final Dokument dokument = lagDokument(journalpost, tittel, filnavn, mimeType, dokumentData, hoveddokument);
+        return service.nyDokument(dokument, false, getArkivKontekst());
     }
 
     private void sendDokumentTilEphorte(SakArkivOppdateringPort service, Dokument dokument) {
@@ -117,6 +119,7 @@ public class Saksimporter {
         return journalpost;
     }
 
+
     Korrespondansepart lagAvsender(Avsender avsender) {
         Korrespondansepart avsenderKorrespondent = new Korrespondansepart();
 
@@ -129,7 +132,6 @@ public class Saksimporter {
         avsenderKorrespondent.setKontakt(kontakt);
         return avsenderKorrespondent;
     }
-
 
     Korrespondansepart lagMottaker(Mottaker mottaker) {
         Korrespondansepart mottakerKorrespondent = new Korrespondansepart();
@@ -167,6 +169,7 @@ public class Saksimporter {
         return dokument;
     }
 
+
     EksternNoekkel lagEksternNoekkel() {
         EksternNoekkel eksternNoekkel = new EksternNoekkel();
         eksternNoekkel.setFagsystem("SvarUt");
@@ -174,13 +177,13 @@ public class Saksimporter {
         return eksternNoekkel;
     }
 
-
     Saksnummer lagSaksnummer() {
         Saksnummer saksnummer = new Saksnummer();
         saksnummer.setSaksaar(new BigInteger("2014"));
         saksnummer.setSakssekvensnummer(new BigInteger("211"));
         return saksnummer;
     }
+
 
     SakArkivOppdateringPort createSakarkivService() {
 

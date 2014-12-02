@@ -52,6 +52,27 @@ public class TestWebservice {
 
     }
 
+    @Ignore
+    @Test
+    public void testOpprettSakMedForsendelse() throws Exception {
+
+        Saksimporter importer = new Saksimporter();
+
+        final Forsendelse forsendelse = new Forsendelse();
+        forsendelse.setTittel("EnTittelForTesting");
+        forsendelse.setAvsender(new Avsender());
+        forsendelse.getAvsender().setNavn("AvsenderNavn");
+        forsendelse.setMottaker(new Mottaker());
+        forsendelse.getMottaker().setNavn("Mottakernavn");
+        final Journalpost journalpost = importer.importerJournalPost(forsendelse);
+
+        final byte[] dokumentData = IOUtils.toByteArray(FileLoadUtil.loadPdfFromClasspath("small.pdf").getInputStream());
+
+        final Dokument dokument1 = importer.importerDokument(journalpost, "test.pdf", "test.pdf", "application/pdf", dokumentData, true);
+
+    }
+
+
     @Test
     @Ignore
     public void testKanImportereForsendelse() {
@@ -73,7 +94,7 @@ public class TestWebservice {
 
         for (Forsendelse forsendelse : forsendelser) {
             System.out.println(forsendelse.getId());
-            //saksimporter.importer(forsendelse);
+            //saksimporter.importerJournalPost(forsendelse);
         }
     }
 }

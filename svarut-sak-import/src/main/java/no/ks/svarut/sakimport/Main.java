@@ -15,7 +15,7 @@ public class Main {
         for (Forsendelse forsendelse : forsendelser) {
             System.out.println(forsendelse.getId());
 
-            //importer.importer(forsendelse);
+            //importerJournalPost.importerJournalPost(forsendelse);
         }
     }
 }
