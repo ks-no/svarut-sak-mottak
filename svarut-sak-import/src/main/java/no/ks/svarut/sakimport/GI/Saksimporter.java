@@ -7,6 +7,7 @@ import no.geointegrasjon.rep.arkiv.dokument.xml_schema._2012_01.TilknyttetRegist
 import no.geointegrasjon.rep.arkiv.felles.xml_schema._2012_01.Saksnummer;
 import no.geointegrasjon.rep.arkiv.kjerne.xml_schema._2012_01.*;
 import no.geointegrasjon.rep.arkiv.oppdatering.xml_wsdl._2012_01_31.*;
+import no.geointegrasjon.rep.felles.adresse.xml_schema._2012_01.*;
 import no.geointegrasjon.rep.felles.kontakt.xml_schema._2012_01.Kontakt;
 import no.geointegrasjon.rep.felles.teknisk.xml_schema._2012_01.ArkivKontekst;
 import no.ks.svarut.sakimport.Avsender;
@@ -129,8 +130,37 @@ public class Saksimporter {
         //avsenderKorrespondent.setKortnavn("Bergen kommune");
         final Kontakt kontakt = new Kontakt();
         kontakt.setNavn(avsender.getNavn());
+        final EnkelAdresseListe enkelAdresseListe = new EnkelAdresseListe();
+        enkelAdresseListe.getListe().add(lagEnkelAdresse(avsender));
+        kontakt.setAdresser(enkelAdresseListe);
         avsenderKorrespondent.setKontakt(kontakt);
         return avsenderKorrespondent;
+    }
+
+    private EnkelAdresse lagEnkelAdresse(Avsender avsender) {
+        final EnkelAdresse result = new EnkelAdresse();
+        result.setAdresselinje1(avsender.getAdresselinje1());
+        result.setAdresselinje2(avsender.getAdresselinje2());
+        if(avsender.getAdresselinje3() == null || "".equals(avsender.getAdresselinje3().trim())){
+            result.setAdresselinje2(result.getAdresselinje2() + " " + avsender.getAdresselinje3());
+        }
+        result.setPostadresse(new PostadministrativeOmraader());
+        result.getPostadresse().setPostnummer(avsender.getPostnr());
+        result.getPostadresse().setPoststed(avsender.getPoststed());
+        return result;
+    }
+
+    private EnkelAdresse lagEnkelAdresse(Mottaker mottaker) {
+        final EnkelAdresse result = new EnkelAdresse();
+        result.setAdresselinje1(mottaker.getAdresse1());
+        result.setAdresselinje2(mottaker.getAdresse2());
+        if(mottaker.getAdresse3() == null || "".equals(mottaker.getAdresse3().trim())){
+            result.setAdresselinje2(result.getAdresselinje2() + " " + mottaker.getAdresse3());
+        }
+        result.setPostadresse(new PostadministrativeOmraader());
+        result.getPostadresse().setPostnummer(mottaker.getPostnr());
+        result.getPostadresse().setPoststed(mottaker.getPoststed());
+        return result;
     }
 
     Korrespondansepart lagMottaker(Mottaker mottaker) {
@@ -139,7 +169,10 @@ public class Saksimporter {
         korrespondanseparttype.setKodeverdi("Mottaker");
         mottakerKorrespondent.setKortnavn(mottaker.getNavn());
         Kontakt kontakt = new Kontakt();
-        kontakt.setNavn("Mottakers kontakt navn");
+        kontakt.setNavn(mottaker.getNavn());
+        final EnkelAdresseListe enkelAdresseListe = new EnkelAdresseListe();
+        enkelAdresseListe.getListe().add(lagEnkelAdresse(mottaker));
+        kontakt.setAdresser(enkelAdresseListe);
         mottakerKorrespondent.setKontakt(kontakt);
         mottakerKorrespondent.setKorrespondanseparttype(korrespondanseparttype);
         return mottakerKorrespondent;

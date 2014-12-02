@@ -62,7 +62,16 @@ public class TestWebservice {
         forsendelse.setTittel("EnTittelForTesting");
         forsendelse.setAvsender(new Avsender());
         forsendelse.getAvsender().setNavn("AvsenderNavn");
+        forsendelse.getAvsender().setPostnr("5003");
+        forsendelse.getAvsender().setPoststed("Bergen");
+        forsendelse.getAvsender().setAdresselinje1("Bergen");
+        forsendelse.getAvsender().setAdresselinje2("Bergen");
+        forsendelse.getAvsender().setAdresselinje3("Bergen");
+
         forsendelse.setMottaker(new Mottaker());
+        forsendelse.getMottaker().setPostnr("5002");
+        forsendelse.getMottaker().setPoststed("Loddefjord");
+        forsendelse.getMottaker().setAdresse1("Loddefjord A1");
         forsendelse.getMottaker().setNavn("Mottakernavn");
         final Journalpost journalpost = importer.importerJournalPost(forsendelse);
 

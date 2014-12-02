@@ -254,4 +254,9 @@ public class Forsendelsesnedlaster {
         }
         return url;
     }
+
+    public void hentForsendelseFil(Forsendelse forsendelse) {
+        final HttpGet httpGet = new HttpGet(forsendelse.getDownloadUrl());
+
+    }
 }
