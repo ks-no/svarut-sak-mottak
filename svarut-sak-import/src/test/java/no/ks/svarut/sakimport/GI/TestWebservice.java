@@ -9,6 +9,7 @@ import no.ks.svarut.sakimport.Avsender;
 import no.ks.svarut.sakimport.Forsendelse;
 import no.ks.svarut.sakimport.Forsendelsesnedlaster;
 import no.ks.svarut.sakimport.Mottaker;
+import org.apache.commons.io.IOUtils;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -23,7 +24,7 @@ public class TestWebservice {
         Saksimporter importer = new Saksimporter();
 
         SakArkivOppdateringPort service = importer.createSakarkivService();
-        Journalpost generertJournalpost = importer.lagJournalpost("En tittel");
+        Journalpost generertJournalpost = importer.lagJournalpost("TestHoveddokument");
 
 
         KorrespondansepartListe korrespondansepartListe = new KorrespondansepartListe();
@@ -45,10 +46,9 @@ public class TestWebservice {
 
         Journalpost returnertJournalpost = service.nyJournalpost(generertJournalpost, importer.getArkivKontekst());
 
-        Dokument dokument = importer.lagDokument(returnertJournalpost);
+        Dokument dokument = importer.lagDokument(returnertJournalpost, "test.pdf", "test.pdf", "applicaton/pdf", IOUtils.toByteArray(FileLoadUtil.loadPdfFromClasspath("small.pdf").getInputStream()), true);
 
-        Dokument returnertDokument = service.nyDokument(dokument, false, importer.getArkivKontekst());
-
+        Dokument returnertDokument = service.nyDokument(dokument, true, importer.getArkivKontekst());
 
     }
 

@@ -2,6 +2,8 @@ package no.ks.svarut.sakimport.GI;
 
 import no.geointegrasjon.rep.arkiv.dokument.xml_schema._2012_01.Dokument;
 import no.geointegrasjon.rep.arkiv.dokument.xml_schema._2012_01.Filinnhold;
+import no.geointegrasjon.rep.arkiv.dokument.xml_schema._2012_01.Format;
+import no.geointegrasjon.rep.arkiv.dokument.xml_schema._2012_01.TilknyttetRegistreringSom;
 import no.geointegrasjon.rep.arkiv.felles.xml_schema._2012_01.Saksnummer;
 import no.geointegrasjon.rep.arkiv.kjerne.xml_schema._2012_01.*;
 import no.geointegrasjon.rep.arkiv.oppdatering.xml_wsdl._2012_01_31.*;
@@ -13,6 +15,8 @@ import no.ks.svarut.sakimport.Mottaker;
 import org.apache.commons.io.IOUtils;
 import org.apache.cxf.endpoint.Client;
 import org.apache.cxf.frontend.ClientProxy;
+import org.apache.cxf.interceptor.LoggingInInterceptor;
+import org.apache.cxf.interceptor.LoggingOutInterceptor;
 import org.apache.cxf.jaxws.JaxWsProxyFactoryBean;
 import org.apache.cxf.transport.http.HTTPConduit;
 import org.apache.cxf.transports.http.configuration.HTTPClientPolicy;
@@ -29,7 +33,7 @@ public class Saksimporter {
     private ArkivKontekst arkivKontekst = new ArkivKontekst();
 
     public Saksimporter() {
-        arkivKontekst.setKlientnavn("GEO-SakArkivOppdatering-SVARUT");
+        arkivKontekst.setKlientnavn("SVARUT");
     }
 
     public ArkivKontekst getArkivKontekst() {
@@ -47,9 +51,10 @@ public class Saksimporter {
         SakArkivOppdateringPort service = createSakarkivService();
 
         Journalpost returnertJournalpost = opprettEphorteJournalpost(generertJournalpost, service);
-        Dokument dokument = hentTomtDokumentFraReturnertJournalpost(returnertJournalpost);
 
-        sendDokumentTilEphorte(service, dokument);
+        //Dokument dokument = lagDokument(returnertJournalpost,forsendelse.getTittel(), forsendelse.getDownloadUrl());
+
+        //sendDokumentTilEphorte(service, dokument);
     }
 
     private void sendDokumentTilEphorte(SakArkivOppdateringPort service, Dokument dokument) {
@@ -68,16 +73,6 @@ public class Saksimporter {
         } catch (ApplicationException e) {
             e.printStackTrace();
         }
-    }
-
-    private Dokument hentTomtDokumentFraReturnertJournalpost(Journalpost returnertJournalpost) {
-        Dokument dokument = null;
-        try {
-            dokument = lagDokument(returnertJournalpost);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return dokument;
     }
 
     private Journalpost opprettEphorteJournalpost(Journalpost generertJournalpost, SakArkivOppdateringPort service) {
@@ -148,13 +143,26 @@ public class Saksimporter {
         return mottakerKorrespondent;
     }
 
-    Dokument lagDokument(Journalpost returnertJournalpost) throws IOException {
+    Dokument lagDokument(Journalpost returnertJournalpost, String tittel, String filnavn, String mimeType, byte[] dokumentData, boolean hoveddokument) throws IOException {
         final Dokument dokument = new Dokument();
+        dokument.setTittel(tittel);
+
+        final Format format = new Format();
+        format.setKodeverdi("RA-PDF");
+        dokument.setFormat(format); //nødvendig
+
         final Filinnhold filinnhold = new Filinnhold();
-        filinnhold.setFilnavn("test.pdf");
-        filinnhold.setMimeType("applicaton/pdf");
-        filinnhold.setBase64(IOUtils.toByteArray(FileLoadUtil.loadPdfFromClasspath("small.pdf").getInputStream()));
+        filinnhold.setFilnavn(filnavn);
+        filinnhold.setMimeType(mimeType);
+        filinnhold.setBase64(dokumentData);
         dokument.setFil(filinnhold);
+        final TilknyttetRegistreringSom value = new TilknyttetRegistreringSom();
+        if(hoveddokument)
+            value.setKodeverdi("H");
+        else
+            value.setKodeverdi("V");
+
+        dokument.setTilknyttetRegistreringSom(value);
         dokument.setReferanseJournalpostSystemID(returnertJournalpost.getSystemID());
         return dokument;
     }
@@ -181,6 +189,8 @@ public class Saksimporter {
         factory.setAddress(url);
         factory.setUsername(username);
         factory.setPassword(password);
+        factory.getInInterceptors().add(new LoggingInInterceptor());
+        factory.getOutInterceptors().add(new LoggingOutInterceptor());
         SakArkivOppdateringPort serviceV3 = (SakArkivOppdateringPort) factory.create();
         Client proxy = ClientProxy.getClient(serviceV3);
         HTTPConduit conduit = (HTTPConduit) proxy.getConduit();
