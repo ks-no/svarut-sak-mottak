@@ -2,6 +2,7 @@ package no.ks.svarut.sakimport;
 
 import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
+import org.apache.http.HeaderElement;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.HttpClient;
@@ -102,7 +103,14 @@ public class Forsendelsesnedlaster {
                 throw new RuntimeException("Klarte ikke å laste ned fil for forsendelse " + forsendelse.getId() + ". http status " + response.getStatusLine().getStatusCode());
             }
             final String contentType = response.getEntity().getContentType().getValue();
-            final String filename = response.getFirstHeader("Filename").getValue();
+            String filename = "dokument.pdf";
+            final HeaderElement[] elements = response.getFirstHeader("Content-disposition").getElements();
+            for (HeaderElement element : elements) {
+                if(element.getName().equals("attachment")){
+                    filename = element.getParameterByName("filename").getValue();
+                }
+            }
+
             return new Fil(response.getEntity(), contentType, filename);
         } catch (IOException e) {
             throw new RuntimeException(e);

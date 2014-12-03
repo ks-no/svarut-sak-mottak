@@ -6,8 +6,6 @@ import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -15,36 +13,55 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.StringTokenizer;
 
+
 public class SvarUtFakeService extends HttpServlet {
     private static final long serialVersionUID = 1L;
     final static Logger log = LoggerFactory.getLogger(SvarUtFakeService.class);
     private String gyldigBruker = "gyldigBruker";
     private String gyldigPassord = "EtGyldigPassord";
 
+
     @Override
-    public void service(ServletRequest servletRequest, ServletResponse servletResponse) throws IOException {
-        HttpServletRequest request = (HttpServletRequest) servletRequest;
-        HttpServletResponse response = (HttpServletResponse) servletResponse;
+    public void service(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
-        response.setContentType("text/plain; charset=utf-8");
-
-        System.out.println(request);
         System.out.println("auth " + request.getHeader("Authorization"));
         AuthorizationUser authInfo = getAuthorizationUser(request.getHeader("Authorization"));
         if (authInfo == null) {
             response.setHeader("WWW-Authenticate", "BASIC realm=\"KS Svarut mottaker login\"");
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+            return;
         }
+
         String username = authInfo.getUsername();
         String password = authInfo.getPassword();
 
-        if (username.equals(gyldigBruker) && password.equals(gyldigPassord)) {
-            IOUtils.copy(Thread.currentThread().getContextClassLoader().getResourceAsStream("SvarUtForsendelse.response"), response.getOutputStream());
-        }
-        else {
+        if (!gyldigBruker.equals(username) || !gyldigPassord.equals(password)) {
             response.setStatus(401);
+            return;
         }
 
+
+        if (request.getRequestURI().contains("hentNyeForsendelser")) {
+            sendJsonPendingForsendelser(request, response);
+        } else if (request.getRequestURI().contains("kvitterMottak")) {
+            response.setStatus(200);
+        } else {
+            response.setContentType("application/zip");
+            response.setHeader("Content-Disposition", "attachment; filename=\"test.pdf\"");
+            response.setHeader("Pragma", null); //IE klarer ikke  no-store header verdi
+            response.setHeader("Cache-Control", null);//IE klarer ikke no-store header verdi
+            IOUtils.copy(Thread.currentThread().getContextClassLoader().getResourceAsStream("test.pdf"), response.getOutputStream());
+        }
+    }
+
+    private void sendJsonPendingForsendelser(HttpServletRequest servletRequest, HttpServletResponse servletResponse) throws IOException {
+        HttpServletRequest request = servletRequest;
+        HttpServletResponse response = servletResponse;
+
+        response.setContentType("text/plain; charset=utf-8");
+
+        IOUtils.copy(Thread.currentThread().getContextClassLoader().getResourceAsStream("SvarUtForsendelse.response"), response.getOutputStream());
+        response.flushBuffer();
 
     }
 

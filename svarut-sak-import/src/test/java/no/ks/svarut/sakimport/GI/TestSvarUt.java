@@ -2,6 +2,7 @@ package no.ks.svarut.sakimport.GI;
 
 import no.ks.svarut.sakimport.Forsendelse;
 import no.ks.svarut.sakimport.Forsendelsesnedlaster;
+import no.ks.svarut.sakimport.Main;
 import no.ks.svarut.sakimport.SakImportConfig;
 import org.junit.Before;
 import org.junit.Test;
@@ -63,7 +64,10 @@ public class TestSvarUt {
         } catch (RuntimeException e) {
             assertTrue(e.getCause().getMessage().contains("url"));
         }
+    }
 
-
+    @Test
+    public void testNormalRun() throws Exception {
+        Main.main(args);
     }
 }
