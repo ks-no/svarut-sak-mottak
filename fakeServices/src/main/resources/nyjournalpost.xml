@@ -1,0 +1,193 @@
+<s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/">
+    <s:Body xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <NyJournalpostResponse xmlns="http://rep.geointegrasjon.no/Arkiv/Oppdatering/xml.wsdl/2012.01.31">
+            <return>
+                <systemID xmlns="http://rep.geointegrasjon.no/Arkiv/Kjerne/xml.schema/2012.01.31">5444</systemID>
+                <journalnummer xmlns="http://rep.geointegrasjon.no/Arkiv/Kjerne/xml.schema/2012.01.31">
+                    <journalaar>2014</journalaar>
+                    <journalsekvensnummer>571</journalsekvensnummer>
+                </journalnummer>
+                <journalpostnummer xmlns="http://rep.geointegrasjon.no/Arkiv/Kjerne/xml.schema/2012.01.31">0
+                </journalpostnummer>
+                <journaldato xmlns="http://rep.geointegrasjon.no/Arkiv/Kjerne/xml.schema/2012.01.31">
+                    2014-12-03T00:00:00
+                </journaldato>
+                <journalposttype xmlns="http://rep.geointegrasjon.no/Arkiv/Kjerne/xml.schema/2012.01.31">
+                    <kodeverdi xmlns="http://rep.geointegrasjon.no/Felles/Kodeliste/xml.schema/2012.01.31">I</kodeverdi>
+                    <kodebeskrivelse xmlns="http://rep.geointegrasjon.no/Felles/Kodeliste/xml.schema/2012.01.31">
+                        Inngående brev
+                    </kodebeskrivelse>
+                </journalposttype>
+                <dokumentetsDato xmlns="http://rep.geointegrasjon.no/Arkiv/Kjerne/xml.schema/2012.01.31">
+                    2014-12-03T00:00:00
+                </dokumentetsDato>
+                <journalstatus xmlns="http://rep.geointegrasjon.no/Arkiv/Kjerne/xml.schema/2012.01.31">
+                    <kodeverdi xmlns="http://rep.geointegrasjon.no/Felles/Kodeliste/xml.schema/2012.01.31">S</kodeverdi>
+                    <kodebeskrivelse xmlns="http://rep.geointegrasjon.no/Felles/Kodeliste/xml.schema/2012.01.31">
+                        Registrert/oppdatert av saksbehandler
+                    </kodebeskrivelse>
+                </journalstatus>
+                <tittel xmlns="http://rep.geointegrasjon.no/Arkiv/Kjerne/xml.schema/2012.01.31">tittel</tittel>
+                <skjermetTittel xmlns="http://rep.geointegrasjon.no/Arkiv/Kjerne/xml.schema/2012.01.31">false
+                </skjermetTittel>
+                <antallVedlegg xmlns="http://rep.geointegrasjon.no/Arkiv/Kjerne/xml.schema/2012.01.31">0</antallVedlegg>
+                <offentligTittel xmlns="http://rep.geointegrasjon.no/Arkiv/Kjerne/xml.schema/2012.01.31">tittel
+                </offentligTittel>
+                <saksnr xmlns="http://rep.geointegrasjon.no/Arkiv/Kjerne/xml.schema/2012.01.31">
+                    <saksaar xmlns="http://rep.geointegrasjon.no/Arkiv/Felles/xml.schema/2012.01.31">2014</saksaar>
+                    <sakssekvensnummer xmlns="http://rep.geointegrasjon.no/Arkiv/Felles/xml.schema/2012.01.31">211
+                    </sakssekvensnummer>
+                </saksnr>
+                <referanseSakSystemID xmlns="http://rep.geointegrasjon.no/Arkiv/Kjerne/xml.schema/2012.01.31">
+                    <systemID>
+                        <id>2583</id>
+                    </systemID>
+                </referanseSakSystemID>
+                <korrespondansepart xmlns="http://rep.geointegrasjon.no/Arkiv/Kjerne/xml.schema/2012.01.31">
+                    <liste>
+                        <systemID>11666</systemID>
+                        <korrespondanseparttype>
+                            <kodeverdi xmlns="http://rep.geointegrasjon.no/Felles/Kodeliste/xml.schema/2012.01.31">
+                                Mottaker
+                            </kodeverdi>
+                            <kodebeskrivelse
+                                    xmlns="http://rep.geointegrasjon.no/Felles/Kodeliste/xml.schema/2012.01.31">Mottaker
+                            </kodebeskrivelse>
+                        </korrespondanseparttype>
+                        <behandlingsansvarlig>1</behandlingsansvarlig>
+                        <skjermetKorrespondansepart>false</skjermetKorrespondansepart>
+                        <kortnavn/>
+                        <deresReferanse/>
+                        <journalenhet>
+                            <kodeverdi xmlns="http://rep.geointegrasjon.no/Felles/Kodeliste/xml.schema/2012.01.31">SP
+                            </kodeverdi>
+                            <kodebeskrivelse
+                                    xmlns="http://rep.geointegrasjon.no/Felles/Kodeliste/xml.schema/2012.01.31">Sentralt
+                                postmottak
+                            </kodebeskrivelse>
+                        </journalenhet>
+                        <administrativEnhetInit>IDT</administrativEnhetInit>
+                        <administrativEnhet>Informasjon og dokumentasjon</administrativEnhet>
+                        <saksbehandlerInit>SAB</saksbehandlerInit>
+                        <saksbehandler>Svein Arild Bertelsen</saksbehandler>
+                        <Kontakt xsi:type="q1:Organisasjon"
+                                 xmlns:q1="http://rep.geointegrasjon.no/Felles/Kontakt/xml.schema/2012.01.31">
+                            <q1:navn>Tinderhaug kommune</q1:navn>
+                            <q1:adresser>
+                                <liste xmlns="http://rep.geointegrasjon.no/Felles/Adresse/xml.schema/2012.01.31">
+                                    <adressetype>
+                                        <kodeverdi
+                                                xmlns="http://rep.geointegrasjon.no/Felles/Kodeliste/xml.schema/2012.01.31"/>
+                                        <kodebeskrivelse
+                                                xmlns="http://rep.geointegrasjon.no/Felles/Kodeliste/xml.schema/2012.01.31">
+                                            Ikke definert
+                                        </kodebeskrivelse>
+                                    </adressetype>
+                                    <adresselinje2/>
+                                    <postadresse/>
+                                </liste>
+                            </q1:adresser>
+                            <q1:elektroniskeAdresser>
+                                <liste xsi:type="Epost"
+                                       xmlns="http://rep.geointegrasjon.no/Felles/Adresse/xml.schema/2012.01.31">
+                                    <epostadresse>sab@tinderhaug.kommune.no</epostadresse>
+                                </liste>
+                            </q1:elektroniskeAdresser>
+                        </Kontakt>
+                    </liste>
+                    <liste>
+                        <systemID>11667</systemID>
+                        <korrespondanseparttype>
+                            <kodeverdi xmlns="http://rep.geointegrasjon.no/Felles/Kodeliste/xml.schema/2012.01.31">
+                                Avsender
+                            </kodeverdi>
+                            <kodebeskrivelse
+                                    xmlns="http://rep.geointegrasjon.no/Felles/Kodeliste/xml.schema/2012.01.31">Avsender
+                            </kodebeskrivelse>
+                        </korrespondanseparttype>
+                        <behandlingsansvarlig>0</behandlingsansvarlig>
+                        <skjermetKorrespondansepart>false</skjermetKorrespondansepart>
+                        <kortnavn/>
+                        <deresReferanse/>
+                        <administrativEnhetInit>[IKKE REG]</administrativEnhetInit>
+                        <administrativEnhet>Ikke reg/blank</administrativEnhet>
+                        <saksbehandlerInit>[IKKE REG]</saksbehandlerInit>
+                        <saksbehandler>Ikke reg/ Blank</saksbehandler>
+                        <Kontakt xsi:type="q2:Person"
+                                 xmlns:q2="http://rep.geointegrasjon.no/Felles/Kontakt/xml.schema/2012.01.31">
+                            <q2:navn>Tester testmann</q2:navn>
+                            <q2:adresser>
+                                <liste xmlns="http://rep.geointegrasjon.no/Felles/Adresse/xml.schema/2012.01.31">
+                                    <adressetype>
+                                        <kodeverdi
+                                                xmlns="http://rep.geointegrasjon.no/Felles/Kodeliste/xml.schema/2012.01.31"/>
+                                        <kodebeskrivelse
+                                                xmlns="http://rep.geointegrasjon.no/Felles/Kodeliste/xml.schema/2012.01.31">
+                                            Ikke definert
+                                        </kodebeskrivelse>
+                                    </adressetype>
+                                    <adresselinje1>Første adresselinje</adresselinje1>
+                                    <adresselinje2/>
+                                    <postadresse>
+                                        <postnummer>3333</postnummer>
+                                        <poststed>Teststad</poststed>
+                                    </postadresse>
+                                </liste>
+                            </q2:adresser>
+                            <q2:elektroniskeAdresser/>
+                            <q2:personid>
+                                <q2:personidentifikatorNr>11667</q2:personidentifikatorNr>
+                            </q2:personid>
+                        </Kontakt>
+                    </liste>
+                    <liste>
+                        <systemID>11668</systemID>
+                        <korrespondanseparttype>
+                            <kodeverdi xmlns="http://rep.geointegrasjon.no/Felles/Kodeliste/xml.schema/2012.01.31">
+                                Mottaker
+                            </kodeverdi>
+                            <kodebeskrivelse
+                                    xmlns="http://rep.geointegrasjon.no/Felles/Kodeliste/xml.schema/2012.01.31">Mottaker
+                            </kodebeskrivelse>
+                        </korrespondanseparttype>
+                        <behandlingsansvarlig>0</behandlingsansvarlig>
+                        <skjermetKorrespondansepart>false</skjermetKorrespondansepart>
+                        <kortnavn>Orgnavn</kortnavn>
+                        <deresReferanse/>
+                        <fristBesvarelse>2014-12-17T00:00:00</fristBesvarelse>
+                        <administrativEnhetInit>[IKKE REG]</administrativEnhetInit>
+                        <administrativEnhet>Ikke reg/blank</administrativEnhet>
+                        <saksbehandlerInit>[IKKE REG]</saksbehandlerInit>
+                        <saksbehandler>Ikke reg/ Blank</saksbehandler>
+                        <Kontakt xsi:type="q3:Person"
+                                 xmlns:q3="http://rep.geointegrasjon.no/Felles/Kontakt/xml.schema/2012.01.31">
+                            <q3:navn>Orgnavn</q3:navn>
+                            <q3:adresser>
+                                <liste xmlns="http://rep.geointegrasjon.no/Felles/Adresse/xml.schema/2012.01.31">
+                                    <adressetype>
+                                        <kodeverdi
+                                                xmlns="http://rep.geointegrasjon.no/Felles/Kodeliste/xml.schema/2012.01.31"/>
+                                        <kodebeskrivelse
+                                                xmlns="http://rep.geointegrasjon.no/Felles/Kodeliste/xml.schema/2012.01.31">
+                                            Ikke definert
+                                        </kodebeskrivelse>
+                                    </adressetype>
+                                    <adresselinje1>adresse 1</adresselinje1>
+                                    <adresselinje2/>
+                                    <postadresse>
+                                        <postnummer>5258</postnummer>
+                                        <poststed>Blomsterdalen</poststed>
+                                    </postadresse>
+                                </liste>
+                            </q3:adresser>
+                            <q3:elektroniskeAdresser/>
+                            <q3:personid>
+                                <q3:personidentifikatorNr>11668</q3:personidentifikatorNr>
+                            </q3:personid>
+                        </Kontakt>
+                    </liste>
+                </korrespondansepart>
+            </return>
+        </NyJournalpostResponse>
+    </s:Body>
+</s:Envelope>

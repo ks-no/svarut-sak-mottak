@@ -1,0 +1,47 @@
+<s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/">
+    <s:Body xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+        <NyDokumentResponse xmlns="http://rep.geointegrasjon.no/Arkiv/Oppdatering/xml.wsdl/2012.01.31">
+            <return>
+                <systemID xmlns="http://rep.geointegrasjon.no/Arkiv/Dokument/xml.schema/2012.01.31">7220</systemID>
+                <dokumentnummer xmlns="http://rep.geointegrasjon.no/Arkiv/Dokument/xml.schema/2012.01.31">1
+                </dokumentnummer>
+                <tilknyttetRegistreringSom xmlns="http://rep.geointegrasjon.no/Arkiv/Dokument/xml.schema/2012.01.31">
+                    <kodeverdi xmlns="http://rep.geointegrasjon.no/Felles/Kodeliste/xml.schema/2012.01.31">H</kodeverdi>
+                    <kodebeskrivelse xmlns="http://rep.geointegrasjon.no/Felles/Kodeliste/xml.schema/2012.01.31">
+                        Hoveddokument.
+                    </kodebeskrivelse>
+                </tilknyttetRegistreringSom>
+                <dokumenttype xmlns="http://rep.geointegrasjon.no/Arkiv/Dokument/xml.schema/2012.01.31">
+                    <kodeverdi xmlns="http://rep.geointegrasjon.no/Felles/Kodeliste/xml.schema/2012.01.31">ND
+                    </kodeverdi>
+                    <kodebeskrivelse xmlns="http://rep.geointegrasjon.no/Felles/Kodeliste/xml.schema/2012.01.31">
+                        Noarkdokument
+                    </kodebeskrivelse>
+                </dokumenttype>
+                <tittel xmlns="http://rep.geointegrasjon.no/Arkiv/Dokument/xml.schema/2012.01.31">tittel</tittel>
+                <dokumentstatus xmlns="http://rep.geointegrasjon.no/Arkiv/Dokument/xml.schema/2012.01.31">
+                    <kodeverdi xmlns="http://rep.geointegrasjon.no/Felles/Kodeliste/xml.schema/2012.01.31">B</kodeverdi>
+                    <kodebeskrivelse xmlns="http://rep.geointegrasjon.no/Felles/Kodeliste/xml.schema/2012.01.31">Under
+                        arbeid
+                    </kodebeskrivelse>
+                </dokumentstatus>
+                <variantformat xmlns="http://rep.geointegrasjon.no/Arkiv/Dokument/xml.schema/2012.01.31">
+                    <kodeverdi xmlns="http://rep.geointegrasjon.no/Felles/Kodeliste/xml.schema/2012.01.31">P</kodeverdi>
+                    <kodebeskrivelse xmlns="http://rep.geointegrasjon.no/Felles/Kodeliste/xml.schema/2012.01.31">
+                        Produksjonsformat
+                    </kodebeskrivelse>
+                </variantformat>
+                <format xmlns="http://rep.geointegrasjon.no/Arkiv/Dokument/xml.schema/2012.01.31">
+                    <kodeverdi xmlns="http://rep.geointegrasjon.no/Felles/Kodeliste/xml.schema/2012.01.31">RA-PDF
+                    </kodeverdi>
+                    <kodebeskrivelse xmlns="http://rep.geointegrasjon.no/Felles/Kodeliste/xml.schema/2012.01.31">
+                        Portable document format
+                    </kodebeskrivelse>
+                </format>
+                <referanseJournalpostSystemID xmlns="http://rep.geointegrasjon.no/Arkiv/Dokument/xml.schema/2012.01.31">
+                    5445
+                </referanseJournalpostSystemID>
+            </return>
+        </NyDokumentResponse>
+    </s:Body>
+</s:Envelope>

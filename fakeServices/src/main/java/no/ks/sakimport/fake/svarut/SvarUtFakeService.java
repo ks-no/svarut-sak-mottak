@@ -60,7 +60,7 @@ public class SvarUtFakeService extends HttpServlet {
 
         response.setContentType("text/plain; charset=utf-8");
 
-        IOUtils.copy(Thread.currentThread().getContextClassLoader().getResourceAsStream("SvarUtForsendelse.response"), response.getOutputStream());
+        IOUtils.copy(Thread.currentThread().getContextClassLoader().getResourceAsStream("SvarUtForsendelse.json"), response.getOutputStream());
         response.flushBuffer();
 
     }
