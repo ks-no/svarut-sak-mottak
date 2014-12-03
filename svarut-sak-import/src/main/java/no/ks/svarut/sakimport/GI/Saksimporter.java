@@ -2,11 +2,14 @@ package no.ks.svarut.sakimport.GI;
 
 import no.geointegrasjon.rep.arkiv.dokument.xml_schema._2012_01.Dokument;
 import no.geointegrasjon.rep.arkiv.dokument.xml_schema._2012_01.Filreferanse;
+
 import no.geointegrasjon.rep.arkiv.dokument.xml_schema._2012_01.TilknyttetRegistreringSom;
 import no.geointegrasjon.rep.arkiv.felles.xml_schema._2012_01.Saksnummer;
 import no.geointegrasjon.rep.arkiv.kjerne.xml_schema._2012_01.*;
 import no.geointegrasjon.rep.arkiv.oppdatering.xml_wsdl._2012_01_31.*;
-import no.geointegrasjon.rep.felles.adresse.xml_schema._2012_01.*;
+import no.geointegrasjon.rep.felles.adresse.xml_schema._2012_01.EnkelAdresse;
+import no.geointegrasjon.rep.felles.adresse.xml_schema._2012_01.EnkelAdresseListe;
+import no.geointegrasjon.rep.felles.adresse.xml_schema._2012_01.PostadministrativeOmraader;
 import no.geointegrasjon.rep.felles.kontakt.xml_schema._2012_01.Kontakt;
 import no.geointegrasjon.rep.felles.teknisk.xml_schema._2012_01.ArkivKontekst;
 import no.ks.svarut.sakimport.Avsender;

@@ -10,6 +10,8 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.util.EntityUtils;
 import org.joda.time.DateTime;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
@@ -17,6 +19,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Forsendelsesnedlaster {
+
+    public static final Logger log = LoggerFactory.getLogger(Forsendelsesnedlaster.class);
 
     String urlStiNyeForsendelser = "/tjenester/svarinn/mottaker/hentNyeForsendelser";
     String urlStiKvitterMottak = "/tjenester/svarinn/kvitterMottak/forsendelse/";
@@ -33,11 +37,10 @@ public class Forsendelsesnedlaster {
 
     private List<Forsendelse> hentForsendelser(HttpClient httpClient) {
         HttpResponse response = null;
+
         try {
             HttpGet get = new HttpGet(config.svarUtHost() + urlStiNyeForsendelser);
-
-
-
+            log.info("Henter " + get.getURI());
             response = httpClient.execute(get);
 
             if (response.getStatusLine().getStatusCode() == HttpStatus.SC_NOT_FOUND) {
