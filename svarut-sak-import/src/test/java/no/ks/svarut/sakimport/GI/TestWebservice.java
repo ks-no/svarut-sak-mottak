@@ -14,40 +14,6 @@ import java.util.List;
 
 public class TestWebservice {
 
-    @Ignore
-    @Test
-    public void testOpprettSak() throws Exception {
-
-        Saksimporter importer = new Saksimporter();
-
-        SakArkivOppdateringPort service = importer.createSakarkivService();
-        Journalpost generertJournalpost = importer.lagJournalpost("TestHoveddokument");
-
-
-        KorrespondansepartListe korrespondansepartListe = new KorrespondansepartListe();
-
-        Avsender avsender = new Avsender();
-        avsender.setNavn("Avsenders kontaktnavn");
-        Korrespondansepart korrespondansepart1 = importer.lagAvsender(avsender);
-        korrespondansepartListe.getListe().add(korrespondansepart1);
-
-        Mottaker mottaker = new Mottaker();
-        mottaker.setNavn("Mottakers navn");
-        Korrespondansepart korrespondansepart = importer.lagMottaker(mottaker);
-        korrespondansepartListe.getListe().add(korrespondansepart);
-
-        generertJournalpost.setKorrespondansepart(korrespondansepartListe);
-
-        generertJournalpost.setReferanseEksternNoekkel(importer.lagEksternNoekkel());
-        generertJournalpost.setSaksnr(importer.lagSaksnummer());
-
-        Journalpost returnertJournalpost = service.nyJournalpost(generertJournalpost, importer.getArkivKontekst());
-
-        Dokument dokument = importer.lagDokument(returnertJournalpost, "test.pdf", "test.pdf", "applicaton/pdf", IOUtils.toByteArray(FileLoadUtil.loadPdfFromClasspath("small.pdf").getInputStream()), true);
-
-        Dokument returnertDokument = service.nyDokument(dokument, true, importer.getArkivKontekst());
-
-    }
 
     @Ignore
     @Test
@@ -56,7 +22,8 @@ public class TestWebservice {
         Saksimporter importer = new Saksimporter();
 
         final Forsendelse forsendelse = new Forsendelse();
-        forsendelse.setTittel("EnTittelForTesting");
+        forsendelse.setId("forsendelseID");
+        forsendelse.setTittel("Prøver 240mb fil");
         forsendelse.setAvsender(new Avsender());
         forsendelse.getAvsender().setNavn("AvsenderNavn");
         forsendelse.getAvsender().setPostnr("5003");
@@ -72,12 +39,16 @@ public class TestWebservice {
         forsendelse.getMottaker().setNavn("Mottakernavn");
         final Journalpost journalpost = importer.importerJournalPost(forsendelse);
 
-        final byte[] dokumentData = IOUtils.toByteArray(FileLoadUtil.loadPdfFromClasspath("small.pdf").getInputStream());
 
-        final Dokument dokument1 = importer.importerDokument(journalpost, "test.pdf", "test.pdf", "application/pdf", dokumentData, true);
+        final Dokument dokument1 = importer.importerDokument(journalpost, "test.pdf", "test.pdf", "application/pdf", FileLoadUtil.loadPdfFromClasspath("ouput240.pdf").getInputStream(), true, forsendelse, null);
 
     }
 
+    @Test
+    public void testHttpServerForFilDownload() throws Exception {
+        final Saksimporter saksimporter = new Saksimporter();
+        saksimporter.startHttpServerForFileDownload("filnavn.pdf", "application/pdf", FileLoadUtil.loadPdfFromClasspath("small.pdf").getInputStream(), "forsendelseid", null);
+    }
 
     @Test
     @Ignore

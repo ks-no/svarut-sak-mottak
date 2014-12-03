@@ -103,7 +103,7 @@ public class Forsendelsesnedlaster {
             }
             final String contentType = response.getEntity().getContentType().getValue();
             final String filename = response.getFirstHeader("Filename").getValue();
-            return new Fil(EntityUtils.toByteArray(response.getEntity()), contentType, filename);
+            return new Fil(response.getEntity(), contentType, filename);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

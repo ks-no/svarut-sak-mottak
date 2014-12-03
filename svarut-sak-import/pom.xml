@@ -86,6 +86,12 @@
 			<artifactId>cxf-rt-transports-http</artifactId>
 			<version>${cxf.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>org.eclipse.jetty</groupId>
+			<artifactId>jetty-server</artifactId>
+			<version>9.2.5.v20141112</version>
+		</dependency>
+
 	</dependencies>
     <repositories>
         <repository>

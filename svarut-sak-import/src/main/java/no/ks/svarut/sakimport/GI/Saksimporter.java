@@ -1,8 +1,7 @@
 package no.ks.svarut.sakimport.GI;
 
 import no.geointegrasjon.rep.arkiv.dokument.xml_schema._2012_01.Dokument;
-import no.geointegrasjon.rep.arkiv.dokument.xml_schema._2012_01.Filinnhold;
-import no.geointegrasjon.rep.arkiv.dokument.xml_schema._2012_01.Format;
+import no.geointegrasjon.rep.arkiv.dokument.xml_schema._2012_01.Filreferanse;
 import no.geointegrasjon.rep.arkiv.dokument.xml_schema._2012_01.TilknyttetRegistreringSom;
 import no.geointegrasjon.rep.arkiv.felles.xml_schema._2012_01.Saksnummer;
 import no.geointegrasjon.rep.arkiv.kjerne.xml_schema._2012_01.*;
@@ -13,7 +12,6 @@ import no.geointegrasjon.rep.felles.teknisk.xml_schema._2012_01.ArkivKontekst;
 import no.ks.svarut.sakimport.Avsender;
 import no.ks.svarut.sakimport.Forsendelse;
 import no.ks.svarut.sakimport.Mottaker;
-import org.apache.commons.io.IOUtils;
 import org.apache.cxf.endpoint.Client;
 import org.apache.cxf.frontend.ClientProxy;
 import org.apache.cxf.interceptor.LoggingInInterceptor;
@@ -21,8 +19,10 @@ import org.apache.cxf.interceptor.LoggingOutInterceptor;
 import org.apache.cxf.jaxws.JaxWsProxyFactoryBean;
 import org.apache.cxf.transport.http.HTTPConduit;
 import org.apache.cxf.transports.http.configuration.HTTPClientPolicy;
+import org.eclipse.jetty.server.Server;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.math.BigInteger;
 
 public class Saksimporter {
@@ -55,13 +55,25 @@ public class Saksimporter {
 
     }
 
-    public Dokument importerDokument(Journalpost journalpost, String tittel, String filnavn, String mimeType, byte[] dokumentData, boolean hoveddokument) {
+    public Dokument importerDokument(Journalpost journalpost, String tittel, String filnavn, String mimeType, InputStream dokumentData, boolean hoveddokument, Forsendelse forsendelse, Runnable kvittering) {
         try {
-            final Dokument dokument = lagDokument(journalpost, tittel, filnavn, mimeType, dokumentData, hoveddokument);
-            return service.nyDokument(dokument, false, getArkivKontekst());
+            final Dokument dokument = lagDokument(journalpost, tittel, filnavn, mimeType, hoveddokument, forsendelse.getId());
+            final Server server = startHttpServerForFileDownload(filnavn, mimeType, dokumentData, forsendelse.getId(), kvittering);
+            final Dokument nyDokument = service.nyDokument(dokument, false, getArkivKontekst());
+            server.join();
+            return nyDokument;
         }catch (Exception e){
             throw new RuntimeException(e);
         }
+    }
+
+    Server startHttpServerForFileDownload(String filnavn, String mimeType, InputStream dokumentData, String forsendelseId, Runnable kvittering) throws Exception {
+        Server server = new Server(9977);
+        server.setHandler(new DownloadHandler(dokumentData, mimeType, filnavn, forsendelseId, kvittering));
+        server.setStopAtShutdown(true);
+        server.setStopTimeout(15000);
+        server.start();
+        return server;
     }
 
     private void sendDokumentTilEphorte(SakArkivOppdateringPort service, Dokument dokument) {
@@ -182,14 +194,15 @@ public class Saksimporter {
         return mottakerKorrespondent;
     }
 
-    Dokument lagDokument(Journalpost returnertJournalpost, String tittel, String filnavn, String mimeType, byte[] dokumentData, boolean hoveddokument) throws IOException {
+    Dokument lagDokument(Journalpost returnertJournalpost, String tittel, String filnavn, String mimeType,boolean hoveddokument, String forsendelseId) throws IOException {
         final Dokument dokument = new Dokument();
         dokument.setTittel(tittel);
 
-        final Filinnhold filinnhold = new Filinnhold();
+        final Filreferanse filinnhold = new Filreferanse();
         filinnhold.setFilnavn(filnavn);
         filinnhold.setMimeType(mimeType);
-        filinnhold.setBase64(dokumentData);
+        filinnhold.setUri("http://85.19.202.20:9977/forsendelse/" + forsendelseId);
+        filinnhold.setKvitteringUri("http://85.19.202.20:9977/kvitter/" + forsendelseId);
         dokument.setFil(filinnhold);
         final TilknyttetRegistreringSom value = new TilknyttetRegistreringSom();
         if(hoveddokument)
@@ -233,7 +246,7 @@ public class Saksimporter {
 
         HTTPClientPolicy httpClientPolicy = new HTTPClientPolicy();
         httpClientPolicy.setConnectionTimeout(120000);
-        httpClientPolicy.setReceiveTimeout(120000);
+        httpClientPolicy.setReceiveTimeout(10*60*1000);
         conduit.setClient(httpClientPolicy);
 
 
