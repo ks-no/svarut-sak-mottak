@@ -5,6 +5,8 @@ import java.net.URL;
 
 public class FileLoadUtil {
 
+	private FileLoadUtil(){}
+
 	public static DataHandler loadPdfFromClasspath(String resource){
 		URL url = Thread.currentThread().getContextClassLoader().getResource(resource);
 		return new DataHandler(url);

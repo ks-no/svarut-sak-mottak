@@ -19,7 +19,7 @@ public class TestWebservice {
     @Test
     public void testOpprettSakMedForsendelse() throws Exception {
 
-        Saksimporter importer = new Saksimporter();
+        Saksimporter importer = new Saksimporter(new SakImportConfig(lagArgs()));
 
         final Forsendelse forsendelse = new Forsendelse();
         forsendelse.setId("forsendelseID");
@@ -46,33 +46,32 @@ public class TestWebservice {
 
     @Test
     public void testHttpServerForFilDownload() throws Exception {
-        final Saksimporter saksimporter = new Saksimporter();
+        final Saksimporter saksimporter = new Saksimporter(new SakImportConfig(lagArgs()));
         saksimporter.startHttpServerForFileDownload("filnavn.pdf", "application/pdf", FileLoadUtil.loadPdfFromClasspath("small.pdf").getInputStream(), "forsendelseid", null);
     }
 
     @Test
     @Ignore
     public void testKanImportereForsendelse() {
-        String brukernavn = "gyldigBruker";
-        String passord = "EtGyldigPassord";
-        String url = "http://localhost:8102/tjenester/svarut";
-
-        String[] args = new String[6];
-        args[0] = "-username";
-        args[1] = brukernavn;
-        args[2] = "-password";
-        args[3] = passord;
-        args[4] = "-url";
-        args[5] = url;
+        String[] args = lagArgs();
         Forsendelsesnedlaster nedlaster = new Forsendelsesnedlaster(new SakImportConfig(args));
         List<Forsendelse> forsendelser = nedlaster.hentNyeForsendelser();
 
-        Saksimporter saksimporter = new Saksimporter();
+        Saksimporter saksimporter = new Saksimporter(new SakImportConfig(lagArgs()));
 
         for (Forsendelse forsendelse : forsendelser) {
             System.out.println(forsendelse.getId());
             //saksimporter.importerJournalPost(forsendelse);
         }
+    }
+
+    private String[] lagArgs() {
+        String brukernavn = "gyldigBruker";
+        String passord = "EtGyldigPassord";
+        String url = "http://localhost:8102/tjenester/svarut";
+
+        String sakurl = "https://localhost:8102/EphorteFakeService/service";
+        return new String[]{"-username", brukernavn, "-password", passord, "-url", url, "-sakurl", sakurl, "-sakbrukernavn", "tull", "-sakpassord", "passord"};
     }
 }
 

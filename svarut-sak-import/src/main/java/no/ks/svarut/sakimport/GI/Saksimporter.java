@@ -15,6 +15,7 @@ import no.geointegrasjon.rep.felles.teknisk.xml_schema._2012_01.ArkivKontekst;
 import no.ks.svarut.sakimport.Avsender;
 import no.ks.svarut.sakimport.Forsendelse;
 import no.ks.svarut.sakimport.Mottaker;
+import no.ks.svarut.sakimport.SakImportConfig;
 import org.apache.cxf.endpoint.Client;
 import org.apache.cxf.frontend.ClientProxy;
 import org.apache.cxf.interceptor.LoggingInInterceptor;
@@ -31,14 +32,19 @@ import java.math.BigInteger;
 public class Saksimporter {
 
 
-    private String url = "http://www.ephorte.com/ephorte5gi/Services/GeoIntegration/V1.1/SakArkivOppdateringService.svc";
-    private String username = "GEO-SakArkivOppdatering-SVARUT";
-    private String password = "SVARUT42";
+    private String url;
+    private String username;
+    private String password;
+
     private ArkivKontekst arkivKontekst = new ArkivKontekst();
     private SakArkivOppdateringPort service;
 
-    public Saksimporter() {
+    public Saksimporter(SakImportConfig sakImportConfig) {
         arkivKontekst.setKlientnavn("SVARUT");
+        url = sakImportConfig.sakUrl();
+        username = sakImportConfig.sakBrukernavn();
+        password = sakImportConfig.sakPassord();
+
         service = createSakarkivService();
     }
 

@@ -9,12 +9,14 @@ import java.util.List;
 
 public class Main {
 
+    private Main(){}
+
     public static void main(String... args) throws IOException {
         SakImportConfig config = new SakImportConfig(args);
         Forsendelsesnedlaster nedlaster = new Forsendelsesnedlaster(config);
         List<Forsendelse> forsendelser = nedlaster.hentNyeForsendelser();
 
-        Saksimporter importer = new Saksimporter();
+        Saksimporter importer = new Saksimporter(config);
 
         for (Forsendelse forsendelse : forsendelser) {
             System.out.println(forsendelse.getId());

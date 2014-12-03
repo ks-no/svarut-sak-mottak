@@ -34,6 +34,9 @@ import java.util.Properties;
 
 public class SakImportConfig {
 
+    private final String sakBrukernavn;
+    private final String sakPassord;
+    private final String sakUrl;
     private int port;
     private String urlSti;
     private String host;
@@ -48,11 +51,13 @@ public class SakImportConfig {
         SvarUtCommandLineParser parser = new SvarUtCommandLineParser(args);
         CommandLine cmdLine = parser.parse();
 
-        svarUtBrukernavn = settBrukernavn(properties, cmdLine);
-        svarUtPassord = settPassord(properties, cmdLine);
-        String url = settUrl(properties, cmdLine);
+        svarUtBrukernavn = hentConfig(properties, cmdLine, KommandoParametre.BRUKER_STR);
+        svarUtPassord = hentConfig(properties, cmdLine, KommandoParametre.PASSORD_STR);
+        String url = hentConfig(properties, cmdLine, KommandoParametre.URL_STR);
         konfigurerSvarUt(url);
-
+        sakBrukernavn = hentConfig(properties, cmdLine, KommandoParametre.SAK_BRUKERNAVN);
+        sakPassord = hentConfig(properties, cmdLine, KommandoParametre.SAK_PASSORD);
+        sakUrl = hentConfig(properties, cmdLine, KommandoParametre.SAK_URL);
         svarUtHttpClient = getDefaultHttpClient(svarUtBrukernavn, svarUtPassord);
     }
 
@@ -161,12 +166,13 @@ public class SakImportConfig {
     }
 
 
-    private String settBrukernavn(Properties properties, CommandLine cmdLine) {
-        String brukernavn = properties.getProperty(KommandoParametre.BRUKER_STR.getValue());
-        if (cmdLine.hasOption(KommandoParametre.BRUKER_STR.getValue())) {
-            brukernavn = cmdLine.getOptionValue(KommandoParametre.BRUKER_STR.getValue());
+
+    private String hentConfig(Properties properties, CommandLine cmdLine, KommandoParametre kommandoParameter) {
+        String result = properties.getProperty(kommandoParameter.getValue());
+        if (cmdLine.hasOption(kommandoParameter.getValue())) {
+            result = cmdLine.getOptionValue(kommandoParameter.getValue());
         }
-        return brukernavn;
+        return result;
     }
 
     private String settPassord(Properties properties, CommandLine cmdLine) {
@@ -187,5 +193,17 @@ public class SakImportConfig {
 
     public String svarUtHost() {
         return protokoll + "://" + host + ":" + port;
+    }
+
+    public String sakUrl() {
+        return sakUrl;
+    }
+
+    public String sakBrukernavn() {
+        return sakBrukernavn;
+    }
+
+    public String sakPassord() {
+        return sakPassord;
     }
 }

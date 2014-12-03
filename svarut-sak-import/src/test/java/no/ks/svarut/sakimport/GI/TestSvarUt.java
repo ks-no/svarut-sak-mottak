@@ -4,6 +4,7 @@ import no.ks.svarut.sakimport.Forsendelse;
 import no.ks.svarut.sakimport.Forsendelsesnedlaster;
 import no.ks.svarut.sakimport.Main;
 import no.ks.svarut.sakimport.SakImportConfig;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -17,21 +18,30 @@ public class TestSvarUt {
 
     private String brukernavn;
     private String passord;
-    private String url;
-    private String[] args = new String[6];
+    private String[] args;
+    private no.ks.Main jettyFakeServices;
+
+    private String[] lagArgs() {
+        brukernavn = "gyldigBruker";
+        passord = "EtGyldigPassord";
+        String url = "http://localhost:8102/tjenester/svarut";
+
+        String sakurl = "http://localhost:8102/EphorteFakeService/service";
+        return new String[]{"-username", brukernavn, "-password", passord, "-url", url, "-sakurl", sakurl, "-sakbrukernavn", "tull", "-sakpassord", "passord"};
+    }
 
     @Before
     public void setUp() throws Exception {
-        brukernavn = "gyldigBruker";
-        passord = "EtGyldigPassord";
-        url = "http://localhost:8102/tjenester/svarut";
+        args=lagArgs();
+        jettyFakeServices = new no.ks.Main();
+        jettyFakeServices.start();
+        jettyFakeServices.waitTillRunning();
+    }
 
-        args[0] = "-username";
-        args[1] = brukernavn;
-        args[2] = "-password";
-        args[3] = passord;
-        args[4] = "-url";
-        args[5] = url;
+    @After
+    public void tearDown() throws Exception {
+        jettyFakeServices.stop();
+
     }
 
     @Test

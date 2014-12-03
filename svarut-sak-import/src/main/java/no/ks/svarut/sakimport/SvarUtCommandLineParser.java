@@ -2,6 +2,9 @@ package no.ks.svarut.sakimport;
 
 import org.apache.commons.cli.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class SvarUtCommandLineParser {
 
     private String[] args;
@@ -64,52 +67,51 @@ public class SvarUtCommandLineParser {
                 .withArgName("v")
                 .create(KommandoParametre.VERSJON_STR.getValue());
 
-        Option brukernavn = OptionBuilder.withArgName(KommandoParametre.BRUKER_STR.getValue())
-                .hasArg()
-                .withDescription("brukernavn for svarut-pålogging")
-                .create(KommandoParametre.BRUKER_STR.getValue());
 
-        Option passord = OptionBuilder.withArgName(KommandoParametre.PASSORD_STR.getValue())
-                .hasArg()
-                .withDescription("Passord for svarut-pålogging")
-                .create(KommandoParametre.PASSORD_STR.getValue());
-
-        Option url = OptionBuilder.withArgName(KommandoParametre.URL_STR.getValue())
-                .hasArg()
-                .withDescription("URL til SvarUt")
-                .create(KommandoParametre.URL_STR.getValue());
-
-        options.addOption(brukernavn);
-        options.addOption(passord);
         options.addOption(hjelp);
         options.addOption(versjon);
-        options.addOption(url);
-
+        fellesoptions().stream().forEach((o) -> options.addOption(o));
         return options;
     }
 
     private Options definerKommandolinjeArgumenter() {
         Options options = new Options();
+        fellesoptions().stream().forEach((o) -> options.addOption(o));
+        return options;
+    }
 
-        Option brukernavn = OptionBuilder.withArgName(KommandoParametre.BRUKER_STR.getValue())
+    private List<Option> fellesoptions(){
+        final ArrayList<Option> options = new ArrayList<Option>();
+
+        options.add(OptionBuilder.withArgName(KommandoParametre.BRUKER_STR.getValue())
                 .hasArg()
                 .withDescription("brukernavn for svarut-pålogging")
-                .create(KommandoParametre.BRUKER_STR.getValue());
+                .create(KommandoParametre.BRUKER_STR.getValue()));
 
-        Option passord = OptionBuilder.withArgName(KommandoParametre.PASSORD_STR.getValue())
+        options.add(OptionBuilder.withArgName(KommandoParametre.PASSORD_STR.getValue())
                 .hasArg()
                 .withDescription("Passord for svarut-pålogging")
-                .create(KommandoParametre.PASSORD_STR.getValue());
+                .create(KommandoParametre.PASSORD_STR.getValue()));
 
-        Option url = OptionBuilder.withArgName(KommandoParametre.URL_STR.getValue())
+        options.add(OptionBuilder.withArgName(KommandoParametre.URL_STR.getValue())
                 .hasArg()
                 .withDescription("URL til SvarUt")
-                .create(KommandoParametre.URL_STR.getValue());
+                .create(KommandoParametre.URL_STR.getValue()));
 
-        options.addOption(brukernavn);
-        options.addOption(passord);
-        options.addOption(url);
+        options.add(OptionBuilder.withArgName(KommandoParametre.SAK_URL.getValue())
+                .hasArg()
+                .withDescription("URL til GeointegrasjonWebservice i saksystemet")
+                .create(KommandoParametre.SAK_URL.getValue()));
 
+        options.add(OptionBuilder.withArgName(KommandoParametre.SAK_BRUKERNAVN.getValue())
+                .hasArg()
+                .withDescription("Brukernavn til GeointegrasjonWebservice i saksystemet")
+                .create(KommandoParametre.SAK_BRUKERNAVN.getValue()));
+
+        options.add(OptionBuilder.withArgName(KommandoParametre.SAK_PASSORD.getValue())
+                .hasArg()
+                .withDescription("Passord til GeointegrasjonWebservice i saksystemet")
+                .create(KommandoParametre.SAK_PASSORD.getValue()));
         return options;
     }
 }

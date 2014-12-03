@@ -47,12 +47,10 @@ public class DownloadHandler extends AbstractHandler {
         response.setStatus(200);
         response.getWriter().println("Kvittering OK");
         response.flushBuffer();
-        es.submit(() -> {
+        es.submit( () -> {
             try {
                 getServer().stop();
-            } catch (Exception e) {
-            }
-            return;
+            } catch (Exception e) {}
         });
         System.out.println("kvitterte " + forsendelseId);
     }

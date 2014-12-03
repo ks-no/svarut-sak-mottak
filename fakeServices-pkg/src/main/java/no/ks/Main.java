@@ -17,10 +17,11 @@ public class Main {
     private final String contextPath;
     private final String workPath;
     private final String secret;
+    private Server srv;
 
     public static void main(String[] args) throws Exception {
         Main sc = new Main();
-		sc.start();
+		sc.start().join();
     }
 
     public Main() {
@@ -35,17 +36,13 @@ public class Main {
         secret = System.getProperty("jetty.secret", "eb27fb2e61ed603363461b3b4e37e0a0");
     }
 
-    private void start() {
+    public Server start() {
         // Start a Jetty server with some sensible(?) defaults
         try {
         	System.setProperty("org.eclipse.jetty.util.log.INFO","true");
 
-            Server srv = new Server(port);
+            srv = new Server(port);
             srv.setStopAtShutdown(true);
-
-            // Increase thread pool
-            QueuedThreadPool threadPool = new QueuedThreadPool();
-            threadPool.setMaxThreads(100);
 
             // Get the war-file
             ProtectionDomain protectionDomain = Main.class.getProtectionDomain();
@@ -63,10 +60,11 @@ public class Main {
             srv.setHandler(handlers);
 
             srv.start();
-            srv.join();
+            return srv;
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return null;
     }
 
     private void resetTempDirectory(WebAppContext context, String currentDir) throws IOException {
@@ -81,4 +79,17 @@ public class Main {
     }
 
 
+    public void waitTillRunning() {
+        while(!srv.isStarted()){
+            try {
+                Thread.sleep(10);
+            } catch (InterruptedException e) {}
+        }
+    }
+
+    public void stop() {
+        try {
+            srv.stop();
+        } catch (Exception e) {}
+    }
 }
