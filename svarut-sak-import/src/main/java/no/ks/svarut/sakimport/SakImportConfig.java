@@ -50,9 +50,10 @@ public class SakImportConfig {
     private HttpClient svarUtHttpClient;
 
     public SakImportConfig(String... args) {
-        final Properties properties = getDefaultProperties();
         SvarUtCommandLineParser parser = new SvarUtCommandLineParser(args);
         CommandLine cmdLine = parser.parse();
+        String propertiesFilsti = settPropertiesFilsti(cmdLine);
+        final Properties properties = getDefaultProperties(propertiesFilsti);
 
         svarUtBrukernavn = hentConfig(properties, cmdLine, KommandoParametre.BRUKER_STR);
         svarUtPassord = hentConfig(properties, cmdLine, KommandoParametre.PASSORD_STR);
@@ -67,12 +68,20 @@ public class SakImportConfig {
         sakDefaultSaksnr = hentConfig(properties, cmdLine, KommandoParametre.SAK_DEFAULT_SAKSNR);
     }
 
+    private String settPropertiesFilsti(CommandLine cmdLine) {
+        if (cmdLine.hasOption(KommandoParametre.PROPERTIES_FILSTI.getValue())) {
+            return cmdLine.getOptionValue(KommandoParametre.PROPERTIES_FILSTI.getValue());
+        }
+        return "config.properties";
+    }
+
     private void konfigurerSvarUt(String urlStr) {
         URL url = null;
         try {
             url = new URL(urlStr);
         } catch (MalformedURLException e) {
             e.printStackTrace();
+            System.out.println("URL: " + urlStr);
         }
         this.port = url.getPort();
         this.urlSti = url.getPath();
@@ -81,16 +90,16 @@ public class SakImportConfig {
 
     }
 
-    public HttpClient httpClientForSvarUt(){
+    public HttpClient httpClientForSvarUt() {
         return svarUtHttpClient;
-    };
+    }
 
-    private Properties getDefaultProperties() {
+    private Properties getDefaultProperties(String propertiesFilsti) {
         Properties properties = new Properties();
         InputStream input = null;
 
         try {
-            input = Thread.currentThread().getContextClassLoader().getResourceAsStream("config.properties");
+            input = Thread.currentThread().getContextClassLoader().getResourceAsStream(propertiesFilsti);
             properties.load(input);
 
         } catch (FileNotFoundException e) {
@@ -118,7 +127,7 @@ public class SakImportConfig {
 
     }
 
-    public CloseableHttpClient settOppHttpKlient(HttpClientBuilder clientBuilder){
+    public CloseableHttpClient settOppHttpKlient(HttpClientBuilder clientBuilder) {
         if (this.protokoll.equals("http")) {
             return clientBuilder.build();
         }
@@ -172,7 +181,6 @@ public class SakImportConfig {
     }
 
 
-
     private String hentConfig(Properties properties, CommandLine cmdLine, KommandoParametre kommandoParameter) {
         String result = properties.getProperty(kommandoParameter.getValue());
         if (cmdLine.hasOption(kommandoParameter.getValue())) {
@@ -182,7 +190,11 @@ public class SakImportConfig {
     }
 
     public String getSvarUtHost() {
-        return protokoll + "://" + host + ":" + port;
+        if (this.port != -1) {
+            return protokoll + "://" + host + ":" + port;
+        } else {
+            return protokoll + "://" + host;
+        }
     }
 
     public String getSakUrl() {
@@ -197,7 +209,7 @@ public class SakImportConfig {
         return sakPassord;
     }
 
-    public String getSakImportHostname(){
+    public String getSakImportHostname() {
         return sakImportHostname;
     }
 

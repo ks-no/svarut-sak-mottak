@@ -32,7 +32,7 @@ public class Forsendelsesnedlaster {
     }
 
     public List<Forsendelse> hentNyeForsendelser() {
-    HttpClient httpClient = config.httpClientForSvarUt();
+        HttpClient httpClient = config.httpClientForSvarUt();
         HttpResponse response = null;
 
         try {
@@ -66,14 +66,12 @@ public class Forsendelsesnedlaster {
             List<Forsendelse> forsendelser = konverterTilObjekt(json);
             return forsendelser;
         } catch (Exception e) {
-            throw new RuntimeException("feil under http get", e);
+            throw new RuntimeException("feil under http get på url: " + config.getSvarUtHost() + urlStiNyeForsendelser, e);
         } finally {
             if (response != null)
                 EntityUtils.consumeQuietly(response.getEntity());
         }
     }
-
-
 
 
     private List<Forsendelse> konverterTilObjekt(String result) {
@@ -93,27 +91,26 @@ public class Forsendelsesnedlaster {
     }
 
 
-
     public Fil hentForsendelseFil(Forsendelse forsendelse) {
         final HttpGet httpGet = new HttpGet(forsendelse.getDownloadUrl());
         final HttpResponse response;
         try {
             response = config.httpClientForSvarUt().execute(httpGet);
-            if(response.getStatusLine().getStatusCode() != HttpStatus.SC_OK){
-                throw new RuntimeException("Klarte ikke å laste ned fil for forsendelse " + forsendelse.getId() + ". http status " + response.getStatusLine().getStatusCode());
+            if (response.getStatusLine().getStatusCode() != HttpStatus.SC_OK) {
+                throw new RuntimeException("Klarte ikke å laste ned fil for forsendelse " + forsendelse.getId() + ". http status " + response.getStatusLine().getStatusCode() + " Download url: " + forsendelse.getDownloadUrl());
             }
             final String contentType = response.getEntity().getContentType().getValue();
             String filename = "dokument.pdf";
             final HeaderElement[] elements = response.getFirstHeader("Content-disposition").getElements();
             for (HeaderElement element : elements) {
-                if(element.getName().equals("attachment")){
+                if (element.getName().equals("attachment")) {
                     filename = element.getParameterByName("filename").getValue();
                 }
             }
 
             return new Fil(response.getEntity(), contentType, filename);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Prøvde uten hell å laste ned " + forsendelse.getDownloadUrl(), e);
         }
 
     }
@@ -122,7 +119,7 @@ public class Forsendelsesnedlaster {
         final HttpPost httpPost = new HttpPost(config.getSvarUtHost() + urlStiKvitterMottak + forsendelse.getId());
         try {
             final HttpResponse execute = config.httpClientForSvarUt().execute(httpPost);
-            if(execute.getStatusLine().getStatusCode() == HttpStatus.SC_OK) return;
+            if (execute.getStatusLine().getStatusCode() == HttpStatus.SC_OK) return;
             throw new RuntimeException("Feil status " + execute.getStatusLine().getStatusCode() + " på kvittering av mottat forsendelse");
         } catch (IOException e) {
             throw new RuntimeException(e);

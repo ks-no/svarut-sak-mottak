@@ -4,13 +4,10 @@ import no.ks.svarut.sakimport.Forsendelse;
 import no.ks.svarut.sakimport.Forsendelsesnedlaster;
 import no.ks.svarut.sakimport.Main;
 import no.ks.svarut.sakimport.SakImportConfig;
-import org.eclipse.jetty.server.Server;
-import org.eclipse.jetty.webapp.WebAppContext;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.io.File;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;

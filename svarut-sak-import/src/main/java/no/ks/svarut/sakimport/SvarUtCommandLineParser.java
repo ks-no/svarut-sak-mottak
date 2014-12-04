@@ -116,7 +116,6 @@ public class SvarUtCommandLineParser {
                 .hasArg()
                 .withDescription("Hostnavn for server til svarut-sak-import som saksystem kan nå den på.")
                 .create(KommandoParametre.SAK_IMPORT_HOSTNAME.getValue()));
-
         options.add(OptionBuilder.withArgName(KommandoParametre.SAK_DEFAULT_SAKSAAR.getValue())
                 .hasArg()
                 .withDescription("Saksår for importsak i saksystem. Brukes når ikke forsendelse kan legges direkte på korrekt sak.")
@@ -125,6 +124,10 @@ public class SvarUtCommandLineParser {
                 .hasArg()
                 .withDescription("Saksnr for importsak i saksystem. Brukes når ikke forsendelse kan legges direkte på korrekt sak.")
                 .create(KommandoParametre.SAK_DEFAULT_SAKSNR.getValue()));
+        options.add(OptionBuilder.withArgName(KommandoParametre.PROPERTIES_FILSTI.getValue())
+                .hasArg()
+                .withDescription("Angir filsti og filnavn til konfigurasjonsfilen")
+                .create(KommandoParametre.PROPERTIES_FILSTI.getValue()));
         return options;
     }
 }
