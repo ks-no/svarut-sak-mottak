@@ -38,6 +38,8 @@ public class SakImportConfig {
     private final String sakPassord;
     private final String sakUrl;
     private final String sakImportHostname;
+    private final String sakDefaultSaksAar;
+    private final String sakDefaultSaksnr;
     private int port;
     private String urlSti;
     private String host;
@@ -61,6 +63,8 @@ public class SakImportConfig {
         sakUrl = hentConfig(properties, cmdLine, KommandoParametre.SAK_URL);
         svarUtHttpClient = getDefaultHttpClient(svarUtBrukernavn, svarUtPassord);
         sakImportHostname = hentConfig(properties, cmdLine, KommandoParametre.SAK_IMPORT_HOSTNAME);
+        sakDefaultSaksAar = hentConfig(properties, cmdLine, KommandoParametre.SAK_DEFAULT_SAKSAAR);
+        sakDefaultSaksnr = hentConfig(properties, cmdLine, KommandoParametre.SAK_DEFAULT_SAKSNR);
     }
 
     private void konfigurerSvarUt(String urlStr) {
@@ -195,5 +199,13 @@ public class SakImportConfig {
 
     public String getSakImportHostname(){
         return sakImportHostname;
+    }
+
+    public String getDefaultSaksAar() {
+        return sakDefaultSaksAar;
+    }
+
+    public String getDefaultSaksnr() {
+        return sakDefaultSaksnr;
     }
 }

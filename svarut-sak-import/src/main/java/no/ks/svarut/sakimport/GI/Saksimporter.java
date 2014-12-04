@@ -236,8 +236,8 @@ public class Saksimporter {
 
     Saksnummer lagSaksnummer() {
         Saksnummer saksnummer = new Saksnummer();
-        saksnummer.setSaksaar(new BigInteger("2014"));
-        saksnummer.setSakssekvensnummer(new BigInteger("211"));
+        saksnummer.setSaksaar(new BigInteger(sakImportConfig.getDefaultSaksAar()));
+        saksnummer.setSakssekvensnummer(new BigInteger(sakImportConfig.getDefaultSaksnr()));
         return saksnummer;
     }
 

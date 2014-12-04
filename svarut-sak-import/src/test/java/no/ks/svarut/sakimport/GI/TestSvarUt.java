@@ -30,7 +30,7 @@ public class TestSvarUt {
         String url = "http://localhost:8102/tjenester/svarut";
 
         String sakurl = "http://localhost:8102/EphorteFakeService/service";
-        return new String[]{"-username", brukernavn, "-password", passord, "-url", url, "-sakurl", sakurl, "-sakbrukernavn", "tull", "-sakpassord", "passord", "-hostname", "localhost"};
+        return new String[]{"-username", brukernavn, "-password", passord, "-url", url, "-sakurl", sakurl, "-sakbrukernavn", "tull", "-sakpassord", "passord", "-hostname", "localhost", "-saksaar", "2014", "-saksnr", "211"};
     }
 
     @Before
@@ -40,7 +40,6 @@ public class TestSvarUt {
         fakeServicesJettyRunner = new FakeServicesJettyRunner();
         fakeServicesJettyRunner.start();
         fakeServicesJettyRunner.waitTillRunning();
-        //fakeServicesJettyRunner.join();
     }
 
     @After
