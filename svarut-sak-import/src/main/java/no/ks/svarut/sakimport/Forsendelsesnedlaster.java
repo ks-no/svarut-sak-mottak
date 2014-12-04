@@ -32,10 +32,7 @@ public class Forsendelsesnedlaster {
     }
 
     public List<Forsendelse> hentNyeForsendelser() {
-        return hentForsendelser(config.httpClientForSvarUt());
-    }
-
-    private List<Forsendelse> hentForsendelser(HttpClient httpClient) {
+    HttpClient httpClient = config.httpClientForSvarUt();
         HttpResponse response = null;
 
         try {
