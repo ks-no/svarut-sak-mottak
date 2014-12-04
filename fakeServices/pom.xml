@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <project>
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>no.ks.sakimport</groupId>
-	<artifactId>fakeServices</artifactId>
+	<groupId>no.ks.svarut-sakimport</groupId>
+	<artifactId>fakeService</artifactId>
 	<packaging>war</packaging>
 	<name>ILS - ${project.artifactId}</name>
 	<description>Fakes for integrasjonstester</description>
@@ -30,7 +30,13 @@
 					<target>1.8</target>
 					<encoding>utf-8</encoding>
 				</configuration>
-            </plugin>     
+            </plugin>
+			<plugin>
+				<artifactId>maven-war-plugin</artifactId>
+				<configuration>
+					<attachClasses>true</attachClasses>
+				</configuration>
+			</plugin>
 		</plugins>
 	</build>
 	<dependencies>

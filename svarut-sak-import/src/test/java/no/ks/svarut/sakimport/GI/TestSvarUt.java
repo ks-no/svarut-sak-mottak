@@ -4,10 +4,13 @@ import no.ks.svarut.sakimport.Forsendelse;
 import no.ks.svarut.sakimport.Forsendelsesnedlaster;
 import no.ks.svarut.sakimport.Main;
 import no.ks.svarut.sakimport.SakImportConfig;
+import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.webapp.WebAppContext;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.File;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -19,7 +22,7 @@ public class TestSvarUt {
     private String brukernavn;
     private String passord;
     private String[] args;
-    private no.ks.Main jettyFakeServices;
+    private FakeServicesJettyRunner fakeServicesJettyRunner;
 
     private String[] lagArgs() {
         brukernavn = "gyldigBruker";
@@ -32,15 +35,17 @@ public class TestSvarUt {
 
     @Before
     public void setUp() throws Exception {
+        System.setProperty("basedir", "/home/idar/work/svarut-sak-import/svarut-sak-import");
         args=lagArgs();
-        jettyFakeServices = new no.ks.Main();
-        jettyFakeServices.start();
-        jettyFakeServices.waitTillRunning();
+        fakeServicesJettyRunner = new FakeServicesJettyRunner();
+        fakeServicesJettyRunner.start();
+        fakeServicesJettyRunner.waitTillRunning();
+        //fakeServicesJettyRunner.join();
     }
 
     @After
     public void tearDown() throws Exception {
-        jettyFakeServices.stop();
+        fakeServicesJettyRunner.stop();
 
     }
 
