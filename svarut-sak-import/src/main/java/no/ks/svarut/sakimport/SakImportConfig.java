@@ -47,7 +47,7 @@ public class SakImportConfig {
     private SSLContext sslContext;
     private String svarUtBrukernavn;
     private String svarUtPassord;
-    private HttpClient svarUtHttpClient;
+    private CloseableHttpClient svarUtHttpClient;
 
     public SakImportConfig(String... args) {
         SvarUtCommandLineParser parser = new SvarUtCommandLineParser(args);
@@ -112,7 +112,7 @@ public class SakImportConfig {
         return properties;
     }
 
-    private HttpClient getDefaultHttpClient(String brukernavn, String passord) {
+    private CloseableHttpClient getDefaultHttpClient(String brukernavn, String passord) {
         HttpClientBuilder clientBuilder = HttpClientBuilder.create();
 
         AuthScope authScope = new AuthScope(this.host, this.port);

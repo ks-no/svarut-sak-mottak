@@ -35,9 +35,9 @@ public class Forsendelsesnedlaster {
         HttpClient httpClient = config.httpClientForSvarUt();
         HttpResponse response = null;
 
-        try {
             HttpGet get = new HttpGet(config.getSvarUtHost() + urlStiNyeForsendelser);
             log.info("Henter " + get.getURI());
+        try {
             response = httpClient.execute(get);
 
             if (response.getStatusLine().getStatusCode() == HttpStatus.SC_NOT_FOUND) {
