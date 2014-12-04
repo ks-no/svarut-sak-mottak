@@ -112,6 +112,10 @@ public class SvarUtCommandLineParser {
                 .hasArg()
                 .withDescription("Passord til GeointegrasjonWebservice i saksystemet")
                 .create(KommandoParametre.SAK_PASSORD.getValue()));
+        options.add(OptionBuilder.withArgName(KommandoParametre.SAK_IMPORT_HOSTNAME.getValue())
+                .hasArg()
+                .withDescription("Hostnavn for server til svarut-sak-import som saksystem kan nå den på.")
+                .create(KommandoParametre.SAK_IMPORT_HOSTNAME.getValue()));
         return options;
     }
 }

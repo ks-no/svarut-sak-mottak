@@ -39,7 +39,7 @@ public class Forsendelsesnedlaster {
         HttpResponse response = null;
 
         try {
-            HttpGet get = new HttpGet(config.svarUtHost() + urlStiNyeForsendelser);
+            HttpGet get = new HttpGet(config.getSvarUtHost() + urlStiNyeForsendelser);
             log.info("Henter " + get.getURI());
             response = httpClient.execute(get);
 
@@ -122,7 +122,7 @@ public class Forsendelsesnedlaster {
     }
 
     public void kvitterForsendelse(Forsendelse forsendelse) {
-        final HttpPost httpPost = new HttpPost(config.svarUtHost() + urlStiKvitterMottak + forsendelse.getId());
+        final HttpPost httpPost = new HttpPost(config.getSvarUtHost() + urlStiKvitterMottak + forsendelse.getId());
         try {
             final HttpResponse execute = config.httpClientForSvarUt().execute(httpPost);
             if(execute.getStatusLine().getStatusCode() == HttpStatus.SC_OK) return;

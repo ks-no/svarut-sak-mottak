@@ -32,6 +32,7 @@ import java.math.BigInteger;
 public class Saksimporter {
 
 
+    private final SakImportConfig sakImportConfig;
     private String url;
     private String username;
     private String password;
@@ -41,9 +42,10 @@ public class Saksimporter {
 
     public Saksimporter(SakImportConfig sakImportConfig) {
         arkivKontekst.setKlientnavn("SVARUT");
-        url = sakImportConfig.sakUrl();
-        username = sakImportConfig.sakBrukernavn();
-        password = sakImportConfig.sakPassord();
+        url = sakImportConfig.getSakUrl();
+        username = sakImportConfig.getSakBrukernavn();
+        password = sakImportConfig.getSakPassord();
+        this.sakImportConfig = sakImportConfig;
 
         service = createSakarkivService();
     }
@@ -210,8 +212,8 @@ public class Saksimporter {
         final Filreferanse filinnhold = new Filreferanse();
         filinnhold.setFilnavn(filnavn);
         filinnhold.setMimeType(mimeType);
-        filinnhold.setUri("http://85.19.202.20:9977/forsendelse/" + forsendelseId);
-        filinnhold.setKvitteringUri("http://85.19.202.20:9977/kvitter/" + forsendelseId);
+        filinnhold.setUri("http://" + sakImportConfig.getSakImportHostname() + ":9977/forsendelse/" + forsendelseId);
+        filinnhold.setKvitteringUri("http://"+ sakImportConfig.getSakImportHostname() + ":9977/kvitter/" + forsendelseId);
         dokument.setFil(filinnhold);
         final TilknyttetRegistreringSom value = new TilknyttetRegistreringSom();
         if(hoveddokument)

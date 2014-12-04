@@ -37,6 +37,7 @@ public class SakImportConfig {
     private final String sakBrukernavn;
     private final String sakPassord;
     private final String sakUrl;
+    private final String sakImportHostname;
     private int port;
     private String urlSti;
     private String host;
@@ -59,6 +60,7 @@ public class SakImportConfig {
         sakPassord = hentConfig(properties, cmdLine, KommandoParametre.SAK_PASSORD);
         sakUrl = hentConfig(properties, cmdLine, KommandoParametre.SAK_URL);
         svarUtHttpClient = getDefaultHttpClient(svarUtBrukernavn, svarUtPassord);
+        sakImportHostname = hentConfig(properties, cmdLine, KommandoParametre.SAK_IMPORT_HOSTNAME);
     }
 
     private void konfigurerSvarUt(String urlStr) {
@@ -175,35 +177,23 @@ public class SakImportConfig {
         return result;
     }
 
-    private String settPassord(Properties properties, CommandLine cmdLine) {
-        String passord = properties.getProperty(KommandoParametre.PASSORD_STR.getValue());
-        if (cmdLine.hasOption(KommandoParametre.PASSORD_STR.getValue())) {
-            passord = cmdLine.getOptionValue(KommandoParametre.PASSORD_STR.getValue());
-        }
-        return passord;
-    }
-
-    private String settUrl(Properties properties, CommandLine cmdLine) {
-        String url = properties.getProperty(KommandoParametre.URL_STR.getValue());
-        if (cmdLine.hasOption(KommandoParametre.URL_STR.getValue())) {
-            url = cmdLine.getOptionValue(KommandoParametre.URL_STR.getValue());
-        }
-        return url;
-    }
-
-    public String svarUtHost() {
+    public String getSvarUtHost() {
         return protokoll + "://" + host + ":" + port;
     }
 
-    public String sakUrl() {
+    public String getSakUrl() {
         return sakUrl;
     }
 
-    public String sakBrukernavn() {
+    public String getSakBrukernavn() {
         return sakBrukernavn;
     }
 
-    public String sakPassord() {
+    public String getSakPassord() {
         return sakPassord;
+    }
+
+    public String getSakImportHostname(){
+        return sakImportHostname;
     }
 }

@@ -6,7 +6,7 @@ public enum KommandoParametre {
     PASSORD_STR("password"),
     HJELP_STR("help"),
     VERSJON_STR("version"),
-    URL_STR("url"), SAK_URL("sakurl"), SAK_BRUKERNAVN("sakbrukernavn"), SAK_PASSORD("sakpassord");
+    URL_STR("url"), SAK_URL("sakurl"), SAK_BRUKERNAVN("sakbrukernavn"), SAK_PASSORD("sakpassord"), SAK_IMPORT_HOSTNAME("hostname");
 
     private final String value;
 
