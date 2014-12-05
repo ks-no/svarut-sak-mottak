@@ -46,11 +46,19 @@ public class SvarUtFakeService extends HttpServlet {
         } else if (request.getRequestURI().contains("kvitterMottak")) {
             response.setStatus(200);
         } else {
-            response.setContentType("application/zip");
-            response.setHeader("Content-Disposition", "attachment; filename=\"test.pdf\"");
             response.setHeader("Pragma", null); //IE klarer ikke  no-store header verdi
             response.setHeader("Cache-Control", null);//IE klarer ikke no-store header verdi
-            IOUtils.copy(Thread.currentThread().getContextClassLoader().getResourceAsStream("test.pdf"), response.getOutputStream());
+            if(request.getRequestURI().contains("43ee26b7-838b-4f99-b81c-d21551b621d8")){
+                response.setContentType("application/zip");
+                response.setHeader("Content-Disposition", "attachment; filename=\"dokumenter.zip\"");
+
+                IOUtils.copy(Thread.currentThread().getContextClassLoader().getResourceAsStream("dokumenter.zip"), response.getOutputStream());
+            } else {
+                response.setContentType("application/pdf");
+                response.setHeader("Content-Disposition", "attachment; filename=\"test.pdf\"");
+
+                IOUtils.copy(Thread.currentThread().getContextClassLoader().getResourceAsStream("test.pdf"), response.getOutputStream());
+            }
         }
     }
 

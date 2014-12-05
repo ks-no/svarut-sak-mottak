@@ -6,6 +6,7 @@ import no.ks.svarut.sakimport.Main;
 import no.ks.svarut.sakimport.SakImportConfig;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.List;
@@ -49,7 +50,7 @@ public class TestSvarUt {
     public void testRiktigBrukerOgPassordGirForsendelse() throws Exception {
         Forsendelsesnedlaster nedlaster = new Forsendelsesnedlaster(new SakImportConfig(args));
         List<Forsendelse> forsendelser = nedlaster.hentNyeForsendelser();
-        assertEquals(1, forsendelser.size());
+        assertEquals(2, forsendelser.size());
     }
 
     @Test
