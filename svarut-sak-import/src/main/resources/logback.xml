@@ -4,13 +4,13 @@
     <property file="src/main/resources/config.properties" />
 
     <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${LOG_DIR}/svarUtSakImport.log</file>
+        <file>logg/svarUtSakImport.log</file>
         <encoder>
             <charset>UTF-8</charset>
             <pattern>%date [%thread] %-5level %logger{25} - %msg%n</pattern>
         </encoder>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>svarUtSakImport/svarUtSakImport.%d{yyyy-MM-dd}.log.gz</fileNamePattern>
+            <fileNamePattern>logg/old/svarUtSakImport.%d{yyyy-MM-dd}.log.gz</fileNamePattern>
             <maxHistory>365</maxHistory>
         </rollingPolicy>
     </appender>
