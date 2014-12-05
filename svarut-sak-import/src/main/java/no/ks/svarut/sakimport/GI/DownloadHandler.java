@@ -3,6 +3,7 @@ package no.ks.svarut.sakimport.GI;
 import org.apache.commons.io.IOUtils;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.handler.AbstractHandler;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -14,13 +15,14 @@ import java.util.concurrent.Executors;
 
 public class DownloadHandler extends AbstractHandler {
 
-    static ExecutorService es = Executors.newCachedThreadPool();
+    public static ExecutorService es = Executors.newCachedThreadPool();
     private InputStream data;
 
     private final String mimeType;
     private final String filnavn;
     private String forsendelseId;
     private final Runnable kvittering;
+    private org.slf4j.Logger log = LoggerFactory.getLogger(DownloadHandler.class);
 
     public DownloadHandler(InputStream data, String mimeType, String filnavn, String forsendelseId, Runnable kvittering) {
         this.data = data;
@@ -52,7 +54,7 @@ public class DownloadHandler extends AbstractHandler {
                 getServer().stop();
             } catch (Exception e) {}
         });
-        System.out.println("kvitterte " + forsendelseId);
+        log.info("Sak system kvitterte for mottak av forsendelsedokument. {}", forsendelseId);
     }
 
     private void leverData(HttpServletResponse response) throws IOException {
@@ -61,7 +63,7 @@ public class DownloadHandler extends AbstractHandler {
         response.setStatus(HttpServletResponse.SC_OK);
         IOUtils.copy(data, response.getOutputStream());
         response.flushBuffer();
-        System.out.println("lastet ned " + forsendelseId);
+        log.info("Sak system lastet ned forsendelse {}", forsendelseId);
     }
 
 }

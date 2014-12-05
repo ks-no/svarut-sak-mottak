@@ -24,6 +24,7 @@ import org.apache.cxf.jaxws.JaxWsProxyFactoryBean;
 import org.apache.cxf.transport.http.HTTPConduit;
 import org.apache.cxf.transports.http.configuration.HTTPClientPolicy;
 import org.eclipse.jetty.server.Server;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -39,6 +40,7 @@ public class Saksimporter {
 
     private ArkivKontekst arkivKontekst = new ArkivKontekst();
     private SakArkivOppdateringPort service;
+    private org.slf4j.Logger log = LoggerFactory.getLogger(Saksimporter.class);
 
     public Saksimporter(SakImportConfig sakImportConfig) {
         arkivKontekst.setKlientnavn("SVARUT");
@@ -70,6 +72,7 @@ public class Saksimporter {
         try {
             final Dokument dokument = lagDokument(journalpost, tittel, filnavn, mimeType, hoveddokument, forsendelse.getId());
             final Server server = startHttpServerForFileDownload(filnavn, mimeType, dokumentData, forsendelse.getId(), kvittering);
+            log.debug("Startet jetty for mottak av forsnedelse");
             final Dokument nyDokument = service.nyDokument(dokument, false, getArkivKontekst());
             server.join();
             return nyDokument;
