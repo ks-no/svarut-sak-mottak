@@ -313,6 +313,47 @@
 					<encoding>UTF-8</encoding>
 				</configuration>
 			</plugin>
+
+			<plugin>
+				<artifactId>maven-jar-plugin</artifactId>
+				<version>2.5</version>
+				<configuration>
+					<archive>
+						<!-- Make an executable jar, adjust classpath entries-->
+						<manifest>
+							<addClasspath>true</addClasspath>
+							<mainClass>no.ks.svarut.sakimport</mainClass>
+						</manifest>
+						<!--Resources will be placed under conf/-->
+						<manifestEntries>
+							<Class-Path>./konfigurasjon/</Class-Path>
+						</manifestEntries>
+					</archive>
+					<!--exclude the file that go in the configuration directory from the archive-->
+					<excludes>
+						<exclude>*.properties</exclude>
+						<exclude>logback.xml</exclude>
+					</excludes>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<version>2.5.2</version>
+				<configuration>
+					<descriptors>
+						<descriptor>${basedir}/assembly/distribution-zip.xml</descriptor>
+					</descriptors>
+				</configuration>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>single</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
 		</plugins>
 	</build>
 </project>

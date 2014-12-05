@@ -1,0 +1,34 @@
+<assembly>
+    <id>dist</id>
+    <formats>
+        <format>zip</format>
+    </formats>
+
+    <includeBaseDirectory>true</includeBaseDirectory>
+
+    <fileSets>
+        <fileSet>
+            <!--Get the generated application jar-->
+            <directory>${project.build.directory}</directory>
+            <outputDirectory>/</outputDirectory>
+            <includes>
+                <include>svarut-sak-import.jar</include>
+            </includes>
+        </fileSet>
+        <fileSet>
+            <!--Get application resources-->
+            <directory>src/main/resources</directory>
+            <outputDirectory>konfigurasjon</outputDirectory>
+        </fileSet>
+        <fileSet>
+            <!--Get misc user files-->
+            <directory>${project.basedir}</directory>
+            <outputDirectory>/</outputDirectory>
+            <includes>
+                <include>README*</include>
+                <include>LICENSE*</include>
+                <include>NOTICE*</include>
+            </includes>
+        </fileSet>
+    </fileSets>
+</assembly>
