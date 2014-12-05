@@ -34,8 +34,9 @@ public class Main {
             final Dokument dokument = importer.importerDokument(journalpost, forsendelse.getTittel(), fil.getFilename(), fil.getMimetype(), fil.getData(), true, forsendelse, () -> nedlaster.kvitterForsendelse(forsendelse));
             log.info("Laget dokument {} for forsendelse {}", dokument.getDokumentnummer(), forsendelse.getId());
 
-            log.info("Forsendelse {} ferdig mottat. {}", forsendelse.getTittel(), forsendelse.getId());
+            log.info("Forsendelse {} ferdig mottatt. {}", forsendelse.getTittel(), forsendelse.getId());
         }
+        log.info("Importering til sakssystem er ferdig.");
         DownloadHandler.es.shutdown();
     }
 }
