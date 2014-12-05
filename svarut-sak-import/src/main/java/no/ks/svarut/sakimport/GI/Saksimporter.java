@@ -2,7 +2,6 @@ package no.ks.svarut.sakimport.GI;
 
 import no.geointegrasjon.rep.arkiv.dokument.xml_schema._2012_01.Dokument;
 import no.geointegrasjon.rep.arkiv.dokument.xml_schema._2012_01.Filreferanse;
-
 import no.geointegrasjon.rep.arkiv.dokument.xml_schema._2012_01.TilknyttetRegistreringSom;
 import no.geointegrasjon.rep.arkiv.felles.xml_schema._2012_01.Saksnummer;
 import no.geointegrasjon.rep.arkiv.kjerne.xml_schema._2012_01.*;
@@ -18,8 +17,6 @@ import no.ks.svarut.sakimport.Mottaker;
 import no.ks.svarut.sakimport.SakImportConfig;
 import org.apache.cxf.endpoint.Client;
 import org.apache.cxf.frontend.ClientProxy;
-import org.apache.cxf.interceptor.LoggingInInterceptor;
-import org.apache.cxf.interceptor.LoggingOutInterceptor;
 import org.apache.cxf.jaxws.JaxWsProxyFactoryBean;
 import org.apache.cxf.transport.http.HTTPConduit;
 import org.apache.cxf.transports.http.configuration.HTTPClientPolicy;
