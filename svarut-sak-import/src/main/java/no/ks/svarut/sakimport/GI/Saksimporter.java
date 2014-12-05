@@ -252,8 +252,8 @@ public class Saksimporter {
         factory.setAddress(url);
         factory.setUsername(username);
         factory.setPassword(password);
-        factory.getInInterceptors().add(new LoggingInInterceptor());
-        factory.getOutInterceptors().add(new LoggingOutInterceptor());
+        /*factory.getInInterceptors().add(new LoggingInInterceptor());
+        factory.getOutInterceptors().add(new LoggingOutInterceptor());*/
         SakArkivOppdateringPort serviceV3 = (SakArkivOppdateringPort) factory.create();
         Client proxy = ClientProxy.getClient(serviceV3);
         HTTPConduit conduit = (HTTPConduit) proxy.getConduit();

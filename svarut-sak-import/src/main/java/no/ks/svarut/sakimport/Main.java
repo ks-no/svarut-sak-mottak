@@ -9,6 +9,8 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 public class Main {
 
@@ -26,14 +28,32 @@ public class Main {
         for (Forsendelse forsendelse : forsendelser) {
             log.info("Importerer forsendelse {} {}", forsendelse.getTittel(), forsendelse.getId());
 
-            final Fil fil = nedlaster.hentForsendelseFil(forsendelse);
+            try(final Fil fil = nedlaster.hentForsendelseFil(forsendelse)) {
 
-            final Journalpost journalpost = importer.importerJournalPost(forsendelse);
-            log.info("Laget journalpost {} for forsendelse {}", journalpost.getJournalpostnummer(), forsendelse.getId());
+                final Journalpost journalpost = importer.importerJournalPost(forsendelse);
+                log.info("Laget journalpost {} for forsendelse {}", journalpost.getJournalpostnummer(), forsendelse.getId());
 
-            final Dokument dokument = importer.importerDokument(journalpost, forsendelse.getTittel(), fil.getFilename(), fil.getMimetype(), fil.getData(), true, forsendelse, () -> nedlaster.kvitterForsendelse(forsendelse));
-            log.info("Laget dokument {} for forsendelse {}", dokument.getDokumentnummer(), forsendelse.getId());
+                if (fil.getMimetype().contains("application/zip")) {
+                    try (final ZipInputStream zis = new ZipInputStream(fil.getData())) {
+                        ZipEntry entry;
+                        boolean first = true;
+                        while ((entry = zis.getNextEntry()) != null) {
 
+                            System.out.println("entry: " + entry.getName() + ", " + entry.getSize());
+                            // fikse mimetype
+                            final Fil zipfilEntry = new Fil(zis, "application/pdf", entry.getName());
+                            final Dokument dokument = importer.importerDokument(journalpost, zipfilEntry.getFilename(), zipfilEntry.getFilename(), zipfilEntry.getMimetype(), zipfilEntry.getData(), first, forsendelse, null);
+                            first = false;
+                            log.info("Laget dokument {} for forsendelse {}", dokument.getDokumentnummer(), forsendelse.getId());
+                            zis.closeEntry();
+                        }
+                    }
+                    nedlaster.kvitterForsendelse(forsendelse);
+                } else {
+                    final Dokument dokument = importer.importerDokument(journalpost, forsendelse.getTittel(), fil.getFilename(), fil.getMimetype(), fil.getData(), true, forsendelse, () -> nedlaster.kvitterForsendelse(forsendelse));
+                    log.info("Laget dokument {} for forsendelse {}", dokument.getDokumentnummer(), forsendelse.getId());
+                }
+            }
             log.info("Forsendelse {} ferdig mottatt. {}", forsendelse.getTittel(), forsendelse.getId());
         }
         log.info("Importering til sakssystem er ferdig.");
