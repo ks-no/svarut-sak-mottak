@@ -41,7 +41,7 @@ public class Main {
 
                             System.out.println("entry: " + entry.getName() + ", " + entry.getSize());
                             // fikse mimetype
-                            final Fil zipfilEntry = new Fil(zis, "application/pdf", entry.getName());
+                            final Fil zipfilEntry = new Fil(zis, findMimeType(entry.getName(), forsendelse.getFilmetadata()), entry.getName());
                             final Dokument dokument = importer.importerDokument(journalpost, zipfilEntry.getFilename(), zipfilEntry.getFilename(), zipfilEntry.getMimetype(), zipfilEntry.getData(), first, forsendelse, null);
                             first = false;
                             log.info("Laget dokument {} for forsendelse {}", dokument.getDokumentnummer(), forsendelse.getId());
@@ -58,6 +58,13 @@ public class Main {
         }
         log.info("Importering til sakssystem er ferdig.");
         DownloadHandler.es.shutdown();
+    }
+
+    private static String findMimeType(String name, List<FilMetadata> filmetadata) {
+        for (FilMetadata filMetadata : filmetadata) {
+            if(name.equals(filMetadata.getFilnavn())) return filMetadata.getMimetype();
+        }
+        return "application/pdf";
     }
 }
 

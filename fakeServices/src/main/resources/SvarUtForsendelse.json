@@ -92,6 +92,20 @@
       "dokumentetsDato": null,
       "tittel": null
     },
+    "filmetadata": [
+      {
+        "filnavn": "small.pdf",
+        "mimetype": "application/pdf"
+      },
+      {
+        "filnavn": "text.txt",
+        "mimetype": "text/plain"
+      },
+      {
+        "filnavn": "text2.txt",
+        "mimetype": "text/plain"
+      }
+    ],
     "status": "Akseptert",
     "downloadUrl": "http://localhost:8102/tjenester/svarinn/forsendelse/43ee26b7-838b-4f99-b81c-d21551b621d8"
   }

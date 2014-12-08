@@ -3,6 +3,8 @@ package no.ks.svarut.sakimport;
 
 import org.joda.time.DateTime;
 
+import java.util.List;
+
 public class Forsendelse implements Comparable<Forsendelse> {
 
     private String id;
@@ -15,6 +17,7 @@ public class Forsendelse implements Comparable<Forsendelse> {
     private String downloadUrl;
     private Avsender avsender;
     private Mottaker mottaker;
+    private List<FilMetadata> filmetadata;
 
     public Forsendelse() {
     }
@@ -102,6 +105,14 @@ public class Forsendelse implements Comparable<Forsendelse> {
 
     public void setMottaker(Mottaker mottaker) {
         this.mottaker = mottaker;
+    }
+
+    public List<FilMetadata> getFilmetadata() {
+        return filmetadata;
+    }
+
+    public void setFilmetadata(List<FilMetadata> filmetadata) {
+        this.filmetadata = filmetadata;
     }
 
     @Override
