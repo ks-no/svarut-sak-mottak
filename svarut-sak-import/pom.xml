@@ -163,26 +163,6 @@
                     <scalaVersion>2.10.2</scalaVersion>
                 </configuration>
             </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <version>2.4</version>
-                <executions>
-                    <execution>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>jar</goal>
-                        </goals>
-                        <configuration>
-                            <classifier>classes</classifier>
-                            <includes>
-                                <include>**/no/ks/svarut/**</include>
-                                <exclude>**/no/ks/svarut/actorSystem/*</exclude>
-                            </includes>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
 			<plugin>
 			<groupId>org.apache.cxf</groupId>
 			<artifactId>cxf-codegen-plugin</artifactId>

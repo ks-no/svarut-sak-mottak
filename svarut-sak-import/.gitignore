@@ -5,3 +5,4 @@ target
 svarUtSakImport
 src/main/resources/testConfig.properties
 logg
+dependency-reduced-pom.xml
