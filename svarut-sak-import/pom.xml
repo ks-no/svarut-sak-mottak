@@ -304,14 +304,10 @@
 							<addClasspath>true</addClasspath>
 							<mainClass>no.ks.svarut.sakimport</mainClass>
 						</manifest>
-						<!--Resources will be placed under conf/-->
-						<manifestEntries>
-							<Class-Path>./konfigurasjon/</Class-Path>
-						</manifestEntries>
 					</archive>
 					<!--exclude the file that go in the configuration directory from the archive-->
 					<excludes>
-						<exclude>config.properties</exclude>
+						<exclude>*.properties</exclude>
 					</excludes>
 				</configuration>
 			</plugin>
