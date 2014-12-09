@@ -311,8 +311,7 @@
 					</archive>
 					<!--exclude the file that go in the configuration directory from the archive-->
 					<excludes>
-						<exclude>*.properties</exclude>
-						<exclude>logback.xml</exclude>
+						<exclude>config.properties</exclude>
 					</excludes>
 				</configuration>
 			</plugin>
