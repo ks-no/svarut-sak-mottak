@@ -15,10 +15,14 @@ import java.util.zip.ZipInputStream;
 public class Main {
 
     private static Logger log = LoggerFactory.getLogger(Main.class);
+    private static Logger forsendelserOKlog = LoggerFactory.getLogger("forsendelserOK");
+    private static Logger forsendelserFeiletlog = LoggerFactory.getLogger("forsendelserFeilet");
+
     private Main(){}
 
     public static void main(String... args) throws IOException {
         log.info("Start import av forsendelser");
+        forsendelserOKlog.info("Starter import.");
         SakImportConfig config = new SakImportConfig(args);
         Forsendelsesnedlaster nedlaster = new Forsendelsesnedlaster(config);
         List<Forsendelse> forsendelser = nedlaster.hentNyeForsendelser();
@@ -49,9 +53,11 @@ public class Main {
                         }
                     }
                     nedlaster.kvitterForsendelse(forsendelse);
+                    forsendelserOKlog.info("Importerte forsendelse med id {}", forsendelse.getId());
                 } else {
                     final Dokument dokument = importer.importerDokument(journalpost, forsendelse.getTittel(), fil.getFilename(), fil.getMimetype(), fil.getData(), true, forsendelse, () -> nedlaster.kvitterForsendelse(forsendelse));
                     log.info("Laget dokument {} for forsendelse {}", dokument.getDokumentnummer(), forsendelse.getId());
+                    forsendelserOKlog.info("Importerte forsendelse med id {}", forsendelse.getId());
                 }
             }
             log.info("Forsendelse {} ferdig mottatt. {}", forsendelse.getTittel(), forsendelse.getId());

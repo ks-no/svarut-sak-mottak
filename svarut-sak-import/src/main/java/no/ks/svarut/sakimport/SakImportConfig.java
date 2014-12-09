@@ -96,7 +96,7 @@ public class SakImportConfig {
 
     private Properties getDefaultProperties(String propertiesFilsti) {
         Properties properties = new Properties();
-        InputStream input = null;
+        InputStream input;
 
         try {
             input = Thread.currentThread().getContextClassLoader().getResourceAsStream(propertiesFilsti);

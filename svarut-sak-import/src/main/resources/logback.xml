@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
 
-    <property file="src/main/resources/config.properties" />
 
     <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>logg/svarUtSakImport.log</file>
@@ -14,6 +13,39 @@
             <maxHistory>365</maxHistory>
         </rollingPolicy>
     </appender>
+
+    <appender name="IMPORTLOG" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>logg/forsendelserOK.log</file>
+    <encoder>
+        <charset>UTF-8</charset>
+        <pattern>%d{yyyy-MM-dd HH:mm:ss};%msg%n</pattern>
+    </encoder>
+    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+        <fileNamePattern>logg/old/forsendelserOK.%d{yyyy-MM-dd}.log.gz</fileNamePattern>
+        <maxHistory>365</maxHistory>
+    </rollingPolicy>
+    </appender>
+
+    <appender name="FEILETIMPORTLOG" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>logg/forsendelserFeilet.log</file>
+        <encoder>
+            <charset>UTF-8</charset>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss};%msg%n</pattern>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>logg/old/forsendelserFeilet.%d{yyyy-MM-dd}.log.gz</fileNamePattern>
+            <maxHistory>365</maxHistory>
+        </rollingPolicy>
+    </appender>
+
+    <logger name="forsendelserOK" level="INFO" additivity="false">
+        <appender-ref ref="IMPORTLOG"/>
+    </logger>
+
+    <logger name="forsendelserFeilet" level="INFO" additivity="false">
+        <appender-ref ref="FEILETIMPORTLOG"/>
+    </logger>
+
 
     <root level="INFO">
         <appender-ref ref="FILE" />
