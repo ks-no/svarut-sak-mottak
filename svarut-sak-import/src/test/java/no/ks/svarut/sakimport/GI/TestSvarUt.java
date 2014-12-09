@@ -22,15 +22,6 @@ public class TestSvarUt {
     private String[] args;
     private FakeServicesJettyRunner fakeServicesJettyRunner;
 
-    private String[] lagArgs() {
-        brukernavn = "gyldigBruker";
-        passord = "EtGyldigPassord";
-        String url = "http://localhost:8102/tjenester/svarut";
-
-        String sakurl = "http://localhost:8102/EphorteFakeService/service";
-        return new String[]{"-username", brukernavn, "-password", passord, "-url", url, "-sakurl", sakurl, "-sakbrukernavn", "tull", "-sakpassord", "passord", "-hostname", "localhost", "-saksaar", "2014", "-saksnr", "211"};
-    }
-
     @Before
     public void setUp() throws Exception {
         System.setProperty("basedir", "/home/idar/work/svarut-sak-import/svarut-sak-import");
@@ -82,5 +73,14 @@ public class TestSvarUt {
     public void testNormalRun() throws Exception {
         Main.main(args);
     }
-    
+
+    private String[] lagArgs() {
+        brukernavn = "gyldigBruker";
+        passord = "EtGyldigPassord";
+        String url = "http://localhost:8102/tjenester/svarut";
+
+        String sakurl = "http://localhost:8102/EphorteFakeService/service";
+        return new String[]{"-username", brukernavn, "-password", passord, "-url", url, "-sakurl", sakurl, "-sakbrukernavn", "tull", "-sakpassord", "passord", "-hostname", "localhost", "-saksaar", "2014", "-saksnr", "211"};
+    }
+
 }

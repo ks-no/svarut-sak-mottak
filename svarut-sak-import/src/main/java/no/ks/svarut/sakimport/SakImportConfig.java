@@ -220,4 +220,21 @@ public class SakImportConfig {
     public String getDefaultSaksnr() {
         return sakDefaultSaksnr;
     }
+
+    public boolean harTilstrekkeligeParametre(CommandLine commandLine, Properties properties) {
+        for (KommandoParametre parameter : KommandoParametre.values()) {
+            if (parameter != KommandoParametre.HJELP_STR && parameter != KommandoParametre.VERSJON_STR && parameter != KommandoParametre.PROPERTIES_FILSTI) {
+                boolean harParameter = harProperty(commandLine, properties, parameter.getValue());
+                if (!harParameter) {
+                    throw new RuntimeException("Kunne ikke finne parameter " + parameter.getValue() + " fra kommandolinje eller propertiesfil.");
+                }
+            }
+        }
+        return true;
+    }
+
+    public boolean harProperty(CommandLine commandLine, Properties properties, String propertyNokkel) {
+        String propertiesVerdi = properties.getProperty(propertyNokkel);
+        return commandLine.hasOption(propertyNokkel) || (propertiesVerdi != null);
+    }
 }
