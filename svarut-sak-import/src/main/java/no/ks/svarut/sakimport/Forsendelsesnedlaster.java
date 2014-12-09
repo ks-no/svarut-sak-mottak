@@ -41,23 +41,22 @@ public class Forsendelsesnedlaster {
             response = httpClient.execute(get);
 
             if (response.getStatusLine().getStatusCode() == HttpStatus.SC_NOT_FOUND) {
+                log.info("Fant ikke tjenestesiden.");
                 throw new RuntimeException("Finner ikke tjenestesiden, sjekk at oppgitt url er riktig.");
             }
 
             if (response.getStatusLine().getStatusCode() == HttpStatus.SC_UNAUTHORIZED || response.getStatusLine().getStatusCode() == HttpStatus.SC_FORBIDDEN) {
-                System.out.println("Bruker har ikke tilgang til SvarUt eller bruker/passord er feil.");
-                System.out.println(response);
+                log.info("Bruker har ikke tilgang til SvarUt eller bruker/passord er feil.");
                 throw new RuntimeException("Bruker har ikke tilgang til SvarUt eller bruker/passord er feil.");
             }
 
             if (response.getStatusLine().getStatusCode() == HttpStatus.SC_SERVICE_UNAVAILABLE) {
-                System.out.println("SvarUt er ikke tilgjengelig på dette tidspunkt.");
-                System.out.println(response);
+                log.error("SvarUt er ikke tilgjengelig på dette tidspunkt.");
                 System.exit(-1);
             }
 
             if (response.getStatusLine().getStatusCode() != HttpStatus.SC_OK) {
-                System.out.println("Noe gikk galt ved henting av filer.");
+                log.info("Noe gikk galt ved henting av filer.");
                 throw new RuntimeException("noe gikk galt");
             }
 
@@ -66,6 +65,7 @@ public class Forsendelsesnedlaster {
             List<Forsendelse> forsendelser = konverterTilObjekt(json);
             return forsendelser;
         } catch (Exception e) {
+            log.info("Feil under http get på url: {}{}", config.getSvarUtHost(), urlStiNyeForsendelser);
             throw new RuntimeException("feil under http get på url: " + config.getSvarUtHost() + urlStiNyeForsendelser, e);
         } finally {
             if (response != null)
@@ -122,6 +122,7 @@ public class Forsendelsesnedlaster {
             if (execute.getStatusLine().getStatusCode() == HttpStatus.SC_OK) return;
             throw new RuntimeException("Feil status " + execute.getStatusLine().getStatusCode() + " på kvittering av mottat forsendelse");
         } catch (IOException e) {
+            log.info("Kvittering for forsendelse {} feilet.", forsendelse.getId(), e);
             throw new RuntimeException(e);
         }
     }

@@ -15,9 +15,12 @@ import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManagerFactory;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -33,6 +36,7 @@ import java.security.cert.CertificateFactory;
 import java.util.Properties;
 
 public class SakImportConfig {
+    private static Logger log = LoggerFactory.getLogger(SakImportConfig.class);
 
     private final String sakBrukernavn;
     private final String sakPassord;
@@ -53,6 +57,7 @@ public class SakImportConfig {
         SvarUtCommandLineParser parser = new SvarUtCommandLineParser(args);
         CommandLine cmdLine = parser.parse();
         String propertiesFilsti = settPropertiesFilsti(cmdLine);
+        System.out.println(propertiesFilsti);
         final Properties properties = getDefaultProperties(propertiesFilsti);
 
         svarUtBrukernavn = hentConfig(properties, cmdLine, KommandoParametre.BRUKER_STR);
@@ -80,8 +85,7 @@ public class SakImportConfig {
         try {
             url = new URL(urlStr);
         } catch (MalformedURLException e) {
-            e.printStackTrace();
-            System.out.println("URL: " + urlStr);
+            log.info("Prøvde å konfigurere SvarUt med url {} : {}", urlStr, e);
         }
         this.port = url.getPort();
         this.urlSti = url.getPath();
@@ -103,13 +107,27 @@ public class SakImportConfig {
             properties.load(input);
 
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
-            System.out.println("Fant ikke properties-fil.");
+            log.info("Fant ikke properties-fil.", e);
         } catch (IOException e) {
-            e.printStackTrace();
-            System.out.println("Klarte ikke lese properties-fil.");
+            log.info("Klarte ikke lese properties-fil.", e);
+        } catch (Exception e) {
+            hentPropertiesfilMedSti(propertiesFilsti, properties);
         }
         return properties;
+    }
+
+    private void hentPropertiesfilMedSti(String propertiesFilsti, Properties properties) {
+        InputStream input;
+        try {
+            input = new FileInputStream(propertiesFilsti);
+            properties.load(input);
+        } catch (FileNotFoundException e1) {
+            log.info("Kunne ikke finne propertiesfil " + propertiesFilsti, e1);
+        } catch (IOException e1) {
+            log.info("Kunne ikke lese propertiesfil " + propertiesFilsti, e1);
+        } catch (Exception e1) {
+            log.info("Kunne ikke hente properties for " + propertiesFilsti, e1);
+        }
     }
 
     private CloseableHttpClient getDefaultHttpClient(String brukernavn, String passord) {
@@ -145,6 +163,7 @@ public class SakImportConfig {
             clientBuilder.setConnectionManager(cm);
             return clientBuilder.build();
         } catch (Exception e) {
+            log.info("Prøvde å sette opp httpklient: {}", e);
             return clientBuilder.build();
         }
     }

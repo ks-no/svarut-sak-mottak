@@ -22,49 +22,55 @@ public class Main {
 
     public static void main(String... args) throws IOException {
         log.info("Start import av forsendelser");
-        forsendelserOKlog.info("Starter import.");
-        SakImportConfig config = new SakImportConfig(args);
-        Forsendelsesnedlaster nedlaster = new Forsendelsesnedlaster(config);
-        List<Forsendelse> forsendelser = nedlaster.hentNyeForsendelser();
+        try {
+            SakImportConfig config = new SakImportConfig(args);
+            Forsendelsesnedlaster nedlaster = new Forsendelsesnedlaster(config);
+            List<Forsendelse> forsendelser = nedlaster.hentNyeForsendelser();
 
-        Saksimporter importer = new Saksimporter(config);
-        log.info("Importerer {} forsendelser", forsendelser != null ? forsendelser.size(): 0);
-        for (Forsendelse forsendelse : forsendelser) {
-            log.info("Importerer forsendelse {} {}", forsendelse.getTittel(), forsendelse.getId());
+            Saksimporter importer = new Saksimporter(config);
+            log.info("Importerer {} forsendelser", forsendelser != null ? forsendelser.size() : 0);
+            for (Forsendelse forsendelse : forsendelser) {
+                log.info("Importerer forsendelse {} {}", forsendelse.getTittel(), forsendelse.getId());
 
-            try(final Fil fil = nedlaster.hentForsendelseFil(forsendelse)) {
+                try (final Fil fil = nedlaster.hentForsendelseFil(forsendelse)) {
 
-                final Journalpost journalpost = importer.importerJournalPost(forsendelse);
-                log.info("Laget journalpost {} for forsendelse {}", journalpost.getJournalpostnummer(), forsendelse.getId());
+                    final Journalpost journalpost = importer.importerJournalPost(forsendelse);
+                    log.info("Laget journalpost {} for forsendelse {}", journalpost.getJournalpostnummer(), forsendelse.getId());
 
-                if (fil.getMimetype().contains("application/zip")) {
-                    try (final ZipInputStream zis = new ZipInputStream(fil.getData())) {
-                        ZipEntry entry;
-                        boolean first = true;
-                        while ((entry = zis.getNextEntry()) != null) {
+                    if (fil.getMimetype().contains("application/zip")) {
+                        try (final ZipInputStream zis = new ZipInputStream(fil.getData())) {
+                            ZipEntry entry;
+                            boolean first = true;
+                            while ((entry = zis.getNextEntry()) != null) {
 
-                            System.out.println("entry: " + entry.getName() + ", " + entry.getSize());
-                            // fikse mimetype
-                            final Fil zipfilEntry = new Fil(zis, findMimeType(entry.getName(), forsendelse.getFilmetadata()), entry.getName());
-                            final Dokument dokument = importer.importerDokument(journalpost, zipfilEntry.getFilename(), zipfilEntry.getFilename(), zipfilEntry.getMimetype(), zipfilEntry.getData(), first, forsendelse, null);
-                            first = false;
-                            log.info("Laget dokument {} for forsendelse {}", dokument.getDokumentnummer(), forsendelse.getId());
-                            zis.closeEntry();
+                                System.out.println("entry: " + entry.getName() + ", " + entry.getSize());
+                                // fikse mimetype
+                                final Fil zipfilEntry = new Fil(zis, findMimeType(entry.getName(), forsendelse.getFilmetadata()), entry.getName());
+                                final Dokument dokument = importer.importerDokument(journalpost, zipfilEntry.getFilename(), zipfilEntry.getFilename(), zipfilEntry.getMimetype(), zipfilEntry.getData(), first, forsendelse, null);
+                                first = false;
+                                log.info("Laget dokument {} for forsendelse {}", dokument.getDokumentnummer(), forsendelse.getId());
+                                zis.closeEntry();
+                            }
                         }
+                        nedlaster.kvitterForsendelse(forsendelse);
+                        forsendelserOKlog.info("Importerte forsendelse med id {}", forsendelse.getId());
+                    } else {
+                        final Dokument dokument = importer.importerDokument(journalpost, forsendelse.getTittel(), fil.getFilename(), fil.getMimetype(), fil.getData(), true, forsendelse, () -> nedlaster.kvitterForsendelse(forsendelse));
+                        log.info("Laget dokument {} for forsendelse {}", dokument.getDokumentnummer(), forsendelse.getId());
+                        forsendelserOKlog.info("Importerte forsendelse med id {}", forsendelse.getId());
                     }
-                    nedlaster.kvitterForsendelse(forsendelse);
-                    forsendelserOKlog.info("Importerte forsendelse med id {}", forsendelse.getId());
-                } else {
-                    final Dokument dokument = importer.importerDokument(journalpost, forsendelse.getTittel(), fil.getFilename(), fil.getMimetype(), fil.getData(), true, forsendelse, () -> nedlaster.kvitterForsendelse(forsendelse));
-                    log.info("Laget dokument {} for forsendelse {}", dokument.getDokumentnummer(), forsendelse.getId());
-                    forsendelserOKlog.info("Importerte forsendelse med id {}", forsendelse.getId());
+                } catch (Exception e) {
+                    forsendelserFeiletlog.info("Import av forsendelse {} feilet.", forsendelse.getId(), e);
                 }
+                log.info("Forsendelse {} ferdig mottatt. {}", forsendelse.getTittel(), forsendelse.getId());
             }
-            log.info("Forsendelse {} ferdig mottatt. {}", forsendelse.getTittel(), forsendelse.getId());
+            log.info("Importering til sakssystem er ferdig.");
+            DownloadHandler.es.shutdown();
+        } catch (Exception e) {
+            log.error("Noe gikk galt", e);
+            throw e;
         }
-        log.info("Importering til sakssystem er ferdig.");
-        DownloadHandler.es.shutdown();
-    }
+        }
 
     private static String findMimeType(String name, List<FilMetadata> filmetadata) {
         for (FilMetadata filMetadata : filmetadata) {
