@@ -16,8 +16,7 @@ import java.util.zip.ZipInputStream;
 public class GIImportManager {
 
     private static Logger log = LoggerFactory.getLogger(Main.class);
-    private static Logger forsendelserOKlog = LoggerFactory.getLogger("forsendelserOK");
-    private static Logger forsendelserFeiletlog = LoggerFactory.getLogger("forsendelserFeilet");
+    private static Logger forsendelseslog = LoggerFactory.getLogger("forsendelser");
     private final String[] args;
 
     public GIImportManager(String... args) {
@@ -33,6 +32,7 @@ public class GIImportManager {
 
             Saksimporter importer = new Saksimporter(config);
             log.info("Importerer {} forsendelser", forsendelser != null ? forsendelser.size() : 0);
+            forsendelseslog.info("{} nye forsendelser", forsendelser != null ? forsendelser.size() : 0);
             for (Forsendelse forsendelse : forsendelser) {
                 log.info("Importerer forsendelse {} {}", forsendelse.getTittel(), forsendelse.getId());
                 importerEnForsendelse(nedlaster, importer, forsendelse);
@@ -53,14 +53,13 @@ public class GIImportManager {
             if (fil.getMimetype().contains("application/zip")) {
                 lagDokumentFraZipfil(importer, forsendelse, fil, journalpost);
                 nedlaster.kvitterForsendelse(forsendelse);
-                forsendelserOKlog.info("Importerte forsendelse med id {}", forsendelse.getId());
             } else {
                 final Dokument dokument = importer.importerDokument(journalpost, forsendelse.getTittel(), fil.getFilename(), fil.getMimetype(), fil.getData(), true, forsendelse, () -> nedlaster.kvitterForsendelse(forsendelse));
                 log.info("Laget dokument {} for forsendelse {}", dokument.getDokumentnummer(), forsendelse.getId());
-                forsendelserOKlog.info("Importerte forsendelse med tittel {} og id {}", forsendelse.getTittel(), forsendelse.getId());
             }
+            forsendelseslog.info("Importerte forsendelse med tittel {},id {}, saksnr: {} og journalpostnummer {}.", forsendelse.getTittel(), forsendelse.getId(), journalpost.getSaksnr(), journalpost.getJournalpostnummer());
         } catch (Exception e) {
-            forsendelserFeiletlog.info("Import av forsendelse {} med tittel {} feilet.", forsendelse.getId(), forsendelse.getTittel());
+            forsendelseslog.info("Import av forsendelse {} med tittel {} feilet.", forsendelse.getId(), forsendelse.getTittel());
             log.info("Forsendelse {} ble ikke lagret.", forsendelse.getId(), e);
         }
     }
