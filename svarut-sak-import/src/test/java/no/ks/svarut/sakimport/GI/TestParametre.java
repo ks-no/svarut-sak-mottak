@@ -34,32 +34,31 @@ public class TestParametre {
     @Test
     public void testAlleParametreTilstedeGirIkkeFeilmelding() throws Exception {
         assertEquals(true, konfig.harTilstrekkeligeParametre(commandLine, properties));
-
     }
 
     @Test
     public void testPropertyPlukkesOppFraKommandolinje() {
-        assertEquals(true, konfig.harProperty(commandLine, properties, KommandoParametre.BRUKER_STR.getValue()));
+        assertEquals(true, konfig.harProperty(commandLine, properties, KommandoParametre.SVARUT_BRUKER.getValue()));
     }
 
     @Test
     public void testBrukernavnPlukkesOpppFraPropertiesfil() throws Exception {
-        String[] args = {"-password", passord, "-url", "http://url.av.no/slag", "-sakurl", "http://en.annen.no/url", "-sakbrukernavn", "tull", "-sakpassord", "passord", "-hostname", "localhost", "-saksaar", "2014", "-saksnr", "211"};
-        properties.setProperty(KommandoParametre.BRUKER_STR.getValue(), "propertiesBrukernavn");
+        String[] args = {"-svarutpassord", passord, "-svaruturl", "http://url.av.no/slag", "-sakurl", "http://en.annen.no/url", "-sakbrukernavn", "tull", "-sakpassord", "passord", "-hostname", "localhost", "-saksaar", "2014", "-saksnr", "211"};
+        properties.setProperty(KommandoParametre.SVARUT_BRUKER.getValue(), "propertiesBrukernavn");
         SvarUtCommandLineParser parser = new SvarUtCommandLineParser(args);
         commandLine = parser.parse();
 
-        assertEquals(true, konfig.harProperty(commandLine, properties, KommandoParametre.BRUKER_STR.getValue()));
+        assertEquals(true, konfig.harProperty(commandLine, properties, KommandoParametre.SVARUT_BRUKER.getValue()));
     }
 
     @Test
     public void testManglendePropertyGirFeilmelding() throws Exception {
-        String[] args = {"-password", passord, "-url", "http://url.av.no/slag", "-sakurl", "http://en.annen.no/url", "-sakbrukernavn", "tull", "-sakpassord", "passord", "-hostname", "localhost", "-saksaar", "2014", "-saksnr", "211"};
+        String[] args = {"-svarutpassord", passord, "-svaruturl", "http://url.av.no/slag", "-sakurl", "http://en.annen.no/url", "-sakbrukernavn", "tull", "-sakpassord", "passord", "-hostname", "localhost", "-saksaar", "2014", "-saksnr", "211"};
         SvarUtCommandLineParser parser = new SvarUtCommandLineParser(args);
         commandLine = parser.parse();
 
         expectedException.expect(RuntimeException.class);
-        expectedException.expectMessage("username");
+        expectedException.expectMessage("svarutbrukernavn");
         konfig.harTilstrekkeligeParametre(commandLine, properties);
     }
 
@@ -67,8 +66,8 @@ public class TestParametre {
         brukernavn = "gyldigBruker";
         passord = "EtGyldigPassord";
         String url = "http://localhost:8102/tjenester/svarut";
-
         String sakurl = "http://localhost:8102/EphorteFakeService/service";
-        return new String[]{"-username", brukernavn, "-password", passord, "-url", url, "-sakurl", sakurl, "-sakbrukernavn", "tull", "-sakpassord", "passord", "-hostname", "localhost", "-saksaar", "2014", "-saksnr", "211"};
+
+        return new String[]{"-svarutbrukernavn", brukernavn, "-svarutpassord", passord, "-svaruturl", url, "-sakurl", sakurl, "-sakbrukernavn", "tull", "-sakpassord", "passord", "-hostname", "localhost", "-saksaar", "2014", "-saksnr", "211"};
     }
 }

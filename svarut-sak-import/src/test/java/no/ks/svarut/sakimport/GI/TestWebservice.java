@@ -67,7 +67,7 @@ public class TestWebservice {
         String url = "http://localhost:8102/tjenester/svarut";
 
         String sakurl = "https://localhost:8102/EphorteFakeService/service";
-        return new String[]{"-username", brukernavn, "-password", passord, "-url", url, "-sakurl", sakurl, "-sakbrukernavn", "tull", "-sakpassord", "passord"};
+        return new String[]{"-svarutbrukernavn", brukernavn, "-svarutpassord", passord, "-svaruturl", url, "-sakurl", sakurl, "-sakbrukernavn", "tull", "-sakpassord", "passord"};
     }
 }
 

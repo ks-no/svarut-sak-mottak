@@ -62,9 +62,9 @@ public class SakImportConfig {
         System.out.println(propertiesFilsti);
         final Properties properties = getDefaultProperties(propertiesFilsti);
 
-        svarUtBrukernavn = hentConfig(properties, cmdLine, KommandoParametre.BRUKER_STR);
-        svarUtPassord = hentConfig(properties, cmdLine, KommandoParametre.PASSORD_STR);
-        String url = hentConfig(properties, cmdLine, KommandoParametre.URL_STR);
+        svarUtBrukernavn = hentConfig(properties, cmdLine, KommandoParametre.SVARUT_BRUKER);
+        svarUtPassord = hentConfig(properties, cmdLine, KommandoParametre.SVARUT_PASSORD);
+        String url = hentConfig(properties, cmdLine, KommandoParametre.SVARUT_URL);
         konfigurerSvarUt(url);
         sakBrukernavn = hentConfig(properties, cmdLine, KommandoParametre.SAK_BRUKERNAVN);
         sakPassord = hentConfig(properties, cmdLine, KommandoParametre.SAK_PASSORD);

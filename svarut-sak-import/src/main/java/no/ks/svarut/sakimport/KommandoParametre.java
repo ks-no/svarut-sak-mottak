@@ -2,11 +2,11 @@ package no.ks.svarut.sakimport;
 
 public enum KommandoParametre {
 
-    BRUKER_STR("username"),
-    PASSORD_STR("password"),
+    SVARUT_BRUKER("svarutbrukernavn"),
+    SVARUT_PASSORD("svarutpassord"),
+    SVARUT_URL("svaruturl"),
     HJELP_STR("help"),
     VERSJON_STR("version"),
-    URL_STR("url"),
     SAK_URL("sakurl"),
     SAK_BRUKERNAVN("sakbrukernavn"),
     SAK_PASSORD("sakpassord"),

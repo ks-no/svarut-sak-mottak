@@ -83,20 +83,20 @@ public class SvarUtCommandLineParser {
     private List<Option> fellesoptions(){
         final ArrayList<Option> options = new ArrayList<Option>();
 
-        options.add(OptionBuilder.withArgName(KommandoParametre.BRUKER_STR.getValue())
+        options.add(OptionBuilder.withArgName(KommandoParametre.SVARUT_BRUKER.getValue())
                 .hasArg()
                 .withDescription("brukernavn for svarut-pålogging")
-                .create(KommandoParametre.BRUKER_STR.getValue()));
+                .create(KommandoParametre.SVARUT_BRUKER.getValue()));
 
-        options.add(OptionBuilder.withArgName(KommandoParametre.PASSORD_STR.getValue())
+        options.add(OptionBuilder.withArgName(KommandoParametre.SVARUT_PASSORD.getValue())
                 .hasArg()
                 .withDescription("Passord for svarut-pålogging")
-                .create(KommandoParametre.PASSORD_STR.getValue()));
+                .create(KommandoParametre.SVARUT_PASSORD.getValue()));
 
-        options.add(OptionBuilder.withArgName(KommandoParametre.URL_STR.getValue())
+        options.add(OptionBuilder.withArgName(KommandoParametre.SVARUT_URL.getValue())
                 .hasArg()
                 .withDescription("URL til SvarUt")
-                .create(KommandoParametre.URL_STR.getValue()));
+                .create(KommandoParametre.SVARUT_URL.getValue()));
 
         options.add(OptionBuilder.withArgName(KommandoParametre.SAK_URL.getValue())
                 .hasArg()
