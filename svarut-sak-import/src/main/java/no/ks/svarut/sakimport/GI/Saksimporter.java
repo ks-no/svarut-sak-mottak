@@ -14,7 +14,6 @@ import no.geointegrasjon.rep.felles.teknisk.xml_schema._2012_01.ArkivKontekst;
 import no.ks.svarut.sakimport.Avsender;
 import no.ks.svarut.sakimport.Forsendelse;
 import no.ks.svarut.sakimport.Mottaker;
-import no.ks.svarut.sakimport.SakImportConfig;
 import org.apache.cxf.endpoint.Client;
 import org.apache.cxf.frontend.ClientProxy;
 import org.apache.cxf.jaxws.JaxWsProxyFactoryBean;

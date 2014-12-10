@@ -1,7 +1,6 @@
 package no.ks.svarut.sakimport.GI;
 
 import no.ks.svarut.sakimport.KommandoParametre;
-import no.ks.svarut.sakimport.SakImportConfig;
 import no.ks.svarut.sakimport.SvarUtCommandLineParser;
 import org.apache.commons.cli.CommandLine;
 import org.junit.Before;

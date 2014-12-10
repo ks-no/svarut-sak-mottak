@@ -1,5 +1,7 @@
-package no.ks.svarut.sakimport;
+package no.ks.svarut.sakimport.GI;
 
+import no.ks.svarut.sakimport.KommandoParametre;
+import no.ks.svarut.sakimport.SvarUtCommandLineParser;
 import org.apache.commons.cli.CommandLine;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;

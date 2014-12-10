@@ -3,6 +3,7 @@ package no.ks.svarut.sakimport;
 import no.geointegrasjon.rep.arkiv.dokument.xml_schema._2012_01.Dokument;
 import no.geointegrasjon.rep.arkiv.kjerne.xml_schema._2012_01.Journalpost;
 import no.ks.svarut.sakimport.GI.DownloadHandler;
+import no.ks.svarut.sakimport.GI.SakImportConfig;
 import no.ks.svarut.sakimport.GI.Saksimporter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,7 +19,8 @@ public class Main {
     private static Logger forsendelserOKlog = LoggerFactory.getLogger("forsendelserOK");
     private static Logger forsendelserFeiletlog = LoggerFactory.getLogger("forsendelserFeilet");
 
-    private Main(){}
+    private Main() {
+    }
 
     public static void main(String... args) throws IOException {
         log.info("Start import av forsendelser");
@@ -43,7 +45,7 @@ public class Main {
                             boolean first = true;
                             while ((entry = zis.getNextEntry()) != null) {
 
-                                System.out.println("entry: " + entry.getName() + ", " + entry.getSize());
+                                log.info("entry: " + entry.getName() + ", " + entry.getSize());
                                 // fikse mimetype
                                 final Fil zipfilEntry = new Fil(zis, findMimeType(entry.getName(), forsendelse.getFilmetadata()), entry.getName());
                                 final Dokument dokument = importer.importerDokument(journalpost, zipfilEntry.getFilename(), zipfilEntry.getFilename(), zipfilEntry.getMimetype(), zipfilEntry.getData(), first, forsendelse, null);
@@ -57,24 +59,23 @@ public class Main {
                     } else {
                         final Dokument dokument = importer.importerDokument(journalpost, forsendelse.getTittel(), fil.getFilename(), fil.getMimetype(), fil.getData(), true, forsendelse, () -> nedlaster.kvitterForsendelse(forsendelse));
                         log.info("Laget dokument {} for forsendelse {}", dokument.getDokumentnummer(), forsendelse.getId());
-                        forsendelserOKlog.info("Importerte forsendelse med id {}", forsendelse.getId());
+                        forsendelserOKlog.info("Importerte forsendelse med tittel {} og id {}", forsendelse.getTittel(), forsendelse.getId());
                     }
                 } catch (Exception e) {
-                    forsendelserFeiletlog.info("Import av forsendelse {} feilet.", forsendelse.getId(), e);
+                    forsendelserFeiletlog.info("Import av forsendelse {} med tittel {} feilet.", forsendelse.getId(), forsendelse.getTittel());
+                    log.info("Forsendelse {} ble ikke lagret.", forsendelse.getId(), e);
                 }
-                log.info("Forsendelse {} ferdig mottatt. {}", forsendelse.getTittel(), forsendelse.getId());
             }
             log.info("Importering til sakssystem er ferdig.");
             DownloadHandler.es.shutdown();
         } catch (Exception e) {
             log.error("Noe gikk galt", e);
-            throw e;
         }
-        }
+    }
 
     private static String findMimeType(String name, List<FilMetadata> filmetadata) {
         for (FilMetadata filMetadata : filmetadata) {
-            if(name.equals(filMetadata.getFilnavn())) return filMetadata.getMimetype();
+            if (name.equals(filMetadata.getFilnavn())) return filMetadata.getMimetype();
         }
         return "application/pdf";
     }

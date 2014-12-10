@@ -2,6 +2,7 @@ package no.ks.svarut.sakimport;
 
 import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
+import no.ks.svarut.sakimport.GI.SakImportConfig;
 import org.apache.http.HeaderElement;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
