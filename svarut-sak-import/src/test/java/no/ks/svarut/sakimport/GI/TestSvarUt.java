@@ -32,7 +32,6 @@ public class TestSvarUt {
     @After
     public void tearDown() throws Exception {
         fakeServicesJettyRunner.stop();
-
     }
 
     @Test
