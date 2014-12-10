@@ -86,24 +86,6 @@ public class Saksimporter {
         return server;
     }
 
-    private void sendDokumentTilEphorte(SakArkivOppdateringPort service, Dokument dokument) {
-        try {
-            Dokument returnertDokument = service.nyDokument(dokument, false, getArkivKontekst());
-        } catch (ValidationException e) {
-            e.printStackTrace();
-        } catch (FinderException e) {
-            e.printStackTrace();
-        } catch (SystemException e) {
-            e.printStackTrace();
-        } catch (ImplementationException e) {
-            e.printStackTrace();
-        } catch (OperationalException e) {
-            e.printStackTrace();
-        } catch (ApplicationException e) {
-            e.printStackTrace();
-        }
-    }
-
     private Journalpost opprettEphorteJournalpost(Journalpost generertJournalpost, SakArkivOppdateringPort service) {
         Journalpost returnertJournalpost = null;
         try {
