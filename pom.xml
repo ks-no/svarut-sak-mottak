@@ -16,7 +16,6 @@
 
 	<modules>
 		<module>fakeServices</module>
-		<module>fakeServices-pkg</module>
 		<module>svarut-sak-import</module>
     </modules>
 
