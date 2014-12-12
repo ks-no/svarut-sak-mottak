@@ -44,6 +44,7 @@ Nedlasting av siste versjon
 -----------------------------------
 
 [Siste versjon av SvarUt Sakimport](https://svarut.ks.no/releases/svarut-sak-import-latest.zip)
+
 [Eldre versjoner](https://svarut.ks.no/releases/)
 
 Utvikling av sakimport
