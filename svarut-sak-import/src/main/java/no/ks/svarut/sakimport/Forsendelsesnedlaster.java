@@ -9,6 +9,7 @@ import org.apache.http.HttpStatus;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.util.EntityUtils;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
@@ -95,8 +96,8 @@ public class Forsendelsesnedlaster {
     public Fil hentForsendelseFil(Forsendelse forsendelse) {
         final HttpGet httpGet = new HttpGet(forsendelse.getDownloadUrl());
         final HttpResponse response;
-        try {
-            response = config.httpClientForSvarUt().execute(httpGet);
+        try (CloseableHttpClient httpClient = config.httpClientForSvarUt()){
+            response = httpClient.execute(httpGet);
             if (response.getStatusLine().getStatusCode() != HttpStatus.SC_OK) {
                 throw new RuntimeException("Klarte ikke å laste ned fil for forsendelse " + forsendelse.getId() + ". http status " + response.getStatusLine().getStatusCode() + " Download url: " + forsendelse.getDownloadUrl());
             }
@@ -108,11 +109,11 @@ public class Forsendelsesnedlaster {
                     filename = element.getParameterByName("filename").getValue();
                 }
             }
-
             return new Fil(response.getEntity(), contentType, filename);
         } catch (IOException e) {
             throw new RuntimeException("Prøvde uten hell å laste ned " + forsendelse.getDownloadUrl(), e);
         }
+
 
     }
 

@@ -16,17 +16,24 @@ import java.io.IOException;
 public class EphorteFakeService extends HttpServlet {
 
     @Override
-    protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        if (req.getHeader("SOAPAction").contains("#NyJournalpost")) {
-            resp.setContentType("text/xml; charset=utf-8");
-            IOUtils.copy(Thread.currentThread().getContextClassLoader().getResourceAsStream("nyjournalpost.xml"), resp.getOutputStream());
+    protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        if (request.getHeader("SOAPAction").contains("#NyJournalpost")) {
+            response.setContentType("text/xml; charset=utf-8");
+
+            String postedData = IOUtils.toString(request.getInputStream());
+            if (postedData.contains("sakssekvensnummer>-1")) {
+                response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+                IOUtils.copy(Thread.currentThread().getContextClassLoader().getResourceAsStream("feilSaksnr.xml"), response.getOutputStream());
+            } else {
+                IOUtils.copy(Thread.currentThread().getContextClassLoader().getResourceAsStream("nyjournalpost.xml"), response.getOutputStream());
+            }
             return;
-        } else if (req.getHeader("SOAPAction").contains("#NyDokument")) {
-            resp.setContentType("text/xml; charset=utf-8");
-            String postedData = IOUtils.toString(req.getInputStream());
+        } else if (request.getHeader("SOAPAction").contains("#NyDokument")) {
+            response.setContentType("text/xml; charset=utf-8");
+            String postedData = IOUtils.toString(request.getInputStream());
             downloadUrl(getDownloadUrl(postedData));
             downloadUrl(getKvitteringUrl(postedData));
-            IOUtils.copy(Thread.currentThread().getContextClassLoader().getResourceAsStream("nydokument.xml"), resp.getOutputStream());
+            IOUtils.copy(Thread.currentThread().getContextClassLoader().getResourceAsStream("nydokument.xml"), response.getOutputStream());
             return;
         }
     }

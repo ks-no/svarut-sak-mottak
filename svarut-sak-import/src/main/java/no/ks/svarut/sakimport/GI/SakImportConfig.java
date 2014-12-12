@@ -6,7 +6,6 @@ import org.apache.commons.cli.CommandLine;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.CredentialsProvider;
-import org.apache.http.client.HttpClient;
 import org.apache.http.config.Registry;
 import org.apache.http.config.RegistryBuilder;
 import org.apache.http.conn.HttpClientConnectionManager;
@@ -53,7 +52,6 @@ public class SakImportConfig {
     private SSLContext sslContext;
     private String svarUtBrukernavn;
     private String svarUtPassord;
-    private CloseableHttpClient svarUtHttpClient;
 
     public SakImportConfig(String... args) {
         SvarUtCommandLineParser parser = new SvarUtCommandLineParser(args);
@@ -69,7 +67,6 @@ public class SakImportConfig {
         sakBrukernavn = hentConfig(properties, cmdLine, KommandoParametre.SAK_BRUKERNAVN);
         sakPassord = hentConfig(properties, cmdLine, KommandoParametre.SAK_PASSORD);
         sakUrl = hentConfig(properties, cmdLine, KommandoParametre.SAK_URL);
-        svarUtHttpClient = getDefaultHttpClient(svarUtBrukernavn, svarUtPassord);
         sakImportHostname = hentConfig(properties, cmdLine, KommandoParametre.SAK_IMPORT_HOSTNAME);
         sakDefaultSaksAar = hentConfig(properties, cmdLine, KommandoParametre.SAK_DEFAULT_SAKSAAR);
         sakDefaultSaksnr = hentConfig(properties, cmdLine, KommandoParametre.SAK_DEFAULT_SAKSNR);
@@ -96,8 +93,8 @@ public class SakImportConfig {
 
     }
 
-    public HttpClient httpClientForSvarUt() {
-        return svarUtHttpClient;
+    public CloseableHttpClient httpClientForSvarUt() {
+        return getDefaultHttpClient();
     }
 
     private Properties getDefaultProperties(String propertiesFilsti) {
@@ -132,11 +129,11 @@ public class SakImportConfig {
         }
     }
 
-    private CloseableHttpClient getDefaultHttpClient(String brukernavn, String passord) {
+    private CloseableHttpClient getDefaultHttpClient() {
         HttpClientBuilder clientBuilder = HttpClientBuilder.create();
 
         AuthScope authScope = new AuthScope(this.host, this.port);
-        UsernamePasswordCredentials credentials = new UsernamePasswordCredentials(brukernavn, passord);
+        UsernamePasswordCredentials credentials = new UsernamePasswordCredentials(svarUtBrukernavn, svarUtPassord);
 
         CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
         credentialsProvider.setCredentials(authScope, credentials);

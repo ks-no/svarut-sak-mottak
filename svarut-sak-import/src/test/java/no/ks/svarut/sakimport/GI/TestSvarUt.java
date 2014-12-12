@@ -38,7 +38,7 @@ public class TestSvarUt {
     public void testRiktigBrukerOgPassordGirForsendelse() throws Exception {
         Forsendelsesnedlaster nedlaster = new Forsendelsesnedlaster(new SakImportConfig(args));
         List<Forsendelse> forsendelser = nedlaster.hentNyeForsendelser();
-        assertEquals(2, forsendelser.size());
+        assertEquals(3, forsendelser.size());
     }
 
     @Test

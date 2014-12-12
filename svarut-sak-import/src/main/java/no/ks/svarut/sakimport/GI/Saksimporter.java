@@ -52,27 +52,38 @@ public class Saksimporter {
         return arkivKontekst;
     }
 
-    public Journalpost importerJournalPost(Forsendelse forsendelse) {
+    public Journalpost importerJournalPost(Forsendelse forsendelse) throws ValidationException {
         Journalpost generertJournalpost = lagJournalpost(forsendelse.getTittel());
 
         fyllInnKorrespondanseparter(forsendelse, generertJournalpost);
 
         generertJournalpost.setReferanseEksternNoekkel(lagEksternNoekkel());
-        generertJournalpost.setSaksnr(lagSaksnummer());
+        generertJournalpost.setSaksnr(lagSaksnummer(forsendelse.getMetadataIMottakendeSystem().getSakssekvensnummer()));
 
+        try {
+            return opprettEphorteJournalpost(generertJournalpost, service);
+        } catch (ValidationException e) {
+            log.info("Klarte ikke å opprette journalpost med saksnr {}, prøver med default saksnummer {}", forsendelse.getMetadataIMottakendeSystem().getSakssekvensnummer(), sakImportConfig.getDefaultSaksnr());
+            return opprettEphorteJournalPostMedDefaultSaksnr(generertJournalpost);
+        }
+    }
+
+    private Journalpost opprettEphorteJournalPostMedDefaultSaksnr(Journalpost generertJournalpost) throws ValidationException {
+        Saksnummer defaultSaksnr = new Saksnummer();
+        defaultSaksnr.setSakssekvensnummer(new BigInteger(sakImportConfig.getDefaultSaksnr()));
+        generertJournalpost.setSaksnr(defaultSaksnr);
         return opprettEphorteJournalpost(generertJournalpost, service);
-
     }
 
     public Dokument importerDokument(Journalpost journalpost, String tittel, String filnavn, String mimeType, InputStream dokumentData, boolean hoveddokument, Forsendelse forsendelse, Runnable kvittering) {
         try {
             final Dokument dokument = lagDokument(journalpost, tittel, filnavn, mimeType, hoveddokument, forsendelse.getId());
             final Server server = startHttpServerForFileDownload(filnavn, mimeType, dokumentData, forsendelse.getId(), kvittering);
-            log.debug("Startet jetty for mottak av forsnedelse");
+            log.info("Startet jetty for mottak av forsendelse");
             final Dokument nyDokument = service.nyDokument(dokument, false, getArkivKontekst());
             server.join();
             return nyDokument;
-        }catch (Exception e){
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
@@ -86,22 +97,20 @@ public class Saksimporter {
         return server;
     }
 
-    private Journalpost opprettEphorteJournalpost(Journalpost generertJournalpost, SakArkivOppdateringPort service) {
+    private Journalpost opprettEphorteJournalpost(Journalpost generertJournalpost, SakArkivOppdateringPort service) throws ValidationException {
         Journalpost returnertJournalpost = null;
         try {
             returnertJournalpost = service.nyJournalpost(generertJournalpost, getArkivKontekst());
-        } catch (ValidationException e) {
-            e.printStackTrace();
         } catch (FinderException e) {
-            e.printStackTrace();
+            log.info("Oppretting av journalpost feilet", e);
         } catch (SystemException e) {
-            e.printStackTrace();
+            log.info("Oppretting av journalpost feilet", e);
         } catch (ImplementationException e) {
-            e.printStackTrace();
+            log.info("Oppretting av journalpost feilet", e);
         } catch (OperationalException e) {
-            e.printStackTrace();
+            log.info("Oppretting av journalpost feilet", e);
         } catch (ApplicationException e) {
-            e.printStackTrace();
+            log.info("Oppretting av journalpost feilet", e);
         }
         return returnertJournalpost;
     }
@@ -149,7 +158,7 @@ public class Saksimporter {
         final EnkelAdresse result = new EnkelAdresse();
         result.setAdresselinje1(avsender.getAdresselinje1());
         result.setAdresselinje2(avsender.getAdresselinje2());
-        if(avsender.getAdresselinje3() == null || "".equals(avsender.getAdresselinje3().trim())){
+        if (avsender.getAdresselinje3() == null || "".equals(avsender.getAdresselinje3().trim())) {
             result.setAdresselinje2(result.getAdresselinje2() + " " + avsender.getAdresselinje3());
         }
         result.setPostadresse(new PostadministrativeOmraader());
@@ -162,7 +171,7 @@ public class Saksimporter {
         final EnkelAdresse result = new EnkelAdresse();
         result.setAdresselinje1(mottaker.getAdresse1());
         result.setAdresselinje2(mottaker.getAdresse2());
-        if(mottaker.getAdresse3() == null || "".equals(mottaker.getAdresse3().trim())){
+        if (mottaker.getAdresse3() == null || "".equals(mottaker.getAdresse3().trim())) {
             result.setAdresselinje2(result.getAdresselinje2() + " " + mottaker.getAdresse3());
         }
         result.setPostadresse(new PostadministrativeOmraader());
@@ -186,7 +195,7 @@ public class Saksimporter {
         return mottakerKorrespondent;
     }
 
-    Dokument lagDokument(Journalpost returnertJournalpost, String tittel, String filnavn, String mimeType,boolean hoveddokument, String forsendelseId) throws IOException {
+    Dokument lagDokument(Journalpost returnertJournalpost, String tittel, String filnavn, String mimeType, boolean hoveddokument, String forsendelseId) throws IOException {
         final Dokument dokument = new Dokument();
         dokument.setTittel(tittel);
 
@@ -194,10 +203,10 @@ public class Saksimporter {
         filinnhold.setFilnavn(filnavn);
         filinnhold.setMimeType(mimeType);
         filinnhold.setUri("http://" + sakImportConfig.getSakImportHostname() + ":9977/forsendelse/" + forsendelseId);
-        filinnhold.setKvitteringUri("http://"+ sakImportConfig.getSakImportHostname() + ":9977/kvitter/" + forsendelseId);
+        filinnhold.setKvitteringUri("http://" + sakImportConfig.getSakImportHostname() + ":9977/kvitter/" + forsendelseId);
         dokument.setFil(filinnhold);
         final TilknyttetRegistreringSom value = new TilknyttetRegistreringSom();
-        if(hoveddokument)
+        if (hoveddokument)
             value.setKodeverdi("H");
         else
             value.setKodeverdi("V");
@@ -215,10 +224,14 @@ public class Saksimporter {
         return eksternNoekkel;
     }
 
-    Saksnummer lagSaksnummer() {
+    Saksnummer lagSaksnummer(int saksnr) {
         Saksnummer saksnummer = new Saksnummer();
         saksnummer.setSaksaar(new BigInteger(sakImportConfig.getDefaultSaksAar()));
-        saksnummer.setSakssekvensnummer(new BigInteger(sakImportConfig.getDefaultSaksnr()));
+        if (saksnr != 0) {
+            saksnummer.setSakssekvensnummer(BigInteger.valueOf(saksnr));
+        } else {
+            saksnummer.setSakssekvensnummer(new BigInteger(sakImportConfig.getDefaultSaksnr()));
+        }
         return saksnummer;
     }
 
@@ -238,7 +251,7 @@ public class Saksimporter {
 
         HTTPClientPolicy httpClientPolicy = new HTTPClientPolicy();
         httpClientPolicy.setConnectionTimeout(120000);
-        httpClientPolicy.setReceiveTimeout(10*60*1000);
+        httpClientPolicy.setReceiveTimeout(10 * 60 * 1000);
         conduit.setClient(httpClientPolicy);
 
 

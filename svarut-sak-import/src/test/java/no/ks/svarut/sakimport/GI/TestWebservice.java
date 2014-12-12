@@ -2,7 +2,10 @@ package no.ks.svarut.sakimport.GI;
 
 import no.geointegrasjon.rep.arkiv.dokument.xml_schema._2012_01.Dokument;
 import no.geointegrasjon.rep.arkiv.kjerne.xml_schema._2012_01.Journalpost;
+import no.geointegrasjon.rep.arkiv.oppdatering.xml_wsdl._2012_01_31.ValidationException;
 import no.ks.svarut.sakimport.*;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -10,9 +13,22 @@ import java.util.List;
 
 public class TestWebservice {
 
+    private FakeServicesJettyRunner fakeServicesJettyRunner;
 
-    @Ignore
+    @Before
+    public void setUp() throws Exception {
+        fakeServicesJettyRunner = new FakeServicesJettyRunner();
+        fakeServicesJettyRunner.start();
+        fakeServicesJettyRunner.waitTillRunning();
+    }
+
+    @After
+    public void tearDown() throws Exception {
+        fakeServicesJettyRunner.stop();
+    }
+
     @Test
+    @Ignore
     public void testOpprettSakMedForsendelse() throws Exception {
 
         Saksimporter importer = new Saksimporter(new SakImportConfig(lagArgs()));
@@ -47,8 +63,7 @@ public class TestWebservice {
     }
 
     @Test
-    @Ignore
-    public void testKanImportereForsendelse() {
+    public void testKanImportereForsendelse() throws ValidationException {
         String[] args = lagArgs();
         Forsendelsesnedlaster nedlaster = new Forsendelsesnedlaster(new SakImportConfig(args));
         List<Forsendelse> forsendelser = nedlaster.hentNyeForsendelser();
@@ -57,8 +72,26 @@ public class TestWebservice {
 
         for (Forsendelse forsendelse : forsendelser) {
             System.out.println(forsendelse.getId());
-            //saksimporter.importerJournalPost(forsendelse);
+            saksimporter.importerJournalPost(forsendelse);
         }
+    }
+
+    @Test
+    public void testFeilMetadataFraFakeserviceTilEPhorteTest() throws Exception {
+
+
+        String[] args = lagArgs();
+
+        Forsendelsesnedlaster nedlaster = new Forsendelsesnedlaster(new SakImportConfig(args));
+        List<Forsendelse> forsendelser = nedlaster.hentNyeForsendelser();
+
+        Saksimporter saksimporter = new Saksimporter(new SakImportConfig(args));
+
+        for (Forsendelse forsendelse : forsendelser) {
+            System.out.println(forsendelse.getId());
+            saksimporter.importerJournalPost(forsendelse);
+        }
+
     }
 
     private String[] lagArgs() {
@@ -66,8 +99,9 @@ public class TestWebservice {
         String passord = "EtGyldigPassord";
         String url = "http://localhost:8102/tjenester/svarut";
 
-        String sakurl = "https://localhost:8102/EphorteFakeService/service";
-        return new String[]{"-svarutbrukernavn", brukernavn, "-svarutpassord", passord, "-svaruturl", url, "-sakurl", sakurl, "-sakbrukernavn", "tull", "-sakpassord", "passord"};
+        String sakurl = "http://localhost:8102/EphorteFakeService/service";
+        return new String[]{"-svarutbrukernavn", brukernavn, "-svarutpassord", passord, "-svaruturl", url, "-sakurl",
+                sakurl, "-sakbrukernavn", "tull", "-sakpassord", "passord", "-saksnr", "211", "-saksaar", "2014"};
     }
 }
 

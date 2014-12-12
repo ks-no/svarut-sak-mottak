@@ -2,6 +2,7 @@ package no.ks.svarut.sakimport;
 
 import no.geointegrasjon.rep.arkiv.dokument.xml_schema._2012_01.Dokument;
 import no.geointegrasjon.rep.arkiv.kjerne.xml_schema._2012_01.Journalpost;
+import no.geointegrasjon.rep.arkiv.oppdatering.xml_wsdl._2012_01_31.ValidationException;
 import no.ks.svarut.sakimport.GI.DownloadHandler;
 import no.ks.svarut.sakimport.GI.SakImportConfig;
 import no.ks.svarut.sakimport.GI.Saksimporter;
@@ -58,6 +59,8 @@ public class GIImportManager {
                 log.info("Laget dokument {} for forsendelse {}", dokument.getDokumentnummer(), forsendelse.getId());
             }
             forsendelseslog.info("Importerte forsendelse med tittel {},id {}, saksnr: {} og journalpostnummer {}.", forsendelse.getTittel(), forsendelse.getId(), journalpost.getSaksnr(), journalpost.getJournalpostnummer());
+        } catch (ValidationException e) {
+            log.info("Forsendelse {} validerte ikke.", forsendelse.getId(), e);
         } catch (Exception e) {
             forsendelseslog.info("Import av forsendelse {} med tittel {} feilet.", forsendelse.getId(), forsendelse.getTittel());
             log.info("Forsendelse {} ble ikke lagret.", forsendelse.getId(), e);

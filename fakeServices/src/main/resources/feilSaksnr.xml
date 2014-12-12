@@ -1,0 +1,24 @@
+<s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/">
+    <s:Body>
+        <s:Fault>
+            <faultcode>s:System.Exception</faultcode>
+            <faultstring xml:lang="nb-NO">No case exists with the given journalpost.saksnr&#xD;
+                Parameter name: journalpost
+            </faultstring>
+            <detail>
+                <ValidationFault xmlns="http://rep.geointegrasjon.no/Felles/Teknisk/xml.schema/2012.01.31"
+                                 xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+                    <feilKode>GeoIntegration.Host.SakArkivOppdatering.NyJournalpost</feilKode>
+                    <feilBeskrivelse>No case exists with the given journalpost.saksnr&#xD;
+                        Parameter name: journalpost
+                    </feilBeskrivelse>
+                    <feilDetaljer>
+                        <liste>No case exists with the given journalpost.saksnr&#xD;
+                            Parameter name: journalpost
+                        </liste>
+                    </feilDetaljer>
+                </ValidationFault>
+            </detail>
+        </s:Fault>
+    </s:Body>
+</s:Envelope>
