@@ -94,7 +94,17 @@ public class SakImportConfig {
     }
 
     public CloseableHttpClient httpClientForSvarUt() {
-        return getDefaultHttpClient();
+        HttpClientBuilder clientBuilder = HttpClientBuilder.create();
+
+        AuthScope authScope = new AuthScope(this.host, this.port);
+        UsernamePasswordCredentials credentials = new UsernamePasswordCredentials(svarUtBrukernavn, svarUtPassord);
+
+        CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
+        credentialsProvider.setCredentials(authScope, credentials);
+
+        clientBuilder.setDefaultCredentialsProvider(credentialsProvider);
+
+        return settOppHttpKlient(clientBuilder);
     }
 
     private Properties getDefaultProperties(String propertiesFilsti) {
@@ -127,21 +137,6 @@ public class SakImportConfig {
         } catch (Exception e1) {
             log.info("Kunne ikke hente properties for " + propertiesFilsti, e1);
         }
-    }
-
-    private CloseableHttpClient getDefaultHttpClient() {
-        HttpClientBuilder clientBuilder = HttpClientBuilder.create();
-
-        AuthScope authScope = new AuthScope(this.host, this.port);
-        UsernamePasswordCredentials credentials = new UsernamePasswordCredentials(svarUtBrukernavn, svarUtPassord);
-
-        CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
-        credentialsProvider.setCredentials(authScope, credentials);
-
-        clientBuilder.setDefaultCredentialsProvider(credentialsProvider);
-
-        return settOppHttpKlient(clientBuilder);
-
     }
 
     public CloseableHttpClient settOppHttpKlient(HttpClientBuilder clientBuilder) {

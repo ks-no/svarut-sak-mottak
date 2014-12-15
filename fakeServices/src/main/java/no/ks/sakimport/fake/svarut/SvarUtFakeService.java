@@ -36,7 +36,7 @@ public class SvarUtFakeService extends HttpServlet {
         String password = authInfo.getPassword();
 
         if (!gyldigBruker.equals(username) || !gyldigPassord.equals(password)) {
-            response.setStatus(401);
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             return;
         }
 
@@ -44,7 +44,7 @@ public class SvarUtFakeService extends HttpServlet {
         if (request.getRequestURI().contains("hentNyeForsendelser")) {
             sendJsonPendingForsendelser(request, response);
         } else if (request.getRequestURI().contains("kvitterMottak")) {
-            response.setStatus(200);
+            response.setStatus(HttpServletResponse.SC_OK);
         } else {
             response.setHeader("Pragma", null); //IE klarer ikke  no-store header verdi
             response.setHeader("Cache-Control", null);//IE klarer ikke no-store header verdi
