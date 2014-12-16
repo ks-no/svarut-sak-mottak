@@ -14,6 +14,8 @@ import no.geointegrasjon.rep.felles.teknisk.xml_schema._2012_01.ArkivKontekst;
 import no.ks.svarut.sakimport.Avsender;
 import no.ks.svarut.sakimport.Forsendelse;
 import no.ks.svarut.sakimport.Mottaker;
+import no.ks.svarut.sakimport.NoarkMetadataForImport;
+import no.ks.svarut.sakimport.util.DateTimeUtil;
 import org.apache.cxf.endpoint.Client;
 import org.apache.cxf.frontend.ClientProxy;
 import org.apache.cxf.jaxws.JaxWsProxyFactoryBean;
@@ -60,11 +62,31 @@ public class Saksimporter {
         generertJournalpost.setReferanseEksternNoekkel(lagEksternNoekkel());
         generertJournalpost.setSaksnr(lagSaksnummer(forsendelse.getMetadataForImport().getSakssekvensnummer()));
 
+        NoarkMetadataForImport metadataForImport = forsendelse.getMetadataForImport();
+
+        fyllInnMetadata(generertJournalpost, metadataForImport);
         try {
             return opprettEphorteJournalpost(generertJournalpost, service);
         } catch (ValidationException e) {
             log.info("Klarte ikke å opprette journalpost med saksnr {}, prøver med default saksnummer {}", forsendelse.getMetadataForImport().getSakssekvensnummer(), sakImportConfig.getDefaultSaksnr());
             return opprettEphorteJournalPostMedDefaultSaksnr(generertJournalpost);
+        }
+    }
+
+    private void fyllInnMetadata(Journalpost generertJournalpost, NoarkMetadataForImport metadataForImport) {
+        if(metadataForImport == null) return;
+        if(metadataForImport.getDokumentetsDato() != null)
+            generertJournalpost.setDokumentetsDato(DateTimeUtil.toGregorianCalendar(metadataForImport.getDokumentetsDato()));
+
+        if(metadataForImport.getJournalposttype() != null && !"".equals(metadataForImport.getJournalposttype().trim())){
+            final Journalposttype value = new Journalposttype();
+            value.setKodeverdi(metadataForImport.getJournalposttype());
+            generertJournalpost.setJournalposttype(value);
+        }
+        if(metadataForImport.getJournalstatus() != null && !"".equals(metadataForImport.getJournalstatus().trim()) ){
+            final Journalstatus value = new Journalstatus();
+            value.setKodeverdi(metadataForImport.getJournalstatus());
+            generertJournalpost.setJournalstatus(value);
         }
     }
 

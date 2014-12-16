@@ -6,13 +6,13 @@ public class NoarkMetadataFraAvleverendeSakssystem {
 
     private int sakssekvensnummer;
     private int saksaar;
-    private int journalaar;
-    private int journalsekvensnummer;
-    private int journalpostnummer;
+    private int journalaar; //kun avsender
+    private int journalsekvensnummer; // kun avsender
+    private int journalpostnummer; // kun avsender
     private String journalposttype;
     private String journalstatus;
-    private DateTime journaldato;
-    private DateTime dokumentetsDato;
+    private DateTime journaldato; //kun avsender
+    private DateTime dokumentetsDato; //samme hos avsender og mottaker
     private String tittel;
 
     public NoarkMetadataFraAvleverendeSakssystem() {}
