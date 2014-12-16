@@ -58,12 +58,12 @@ public class Saksimporter {
         fyllInnKorrespondanseparter(forsendelse, generertJournalpost);
 
         generertJournalpost.setReferanseEksternNoekkel(lagEksternNoekkel());
-        generertJournalpost.setSaksnr(lagSaksnummer(forsendelse.getMetadataIMottakendeSystem().getSakssekvensnummer()));
+        generertJournalpost.setSaksnr(lagSaksnummer(forsendelse.getMetadataForImport().getSakssekvensnummer()));
 
         try {
             return opprettEphorteJournalpost(generertJournalpost, service);
         } catch (ValidationException e) {
-            log.info("Klarte ikke å opprette journalpost med saksnr {}, prøver med default saksnummer {}", forsendelse.getMetadataIMottakendeSystem().getSakssekvensnummer(), sakImportConfig.getDefaultSaksnr());
+            log.info("Klarte ikke å opprette journalpost med saksnr {}, prøver med default saksnummer {}", forsendelse.getMetadataForImport().getSakssekvensnummer(), sakImportConfig.getDefaultSaksnr());
             return opprettEphorteJournalPostMedDefaultSaksnr(generertJournalpost);
         }
     }

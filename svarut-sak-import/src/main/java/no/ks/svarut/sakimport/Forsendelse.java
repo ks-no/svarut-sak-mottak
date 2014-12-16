@@ -10,8 +10,8 @@ public class Forsendelse implements Comparable<Forsendelse> {
     private String id;
     private String tittel;
     private DateTime date;
-    private NoarkMetadata metadataFraAvleverendeSystem;
-    private NoarkMetadata metadataIMottakendeSystem;
+    private NoarkMetadataFraAvleverendeSakssystem metadataFraAvleverendeSystem;
+    private NoarkMetadataForImport metadataForImport;
     private String serverUrl;
     private String status;
     private String downloadUrl;
@@ -26,12 +26,12 @@ public class Forsendelse implements Comparable<Forsendelse> {
         this.id = id;
     }
 
-    public Forsendelse(String id, String tittel, DateTime dato, NoarkMetadata metadataFraAvleverendeSystem, NoarkMetadata metadataIMottakendeSystem, String serverUrl, String statusText, String downloadUrl) {
+    public Forsendelse(String id, String tittel, DateTime dato, NoarkMetadataFraAvleverendeSakssystem metadataFraAvleverendeSystem, NoarkMetadataForImport metadataForImport, String serverUrl, String statusText, String downloadUrl) {
         this.id = id;
         this.tittel = tittel;
         this.date = dato;
         this.metadataFraAvleverendeSystem = metadataFraAvleverendeSystem;
-        this.metadataIMottakendeSystem = metadataIMottakendeSystem;
+        this.metadataForImport = metadataForImport;
         this.serverUrl = serverUrl;
         this.status = statusText;
         this.downloadUrl = downloadUrl;
@@ -75,20 +75,20 @@ public class Forsendelse implements Comparable<Forsendelse> {
         return downloadUrl;
     }
 
-    public NoarkMetadata getMetadataFraAvleverendeSystem() {
+    public NoarkMetadataFraAvleverendeSakssystem getMetadataFraAvleverendeSystem() {
         return metadataFraAvleverendeSystem;
     }
 
-    public void setMetadataFraAvleverendeSystem(NoarkMetadata metadataFraAvleverendeSystem) {
+    public void setMetadataFraAvleverendeSystem(NoarkMetadataFraAvleverendeSakssystem metadataFraAvleverendeSystem) {
         this.metadataFraAvleverendeSystem = metadataFraAvleverendeSystem;
     }
 
-    public NoarkMetadata getMetadataIMottakendeSystem() {
-        return metadataIMottakendeSystem;
+    public NoarkMetadataForImport getMetadataForImport() {
+        return metadataForImport;
     }
 
-    public void setMetadataIMottakendeSystem(NoarkMetadata metadataIMottakendeSystem) {
-        this.metadataIMottakendeSystem = metadataIMottakendeSystem;
+    public void setMetadataForImport(NoarkMetadataForImport metadataForImport) {
+        this.metadataForImport = metadataForImport;
     }
 
     public Avsender getAvsender() {

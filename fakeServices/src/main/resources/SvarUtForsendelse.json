@@ -17,9 +17,9 @@
       "navn": "Orgnavn",
       "land": "Norge"
     },
-    "id": "7ad6d686-033b-48c2-8b6b-c97a8a86145f",
+    "id": "d1c6d795-f1a0-4a36-bce1-a4d9f26696db",
     "tittel": "tittel",
-    "date": 1416908007950,
+    "date": 1418730906808,
     "metadataFraAvleverendeSystem": {
       "sakssekvensnummer": 0,
       "saksaar": 0,
@@ -32,20 +32,22 @@
       "dokumentetsDato": null,
       "tittel": null
     },
-    "metadataIMottakendeSystem": {
+    "metadataForImport": {
       "sakssekvensnummer": 0,
       "saksaar": 0,
-      "journalaar": 0,
-      "journalsekvensnummer": 0,
-      "journalpostnummer": 0,
       "journalposttype": null,
       "journalstatus": null,
-      "journaldato": null,
       "dokumentetsDato": null,
       "tittel": null
     },
     "status": "Akseptert",
-    "downloadUrl": "http://localhost:8102/tjenester/svarinn/forsendelse/7ad6d686-033b-48c2-8b6b-c97a8a86145f"
+    "filmetadata": [
+      {
+        "filnavn": "dokument-d1c6d795.pdf",
+        "mimetype": "application/pdf"
+      }
+    ],
+    "downloadUrl": "https://utvikling.svarut.ks.no/tjenester/svarinn/forsendelse/d1c6d795-f1a0-4a36-bce1-a4d9f26696db"
   },
   {
     "avsender": {
@@ -80,15 +82,11 @@
       "dokumentetsDato": null,
       "tittel": null
     },
-    "metadataIMottakendeSystem": {
+    "metadataForImport": {
       "sakssekvensnummer": 0,
       "saksaar": 0,
-      "journalaar": 0,
-      "journalsekvensnummer": 0,
-      "journalpostnummer": 0,
       "journalposttype": null,
       "journalstatus": null,
-      "journaldato": null,
       "dokumentetsDato": null,
       "tittel": null
     },
@@ -142,15 +140,11 @@
       "dokumentetsDato": null,
       "tittel": null
     },
-    "metadataIMottakendeSystem": {
+    "metadataForImport": {
       "sakssekvensnummer": -1,
       "saksaar": 0,
-      "journalaar": 0,
-      "journalsekvensnummer": 0,
-      "journalpostnummer": 0,
       "journalposttype": null,
       "journalstatus": null,
-      "journaldato": null,
       "dokumentetsDato": null,
       "tittel": null
     },
