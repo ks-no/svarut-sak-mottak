@@ -3,12 +3,12 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
-		<groupId>no.ks.svarut-sakimport</groupId>
-		<artifactId>svarut-sakimport</artifactId>
+		<groupId>no.ks.svarut-sak-mottak</groupId>
+		<artifactId>svarut-sak-mottak</artifactId>
 		<version>1.0.0-SNAPSHOT</version>
 	</parent>
 
-	<groupId>no.ks.svarut-sakimport</groupId>
+	<groupId>no.ks.svarut-sak-mottak</groupId>
 	<artifactId>svarut-sak-import</artifactId>
 	<version>1.0.0-SNAPSHOT</version>
 	<packaging>jar</packaging>

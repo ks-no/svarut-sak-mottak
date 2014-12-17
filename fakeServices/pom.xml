@@ -1,14 +1,14 @@
 <?xml version="1.0"?>
 <project>
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>no.ks.svarut-sakimport</groupId>
+	<groupId>no.ks.svarut-sak-mottak</groupId>
 	<artifactId>fakeService</artifactId>
 	<packaging>war</packaging>
 	<name>ILS - ${project.artifactId}</name>
 	<description>Fakes for integrasjonstester</description>
 	<parent>
-		<groupId>no.ks.svarut-sakimport</groupId>
-		<artifactId>svarut-sakimport</artifactId>
+		<groupId>no.ks.svarut-sak-mottak</groupId>
+		<artifactId>svarut-sak-mottak</artifactId>
 		<version>1.0.0-SNAPSHOT</version>
 	</parent>
 	<build>
