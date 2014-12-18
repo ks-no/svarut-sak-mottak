@@ -15,7 +15,8 @@
       "postnr": "5258",
       "poststed": "Blomsterdalen",
       "navn": "Orgnavn",
-      "land": "Norge"
+      "land": "Norge",
+      "orgnr": "999888777"
     },
     "id": "d1c6d795-f1a0-4a36-bce1-a4d9f26696db",
     "tittel": "tittel",
@@ -65,7 +66,8 @@
       "postnr": "5258",
       "poststed": "Blomsterdalen",
       "navn": "Orgnavn",
-      "land": "Norge"
+      "land": "Norge",
+      "orgnr": null
     },
     "id": "43ee26b7-838b-4f99-b81c-d21551b621d8",
     "tittel": "tittel",
