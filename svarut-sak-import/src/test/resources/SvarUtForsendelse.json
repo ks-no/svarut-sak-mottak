@@ -48,7 +48,7 @@
         "mimetype": "application/pdf"
       }
     ],
-    "downloadUrl": "https://utvikling.svarut.ks.no/tjenester/svarinn/forsendelse/d1c6d795-f1a0-4a36-bce1-a4d9f26696db"
+    "downloadUrl": "http://localhost:8102/tjenester/svarinn/forsendelse/d1c6d795-f1a0-4a36-bce1-a4d9f26696db"
   },
   {
     "avsender": {
