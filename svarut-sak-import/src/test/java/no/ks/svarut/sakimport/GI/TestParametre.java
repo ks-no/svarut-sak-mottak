@@ -68,6 +68,8 @@ public class TestParametre {
         String url = "http://localhost:8102/tjenester/svarut";
         String sakurl = "http://localhost:8102/EphorteFakeService/service";
 
-        return new String[]{"-svarutbrukernavn", brukernavn, "-svarutpassord", passord, "-svaruturl", url, "-sakurl", sakurl, "-sakbrukernavn", "tull", "-sakpassord", "passord", "-hostname", "localhost", "-saksaar", "2014", "-saksnr", "211"};
+        return new String[]{"-svarutbrukernavn", brukernavn, "-svarutpassord", passord, "-svaruturl", url, "-sakurl", sakurl,
+                "-sakbrukernavn", "tull", "-sakpassord", "passord", "-hostname", "localhost", "-saksaar", "2014",
+                "-saksnr", "211", "-privatekeyfil", "sp-key.pem"};
     }
 }

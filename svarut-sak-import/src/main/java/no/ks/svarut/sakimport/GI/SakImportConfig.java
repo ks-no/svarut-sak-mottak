@@ -52,6 +52,7 @@ public class SakImportConfig {
     private SSLContext sslContext;
     private String svarUtBrukernavn;
     private String svarUtPassord;
+    private String privateKeyFil;
 
     public SakImportConfig(String... args) {
         SvarUtCommandLineParser parser = new SvarUtCommandLineParser(args);
@@ -70,6 +71,7 @@ public class SakImportConfig {
         sakImportHostname = hentConfig(properties, cmdLine, KommandoParametre.SAK_IMPORT_HOSTNAME);
         sakDefaultSaksAar = hentConfig(properties, cmdLine, KommandoParametre.SAK_DEFAULT_SAKSAAR);
         sakDefaultSaksnr = hentConfig(properties, cmdLine, KommandoParametre.SAK_DEFAULT_SAKSNR);
+        privateKeyFil = hentConfig(properties, cmdLine, KommandoParametre.PRIVATE_KEY_FIL);
     }
 
     private String settPropertiesFilsti(CommandLine cmdLine) {
@@ -232,6 +234,10 @@ public class SakImportConfig {
 
     public String getDefaultSaksnr() {
         return sakDefaultSaksnr;
+    }
+
+    public String getPrivateKeyFil() {
+        return privateKeyFil;
     }
 
     public boolean harTilstrekkeligeParametre(CommandLine commandLine, Properties properties) {

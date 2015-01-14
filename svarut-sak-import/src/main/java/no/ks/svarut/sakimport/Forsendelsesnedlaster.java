@@ -109,13 +109,13 @@ public class Forsendelsesnedlaster {
                     filename = element.getParameterByName("filename").getValue();
                 }
             }
-            return new Fil(response.getEntity(), contentType, filename);
+            return new Fil(response.getEntity(), contentType, filename, config);
         } catch (IOException e) {
             throw new RuntimeException("Prøvde uten hell å laste ned " + forsendelse.getDownloadUrl(), e);
         }
-
-
     }
+
+
 
     public void kvitterForsendelse(Forsendelse forsendelse) {
         final HttpPost httpPost = new HttpPost(config.getSvarUtHost() + urlStiKvitterMottak + forsendelse.getId());

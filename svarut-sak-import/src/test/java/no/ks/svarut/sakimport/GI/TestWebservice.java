@@ -4,12 +4,16 @@ import no.geointegrasjon.rep.arkiv.dokument.xml_schema._2012_01.Dokument;
 import no.geointegrasjon.rep.arkiv.kjerne.xml_schema._2012_01.Journalpost;
 import no.geointegrasjon.rep.arkiv.oppdatering.xml_wsdl._2012_01_31.ValidationException;
 import no.ks.svarut.sakimport.*;
+import org.apache.commons.io.IOUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import java.io.*;
 import java.util.List;
+
+import static org.junit.Assert.assertEquals;
 
 public class TestWebservice {
 
@@ -51,7 +55,6 @@ public class TestWebservice {
         forsendelse.getMottaker().setNavn("Mottakernavn");
         final Journalpost journalpost = importer.importerJournalPost(forsendelse);
 
-
         final Dokument dokument1 = importer.importerDokument(journalpost, "test.pdf", "test.pdf", "application/pdf", FileLoadUtil.loadPdfFromClasspath("ouput240.pdf").getInputStream(), true, forsendelse, null);
 
     }
@@ -77,9 +80,25 @@ public class TestWebservice {
     }
 
     @Test
+    @Ignore
+    public void testKanDekryptereNedlastetFil() throws Exception {
+        String[] args = lagArgs();
+
+        byte[] origPDF = IOUtils.toByteArray(FileLoadUtil.getInputStreamForFileFromClasspath("small.pdf"));
+
+        Forsendelsesnedlaster nedlaster = new Forsendelsesnedlaster(new SakImportConfig(args));
+        List<Forsendelse> forsendelser = nedlaster.hentNyeForsendelser();
+        Forsendelse forsendelse = forsendelser.get(0);
+        System.out.println(forsendelse.getId());
+        Fil fil = nedlaster.hentForsendelseFil(forsendelse);
+        final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        IOUtils.copy(fil.getData(), outputStream);
+        final byte[] dekrypterteData = outputStream.toByteArray();
+        assertEquals(origPDF.length, dekrypterteData.length);
+    }
+
+    @Test
     public void testFeilMetadataFraFakeserviceTilEPhorteTest() throws Exception {
-
-
         String[] args = lagArgs();
 
         Forsendelsesnedlaster nedlaster = new Forsendelsesnedlaster(new SakImportConfig(args));
@@ -101,7 +120,8 @@ public class TestWebservice {
 
         String sakurl = "http://localhost:8102/EphorteFakeService/service";
         return new String[]{"-svarutbrukernavn", brukernavn, "-svarutpassord", passord, "-svaruturl", url, "-sakurl",
-                sakurl, "-sakbrukernavn", "tull", "-sakpassord", "passord", "-saksnr", "211", "-saksaar", "2014"};
+                sakurl, "-sakbrukernavn", "tull", "-sakpassord", "passord", "-saksnr", "211", "-saksaar", "2014",
+                "-privatekeyfil", "sp-key.pem"};
     }
 }
 

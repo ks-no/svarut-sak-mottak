@@ -1,5 +1,7 @@
 package no.ks.svarut.sakimport;
 
+import no.ks.svarut.sakimport.GI.SakImportConfig;
+import no.ks.svarut.sakimport.kryptering.Kryptering;
 import org.apache.http.HttpEntity;
 
 import java.io.IOException;
@@ -10,12 +12,15 @@ public class Fil implements AutoCloseable{
     private final String filename;
     private final InputStream inputStream;
     private HttpEntity entity;
+    Kryptering kryptering;
 
-    public Fil(HttpEntity entity, String mimetype, String filename) throws IOException {
+
+    public Fil(HttpEntity entity, String mimetype, String filename, SakImportConfig config) throws IOException {
         this.entity = entity;
         this.inputStream = entity.getContent();
         this.mimetype = mimetype;
         this.filename = filename;
+        this.kryptering = new Kryptering(config);
     }
 
     public Fil(InputStream zis, String mimetype, String filename) {
@@ -25,7 +30,7 @@ public class Fil implements AutoCloseable{
     }
 
     public InputStream getData() throws IOException {
-        return inputStream;
+        return kryptering.dekrypterForSvarUt(inputStream);
     }
 
     public String getMimetype() {

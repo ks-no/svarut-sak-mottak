@@ -128,6 +128,10 @@ public class SvarUtCommandLineParser {
                 .hasArg()
                 .withDescription("Angir filsti og filnavn til konfigurasjonsfilen")
                 .create(KommandoParametre.PROPERTIES_FILSTI.getValue()));
+        options.add(OptionBuilder.withArgName(KommandoParametre.PRIVATE_KEY_FIL.getValue())
+        .hasArg()
+        .withDescription("Sti til privat nøkkel for dekryptering av forsendelsefiler. Offentlig nøkkel som tilhører må være lagt inn i SvarUt.")
+        .create(KommandoParametre.PRIVATE_KEY_FIL.getValue()));
         return options;
     }
 }
