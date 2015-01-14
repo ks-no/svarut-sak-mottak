@@ -15,8 +15,8 @@ public class FakeServicesJettyRunner {
 
         String dir;
 
-        if (new File("fakeServices/src/main/webapp").exists()) dir = "fakeServices/src/main/webapp";
-        else dir = "../fakeServices/src/main/webapp";
+        if (new File("svarut-sak-import/src/test/webapp").exists()) dir = "svarut-sak-import/src/test/webapp";
+        else dir = "src/test/webapp";
 
         WebAppContext context = new WebAppContext(dir, "/");
         context.setClassLoader(Thread.currentThread().getContextClassLoader());
