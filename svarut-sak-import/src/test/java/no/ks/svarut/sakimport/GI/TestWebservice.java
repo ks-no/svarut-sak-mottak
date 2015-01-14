@@ -91,9 +91,26 @@ public class TestWebservice {
         System.out.println(forsendelse.getId());
         Fil fil = nedlaster.hentForsendelseFil(forsendelse);
         final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        IOUtils.copy(fil.getData(), outputStream);
+        IOUtils.copy(fil.getKryptertData(), outputStream);
         final byte[] dekrypterteData = outputStream.toByteArray();
         assertEquals(origPDF.length, dekrypterteData.length);
+    }
+
+    @Test
+    public void testKanDekryptereZipfil() throws Exception {
+        String[] args = lagArgs();
+
+        byte[] origZip = IOUtils.toByteArray(FileLoadUtil.getInputStreamForFileFromClasspath("dokumenter.zip"));
+
+        Forsendelsesnedlaster nedlaster = new Forsendelsesnedlaster(new SakImportConfig(args));
+        List<Forsendelse> forsendelser = nedlaster.hentNyeForsendelser();
+        Forsendelse forsendelse = forsendelser.get(1);
+        System.out.println(forsendelse.getId());
+        Fil fil = nedlaster.hentForsendelseFil(forsendelse);
+        final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        IOUtils.copy(fil.getKryptertData(), outputStream);
+        final byte[] dekrypterteData = outputStream.toByteArray();
+        assertEquals(origZip.length, dekrypterteData.length);
     }
 
     @Test

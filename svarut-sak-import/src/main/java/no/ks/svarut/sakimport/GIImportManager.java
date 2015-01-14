@@ -55,7 +55,7 @@ public class GIImportManager {
                 lagDokumentFraZipfil(importer, forsendelse, fil, journalpost);
                 nedlaster.kvitterForsendelse(forsendelse);
             } else {
-                final Dokument dokument = importer.importerDokument(journalpost, forsendelse.getTittel(), fil.getFilename(), fil.getMimetype(), fil.getData(), true, forsendelse, () -> nedlaster.kvitterForsendelse(forsendelse));
+                final Dokument dokument = importer.importerDokument(journalpost, forsendelse.getTittel(), fil.getFilename(), fil.getMimetype(), fil.getKryptertData(), true, forsendelse, () -> nedlaster.kvitterForsendelse(forsendelse));
                 log.info("Laget dokument {} for forsendelse {}", dokument.getDokumentnummer(), forsendelse.getId());
             }
             forsendelseslog.info("Importerte forsendelse med tittel {},id {}, saksnr: {} og journalpostnummer {}.", forsendelse.getTittel(), forsendelse.getId(), journalpost.getSaksnr(), journalpost.getJournalpostnummer());
@@ -68,7 +68,7 @@ public class GIImportManager {
     }
 
     private void lagDokumentFraZipfil(Saksimporter importer, Forsendelse forsendelse, Fil fil, Journalpost journalpost) throws IOException {
-        try (final ZipInputStream zis = new ZipInputStream(fil.getData())) {
+        try (final ZipInputStream zis = new ZipInputStream(fil.getKryptertData())) {
             ZipEntry entry;
             boolean first = true;
             while ((entry = zis.getNextEntry()) != null) {

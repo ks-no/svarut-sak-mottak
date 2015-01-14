@@ -43,8 +43,12 @@ public class Fil implements AutoCloseable{
         this.filename = filename;
     }
 
-    public InputStream getData() throws IOException {
+    public InputStream getKryptertData() throws IOException {
         return new ByteArrayInputStream(kryptering.dekrypterForSvarUt(this.content));
+    }
+
+    public InputStream getData() throws IOException {
+        return new ByteArrayInputStream(this.content);
     }
 
     public String getMimetype() {
