@@ -52,12 +52,12 @@ public class SvarUtFakeService extends HttpServlet {
                 response.setContentType("application/zip");
                 response.setHeader("Content-Disposition", "attachment; filename=\"dokumenter.zip\"");
 
-                IOUtils.copy(Thread.currentThread().getContextClassLoader().getResourceAsStream("dokumenter.zip"), response.getOutputStream());
+                IOUtils.copy(Thread.currentThread().getContextClassLoader().getResourceAsStream("dokumenter.crypt"), response.getOutputStream());
             } else {
                 response.setContentType("application/pdf");
-                response.setHeader("Content-Disposition", "attachment; filename=\"test.pdf\"");
+                response.setHeader("Content-Disposition", "attachment; filename=\"small.pdf\"");
 
-                IOUtils.copy(Thread.currentThread().getContextClassLoader().getResourceAsStream("test.pdf"), response.getOutputStream());
+                IOUtils.copy(Thread.currentThread().getContextClassLoader().getResourceAsStream("small.crypt"), response.getOutputStream());
             }
         }
     }

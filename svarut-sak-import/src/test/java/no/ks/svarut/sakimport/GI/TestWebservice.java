@@ -80,7 +80,6 @@ public class TestWebservice {
     }
 
     @Test
-    @Ignore
     public void testKanDekryptereNedlastetFil() throws Exception {
         String[] args = lagArgs();
 

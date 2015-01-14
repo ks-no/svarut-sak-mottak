@@ -8,14 +8,17 @@ import org.bouncycastle.asn1.pkcs.PKCSObjectIdentifiers;
 import org.bouncycastle.asn1.pkcs.RSAESOAEPparams;
 import org.bouncycastle.asn1.x509.AlgorithmIdentifier;
 import org.bouncycastle.cms.*;
+import org.bouncycastle.cms.jcajce.JceCMSContentEncryptorBuilder;
 import org.bouncycastle.cms.jcajce.JceKeyTransEnvelopedRecipient;
+import org.bouncycastle.cms.jcajce.JceKeyTransRecipientInfoGenerator;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
+import org.bouncycastle.operator.OutputEncryptor;
 
-import java.io.BufferedInputStream;
 import java.io.InputStream;
 import java.security.PrivateKey;
 import java.security.Provider;
 import java.security.Security;
+import java.security.cert.X509Certificate;
 
 public class CMSDataKryptering {
 
@@ -38,7 +41,6 @@ public class CMSDataKryptering {
 
     public byte[] dekrypterData(byte[] data, PrivateKey key, Provider p) {
 
-        byte[] cleardata = null;
         try {
             // Initialise parser
             CMSEnvelopedDataParser envDataParser = new CMSEnvelopedDataParser(data);
@@ -72,10 +74,24 @@ public class CMSDataKryptering {
         }
     }
 
+    public byte[] krypterData(byte[] bytes, X509Certificate sertifikat) {
+        try {
+            JceKeyTransRecipientInfoGenerator e = (new JceKeyTransRecipientInfoGenerator(sertifikat, this.keyEncryptionScheme)).setProvider("BC");
+            CMSEnvelopedDataGenerator envelopedDataGenerator = new CMSEnvelopedDataGenerator();
+            envelopedDataGenerator.addRecipientInfoGenerator(e);
+            OutputEncryptor contentEncryptor = (new JceCMSContentEncryptorBuilder(this.cmsEncryptionAlgorithm)).build();
+
+            CMSEnvelopedData cmsData = envelopedDataGenerator.generate(new CMSProcessableByteArray(bytes), contentEncryptor);
+            return cmsData.getEncoded();
+        } catch (Exception e) {
+            throw new RuntimeException("Kunne ikke kryptere", e);
+        }
+    }
+
     public InputStream dekrypterData(InputStream encryptedStream, PrivateKey key, Provider p) {
         try {
             // Initialise parser
-            CMSEnvelopedDataParser envDataParser = new CMSEnvelopedDataParser(new BufferedInputStream(encryptedStream, 4096));
+            CMSEnvelopedDataParser envDataParser = new CMSEnvelopedDataParser(encryptedStream);
             RecipientInformationStore recipients = envDataParser.getRecipientInfos();
 
             RecipientInformation recipient = (RecipientInformation) recipients.getRecipients().iterator().next();
