@@ -1,0 +1,60 @@
+[
+  {
+    "avsender": {
+      "adresselinje1": "Første adresselinje",
+      "adresselinje2": "Andre adresselinje",
+      "adresselinje3": "Tredje adresselinje",
+      "navn": "Tester testmann",
+      "poststed": "Teststad",
+      "postnr": "3333"
+    },
+    "mottaker": {
+      "adresse1": "adresse 1",
+      "adresse2": "adr 2",
+      "adresse3": null,
+      "postnr": "5258",
+      "poststed": "Blomsterdalen",
+      "navn": "Orgnavn",
+      "land": "Norge"
+    },
+    "id": "dbe2537b-79aa-4983-8d62-27db5acdb1c3",
+    "tittel": "tittelMetadataFeiler",
+    "date": 1416908007950,
+    "metadataFraAvleverendeSystem": {
+      "sakssekvensnummer": 0,
+      "saksaar": 0,
+      "journalaar": 0,
+      "journalsekvensnummer": 0,
+      "journalpostnummer": 0,
+      "journalposttype": null,
+      "journalstatus": null,
+      "journaldato": null,
+      "dokumentetsDato": null,
+      "tittel": null
+    },
+    "metadataForImport": {
+      "sakssekvensnummer": -1,
+      "saksaar": 0,
+      "journalposttype": null,
+      "journalstatus": null,
+      "dokumentetsDato": null,
+      "tittel": null
+    },
+    "filmetadata": [
+      {
+        "filnavn": "small.pdf",
+        "mimetype": "application/pdf"
+      },
+      {
+        "filnavn": "text.txt",
+        "mimetype": "text/plain"
+      },
+      {
+        "filnavn": "text2.txt",
+        "mimetype": "text/plain"
+      }
+    ],
+    "status": "Akseptert",
+    "downloadUrl": "http://localhost:8102/tjenester/svarinn/forsendelse/dbe2537b-79aa-4983-8d62-27db5acdb1c3"
+  }
+]
