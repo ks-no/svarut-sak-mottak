@@ -39,5 +39,5 @@ projectversion=$(git describe --abbrev=0)
 revision=$(git describe --long | sed "s/.*-\(.*\)-.*/\1/")
 mkdir -p target
 
-scp svarut-sak-import/target/svarut-sak-import-dist.zip ${targethost}:/nfs/svarut-sak-import/releases/svarut-sak-import-${projectversion}.zip
-ssh ${targethost} "(cd /nfs/svarut-sak-import/releases && sudo ln -sf svarut-sak-import-${projectversion}.zip svarut-sak-import-latest.zip)"
+scp svarut-sak-import/target/svarut-sak-import-dist.zip ${targethost}:/nfs/svarut-external-modules/releases/svarut-sak-import-${projectversion}.zip
+ssh ${targethost} "(cd /nfs/svarut-external-modules/releases && sudo ln -sf svarut-sak-import-${projectversion}.zip svarut-sak-import-latest.zip)"
