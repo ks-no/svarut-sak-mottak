@@ -48,6 +48,8 @@
         "mimetype": "application/pdf"
       }
     ],
+    "kryptert": false,
+    "krevNiva4Innlogging": false,
     "downloadUrl": "http://localhost:8102/tjenester/svarinn/forsendelse/d1c6d795-f1a0-4a36-bce1-a4d9f26696db"
   },
   {
@@ -106,6 +108,8 @@
         "mimetype": "text/plain"
       }
     ],
+    "kryptert": false,
+    "krevNiva4Innlogging": false,
     "status": "Akseptert",
     "downloadUrl": "http://localhost:8102/tjenester/svarinn/forsendelse/43ee26b7-838b-4f99-b81c-d21551b621d8"
   },
@@ -164,6 +168,8 @@
         "mimetype": "text/plain"
       }
     ],
+    "kryptert": false,
+    "krevNiva4Innlogging": false,
     "status": "Akseptert",
     "downloadUrl": "http://localhost:8102/tjenester/svarinn/forsendelse/dbe2537b-79aa-4983-8d62-27db5acdb1c3"
   }
