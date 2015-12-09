@@ -1,20 +1,16 @@
 package no.ks.svarut.sakimport.GI;
 
+import com.google.gson.Gson;
 import no.geointegrasjon.rep.arkiv.dokument.xml_schema._2012_01.Dokument;
 import no.geointegrasjon.rep.arkiv.dokument.xml_schema._2012_01.Filreferanse;
 import no.geointegrasjon.rep.arkiv.dokument.xml_schema._2012_01.TilknyttetRegistreringSom;
 import no.geointegrasjon.rep.arkiv.felles.xml_schema._2012_01.Saksnummer;
 import no.geointegrasjon.rep.arkiv.kjerne.xml_schema._2012_01.*;
 import no.geointegrasjon.rep.arkiv.oppdatering.xml_wsdl._2012_01_31.*;
-import no.geointegrasjon.rep.felles.adresse.xml_schema._2012_01.EnkelAdresse;
-import no.geointegrasjon.rep.felles.adresse.xml_schema._2012_01.EnkelAdresseListe;
-import no.geointegrasjon.rep.felles.adresse.xml_schema._2012_01.PostadministrativeOmraader;
+import no.geointegrasjon.rep.felles.adresse.xml_schema._2012_01.*;
 import no.geointegrasjon.rep.felles.kontakt.xml_schema._2012_01.Kontakt;
 import no.geointegrasjon.rep.felles.teknisk.xml_schema._2012_01.ArkivKontekst;
-import no.ks.svarut.sakimport.Avsender;
-import no.ks.svarut.sakimport.Forsendelse;
-import no.ks.svarut.sakimport.Mottaker;
-import no.ks.svarut.sakimport.NoarkMetadataForImport;
+import no.ks.svarut.sakimport.*;
 import no.ks.svarut.sakimport.util.DateTimeUtil;
 import org.apache.cxf.endpoint.Client;
 import org.apache.cxf.frontend.ClientProxy;
@@ -138,7 +134,7 @@ public class Saksimporter {
     }
 
     private void fyllInnKorrespondanseparter(Forsendelse forsendelse, Journalpost generertJournalpost) {
-        Korrespondansepart avsender = lagAvsender(forsendelse.getAvsender());
+        Korrespondansepart avsender = lagAvsender(forsendelse.getAvsender(), forsendelse.getSvarSendesTil(), forsendelse.getMetadataFraAvleverendeSystem());
         Korrespondansepart mottaker = lagMottaker(forsendelse.getMottaker());
 
         KorrespondansepartListe korrespondansepartListe = new KorrespondansepartListe();
@@ -160,12 +156,13 @@ public class Saksimporter {
     }
 
 
-    Korrespondansepart lagAvsender(Avsender avsender) {
+    Korrespondansepart lagAvsender(Avsender avsender, Mottaker svarSendesTil, NoarkMetadataFraAvleverendeSakssystem noarkMetadataFraAvleverendeSystem) {
         Korrespondansepart avsenderKorrespondent = new Korrespondansepart();
 
         final Korrespondanseparttype korrespondanseparttype = new Korrespondanseparttype();
         korrespondanseparttype.setKodeverdi("Avsender");
         avsenderKorrespondent.setKorrespondanseparttype(korrespondanseparttype);
+        avsenderKorrespondent.setDeresReferanse(lagDeresReferanse(svarSendesTil, noarkMetadataFraAvleverendeSystem));
         //avsenderKorrespondent.setKortnavn("Bergen kommune");
         final Kontakt kontakt = new Kontakt();
         kontakt.setNavn(avsender.getNavn());
@@ -174,6 +171,11 @@ public class Saksimporter {
         kontakt.setAdresser(enkelAdresseListe);
         avsenderKorrespondent.setKontakt(kontakt);
         return avsenderKorrespondent;
+    }
+
+    private String lagDeresReferanse(Mottaker svarSendesTil, NoarkMetadataFraAvleverendeSakssystem noarkMetadataFraAvleverendeSystem) {
+        final DeresReferanse deresReferanse = new DeresReferanse(svarSendesTil, noarkMetadataFraAvleverendeSystem);
+        return new Gson().toJson(deresReferanse);
     }
 
     private EnkelAdresse lagEnkelAdresse(Avsender avsender) {

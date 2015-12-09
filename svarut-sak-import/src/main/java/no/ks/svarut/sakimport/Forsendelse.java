@@ -18,7 +18,7 @@ public class Forsendelse implements Comparable<Forsendelse> {
     private Avsender avsender;
     private Mottaker mottaker;
     private List<FilMetadata> filmetadata;
-
+    private Mottaker svarSendesTil;
     public Forsendelse() {
     }
 
@@ -113,6 +113,14 @@ public class Forsendelse implements Comparable<Forsendelse> {
 
     public void setFilmetadata(List<FilMetadata> filmetadata) {
         this.filmetadata = filmetadata;
+    }
+
+    public Mottaker getSvarSendesTil() {
+        return svarSendesTil;
+    }
+
+    public void setSvarSendesTil(Mottaker svarSendesTil) {
+        this.svarSendesTil = svarSendesTil;
     }
 
     @Override

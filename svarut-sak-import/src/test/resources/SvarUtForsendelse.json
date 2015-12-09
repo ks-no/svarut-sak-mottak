@@ -18,6 +18,17 @@
       "land": "Norge",
       "orgnr": "999888777"
     },
+    "svarSendesTil": {
+      "adresse1": "Adresse 1",
+      "adresse2":null,
+      "adresse3": null,
+      "postnr": "0023",
+      "poststed": "Oslo",
+      "navn": "Kjell T Ring Invest",
+      "land":null,
+      "orgnr": "999888777",
+      "fnr": null
+    },
     "id": "d1c6d795-f1a0-4a36-bce1-a4d9f26696db",
     "tittel": "tittel",
     "date": 1418730906808,

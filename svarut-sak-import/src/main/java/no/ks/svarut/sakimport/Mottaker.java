@@ -8,6 +8,8 @@ public class Mottaker {
     private String poststed;
     private String navn;
     private String land;
+    private String orgnr;
+    private String fnr;
 
     public Mottaker() {
     }
@@ -68,6 +70,22 @@ public class Mottaker {
         return land;
     }
 
+    public String getOrgnr() {
+        return orgnr;
+    }
+
+    public void setOrgnr(String orgnr) {
+        this.orgnr = orgnr;
+    }
+
+    public String getFnr() {
+        return fnr;
+    }
+
+    public void setFnr(String fnr) {
+        this.fnr = fnr;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -78,12 +96,13 @@ public class Mottaker {
         if (adresse1 != null ? !adresse1.equals(mottaker.adresse1) : mottaker.adresse1 != null) return false;
         if (adresse2 != null ? !adresse2.equals(mottaker.adresse2) : mottaker.adresse2 != null) return false;
         if (adresse3 != null ? !adresse3.equals(mottaker.adresse3) : mottaker.adresse3 != null) return false;
-        if (land != null ? !land.equals(mottaker.land) : mottaker.land != null) return false;
-        if (navn != null ? !navn.equals(mottaker.navn) : mottaker.navn != null) return false;
         if (postnr != null ? !postnr.equals(mottaker.postnr) : mottaker.postnr != null) return false;
         if (poststed != null ? !poststed.equals(mottaker.poststed) : mottaker.poststed != null) return false;
+        if (navn != null ? !navn.equals(mottaker.navn) : mottaker.navn != null) return false;
+        if (land != null ? !land.equals(mottaker.land) : mottaker.land != null) return false;
+        if (orgnr != null ? !orgnr.equals(mottaker.orgnr) : mottaker.orgnr != null) return false;
+        return !(fnr != null ? !fnr.equals(mottaker.fnr) : mottaker.fnr != null);
 
-        return true;
     }
 
     @Override
@@ -95,6 +114,8 @@ public class Mottaker {
         result = 31 * result + (poststed != null ? poststed.hashCode() : 0);
         result = 31 * result + (navn != null ? navn.hashCode() : 0);
         result = 31 * result + (land != null ? land.hashCode() : 0);
+        result = 31 * result + (orgnr != null ? orgnr.hashCode() : 0);
+        result = 31 * result + (fnr != null ? fnr.hashCode() : 0);
         return result;
     }
 }
