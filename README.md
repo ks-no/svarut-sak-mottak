@@ -7,7 +7,7 @@ foregår kryptert over TLS. Nyere aktivitet fra sakimport logges til svarutSakim
 logg-katalogen (genereres når loggene roteres).
 
 Nyeste versjon av sakimport kan lastes ned via SvarUt, en må ha tilgang til SvarUt for å få lov å laste ned filen.
-[Svarut-sak-import|https://svarut.ks.no/releases/svarut-sak-import-latest.zip]
+[Svarut-sak-import](https://svarut.ks.no/releases/svarut-sak-import-latest.zip)
 
 Hvordan bruke Sakimport
 -----------------------------------
