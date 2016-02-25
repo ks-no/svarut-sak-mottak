@@ -6,6 +6,8 @@ Geointegrasjonsstandard versjon 1.1. Sakimport henter forsendelser via webservic
 foregår kryptert over TLS. Nyere aktivitet fra sakimport logges til svarutSakimport.log-filen, og eldre logger finnes i
 logg-katalogen (genereres når loggene roteres).
 
+Nyeste versjon av sakimport kan lastes ned via SvarUt, en må ha tilgang til SvarUt for å få lov å laste ned filen.
+[Svarut-sak-import|https://svarut.ks.no/releases/svarut-sak-import-latest.zip]
 
 Hvordan bruke Sakimport
 -----------------------------------
