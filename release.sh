@@ -7,9 +7,9 @@ setValues() {
     while getopts ":vtp" Option
     do
         case $Option in
-            v) targethost="vagrant@filarkiv";;
-            t) targethost="kssuadmin@kssufilarkiv.usrv.ubergenkom.no";;
-            p) targethost="kssuadmin@kssufilarkiv.srv.bergenkom.no";;
+            v) targethost="vagrant@svarut01";;
+            t) targethost="svarutadm@kssusvarut01.usrv.ubergenkom.no";;
+            p) targethost="loggleser@kssusvarut01.srv.bergenkom.no";;
             ?) usage; exit 0;;
         esac
     done
@@ -39,5 +39,5 @@ projectversion=$(git describe --abbrev=0)
 revision=$(git describe --long | sed "s/.*-\(.*\)-.*/\1/")
 mkdir -p target
 
-scp svarut-sak-import/target/svarut-sak-import-dist.zip ${targethost}:/nfs/svarut-external-modules/releases/svarut-sak-import-${projectversion}.zip
-ssh ${targethost} "(cd /nfs/svarut-external-modules/releases && sudo ln -sf svarut-sak-import-${projectversion}.zip svarut-sak-import-latest.zip)"
+scp svarut-sak-import/target/svarut-sak-import-dist.zip ${targethost}:/filarkiv/svarut-external-modules/releases/svarut-sak-import-${projectversion}.zip
+ssh ${targethost} "(cd /filarkiv/svarut-external-modules/releases && ln -sf svarut-sak-import-${projectversion}.zip svarut-sak-import-latest.zip)"
