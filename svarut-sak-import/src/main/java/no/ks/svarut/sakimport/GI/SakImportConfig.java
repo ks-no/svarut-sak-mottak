@@ -38,6 +38,7 @@ public class SakImportConfig {
     private final String sakImportHostname;
     private final String sakDefaultSaksAar;
     private final String sakDefaultSaksnr;
+    private final boolean debug;
     private int port;
     private String urlSti;
     private String host;
@@ -65,6 +66,7 @@ public class SakImportConfig {
         sakDefaultSaksAar = hentConfig(properties, cmdLine, KommandoParametre.SAK_DEFAULT_SAKSAAR);
         sakDefaultSaksnr = hentConfig(properties, cmdLine, KommandoParametre.SAK_DEFAULT_SAKSNR);
         privateKeyFil = hentConfig(properties, cmdLine, KommandoParametre.PRIVATE_KEY_FIL);
+        debug = cmdLine.hasOption(KommandoParametre.DEBUG.getValue());
     }
 
     private String settPropertiesFilsti(CommandLine cmdLine) {
@@ -224,7 +226,7 @@ public class SakImportConfig {
 
     public boolean harTilstrekkeligeParametre(CommandLine commandLine, Properties properties) {
         for (KommandoParametre parameter : KommandoParametre.values()) {
-            if (parameter != KommandoParametre.HJELP_STR && parameter != KommandoParametre.VERSJON_STR && parameter != KommandoParametre.PROPERTIES_FILSTI) {
+            if (parameter != KommandoParametre.HJELP_STR && parameter != KommandoParametre.VERSJON_STR && parameter != KommandoParametre.PROPERTIES_FILSTI && parameter != KommandoParametre.DEBUG) {
                 boolean harParameter = harProperty(commandLine, properties, parameter.getValue());
                 if (!harParameter) {
                     throw new RuntimeException("Kunne ikke finne parameter " + parameter.getValue() + " fra kommandolinje eller propertiesfil.");
@@ -237,5 +239,9 @@ public class SakImportConfig {
     public boolean harProperty(CommandLine commandLine, Properties properties, String propertyNokkel) {
         String propertiesVerdi = properties.getProperty(propertyNokkel);
         return commandLine.hasOption(propertyNokkel) || (propertiesVerdi != null);
+    }
+
+    public boolean isDebug() {
+        return debug;
     }
 }

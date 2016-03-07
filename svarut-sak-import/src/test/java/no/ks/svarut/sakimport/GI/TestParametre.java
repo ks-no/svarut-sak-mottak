@@ -11,6 +11,8 @@ import org.junit.rules.ExpectedException;
 import java.util.Properties;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class TestParametre {
 
@@ -71,5 +73,15 @@ public class TestParametre {
         return new String[]{"-svarutbrukernavn", brukernavn, "-svarutpassord", passord, "-svaruturl", url, "-sakurl", sakurl,
                 "-sakbrukernavn", "tull", "-sakpassord", "passord", "-hostname", "localhost", "-saksaar", "2014",
                 "-saksnr", "211", "-privatekeyfil", "sp-key.pem"};
+    }
+
+    @Test
+    public void testDebugParameter() throws Exception {
+        String[] args = {"-svarutpassord", passord, "-svaruturl", "http://url.av.no/slag", "-sakurl", "http://en.annen.no/url", "-sakbrukernavn", "tull", "-sakpassord", "passord", "-hostname", "localhost", "-saksaar", "2014", "-saksnr", "211", "-debug"};
+        SakImportConfig sakImportConfig = new SakImportConfig(args);
+        assertTrue(sakImportConfig.isDebug());
+        String[] args2 = {"-svarutpassord", passord, "-svaruturl", "http://url.av.no/slag", "-sakurl", "http://en.annen.no/url", "-sakbrukernavn", "tull", "-sakpassord", "passord", "-hostname", "localhost", "-saksaar", "2014", "-saksnr", "211"};
+        sakImportConfig = new SakImportConfig(args2);
+        assertFalse(sakImportConfig.isDebug());
     }
 }

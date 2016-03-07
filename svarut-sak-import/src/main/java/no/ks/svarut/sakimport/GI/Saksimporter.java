@@ -17,6 +17,8 @@ import no.ks.svarut.sakimport.*;
 import no.ks.svarut.sakimport.util.DateTimeUtil;
 import org.apache.cxf.endpoint.Client;
 import org.apache.cxf.frontend.ClientProxy;
+import org.apache.cxf.interceptor.LoggingInInterceptor;
+import org.apache.cxf.interceptor.LoggingOutInterceptor;
 import org.apache.cxf.jaxws.JaxWsProxyFactoryBean;
 import org.apache.cxf.transport.http.HTTPConduit;
 import org.apache.cxf.transports.http.configuration.HTTPClientPolicy;
@@ -263,8 +265,10 @@ public class Saksimporter {
         factory.setAddress(url);
         factory.setUsername(username);
         factory.setPassword(password);
-        /*factory.getInInterceptors().add(new LoggingInInterceptor());
-        factory.getOutInterceptors().add(new LoggingOutInterceptor());*/
+        if(sakImportConfig.isDebug()) {
+            factory.getInInterceptors().add(new LoggingInInterceptor());
+            factory.getOutInterceptors().add(new LoggingOutInterceptor());
+        }
         SakArkivOppdateringPort serviceV3 = (SakArkivOppdateringPort) factory.create();
         Client proxy = ClientProxy.getClient(serviceV3);
         HTTPConduit conduit = (HTTPConduit) proxy.getConduit();

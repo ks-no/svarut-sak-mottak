@@ -132,6 +132,9 @@ public class SvarUtCommandLineParser {
         .hasArg()
         .withDescription("Sti til privat nøkkel for dekryptering av forsendelsefiler. Offentlig nøkkel som tilhører må være lagt inn i SvarUt.")
         .create(KommandoParametre.PRIVATE_KEY_FIL.getValue()));
+        options.add(OptionBuilder.withArgName(KommandoParametre.DEBUG.getValue())
+                .withDescription("Skru på debug logging")
+                .create(KommandoParametre.DEBUG.getValue()));
         return options;
     }
 }

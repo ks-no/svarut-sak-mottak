@@ -14,7 +14,7 @@ public enum KommandoParametre {
     SAK_DEFAULT_SAKSAAR("saksaar"),
     SAK_DEFAULT_SAKSNR("saksnr"),
     PROPERTIES_FILSTI("konfigurasjonsfil"),
-    PRIVATE_KEY_FIL("privatekeyfil");
+    PRIVATE_KEY_FIL("privatekeyfil"), DEBUG("debug");
 
     private final String value;
 
