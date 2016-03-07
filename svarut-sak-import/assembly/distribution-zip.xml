@@ -17,8 +17,8 @@
         </fileSet>
         <fileSet>
             <!--Get application resources-->
-            <directory>src/main/resources</directory>
-            <outputDirectory>konfigurasjon</outputDirectory>
+            <directory>filer</directory>
+            <outputDirectory></outputDirectory>
         </fileSet>
         <fileSet>
             <!--Get misc user files-->

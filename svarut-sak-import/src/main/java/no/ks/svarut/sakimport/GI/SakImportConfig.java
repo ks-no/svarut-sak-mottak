@@ -6,16 +6,9 @@ import org.apache.commons.cli.CommandLine;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.CredentialsProvider;
-import org.apache.http.config.Registry;
-import org.apache.http.config.RegistryBuilder;
-import org.apache.http.conn.HttpClientConnectionManager;
-import org.apache.http.conn.socket.ConnectionSocketFactory;
-import org.apache.http.conn.socket.PlainConnectionSocketFactory;
-import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -146,17 +139,6 @@ public class SakImportConfig {
             return clientBuilder.build();
         }
         try {
-            KeyStore trustStore = lastKeyStore();
-
-            SSLConnectionSocketFactory sslsf = new SSLConnectionSocketFactory(sslContext, SSLConnectionSocketFactory.STRICT_HOSTNAME_VERIFIER);
-            ConnectionSocketFactory plainsf = PlainConnectionSocketFactory.getSocketFactory();
-
-            Registry<ConnectionSocketFactory> r = RegistryBuilder.<ConnectionSocketFactory>create()
-                    .register("http", plainsf)
-                    .register("https", sslsf)
-                    .build();
-            HttpClientConnectionManager cm = new PoolingHttpClientConnectionManager(r);
-            clientBuilder.setConnectionManager(cm);
             return clientBuilder.build();
         } catch (Exception e) {
             log.info("Prøvde å sette opp httpklient: {}", e);

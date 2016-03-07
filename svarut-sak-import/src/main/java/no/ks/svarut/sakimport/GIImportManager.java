@@ -49,7 +49,10 @@ public class GIImportManager {
         try (final Fil fil = nedlaster.hentForsendelseFil(forsendelse)) {
 
             final Journalpost journalpost = importer.importerJournalPost(forsendelse);
-            log.info("Laget journalpost {} for forsendelse {}", journalpost.getJournalpostnummer(), forsendelse.getId());
+            if(journalpost == null)
+                log.error("Journalpost er null");
+            if(journalpost != null)
+                log.info("Laget journalpost {} for forsendelse {}", journalpost.getJournalpostnummer(), forsendelse.getId());
 
             if (fil.getMimetype().contains("application/zip")) {
                 lagDokumentFraZipfil(importer, forsendelse, fil, journalpost);
