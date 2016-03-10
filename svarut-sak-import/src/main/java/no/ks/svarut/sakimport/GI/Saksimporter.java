@@ -133,11 +133,11 @@ public class Saksimporter {
 
     private void fyllInnKorrespondanseparter(Forsendelse forsendelse, Journalpost generertJournalpost) {
         Korrespondansepart avsender = lagAvsender(forsendelse.getAvsender(), forsendelse.getSvarSendesTil(), forsendelse.getMetadataFraAvleverendeSystem());
-        Korrespondansepart mottaker = lagMottaker(forsendelse.getMottaker());
+        //Korrespondansepart mottaker = lagMottaker(forsendelse.getMottaker());
 
         KorrespondansepartListe korrespondansepartListe = new KorrespondansepartListe();
         korrespondansepartListe.getListe().add(avsender);
-        korrespondansepartListe.getListe().add(mottaker);
+        //korrespondansepartListe.getListe().add(mottaker); Mottaker skal være saksbehandler
 
         generertJournalpost.setKorrespondansepart(korrespondansepartListe);
     }
@@ -160,7 +160,7 @@ public class Saksimporter {
         final Korrespondanseparttype korrespondanseparttype = new Korrespondanseparttype();
         korrespondanseparttype.setKodeverdi("Avsender");
         avsenderKorrespondent.setKorrespondanseparttype(korrespondanseparttype);
-        avsenderKorrespondent.setDeresReferanse(lagDeresReferanse(svarSendesTil, noarkMetadataFraAvleverendeSystem));
+        //avsenderKorrespondent.setDeresReferanse(lagDeresReferanse(svarSendesTil, noarkMetadataFraAvleverendeSystem)); MAX 70 tegn
         //avsenderKorrespondent.setKortnavn("Bergen kommune");
         final Kontakt kontakt = new Kontakt();
         kontakt.setNavn(avsender.getNavn());
