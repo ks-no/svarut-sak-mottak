@@ -1,2 +1,2 @@
-dir %~dp0
+cd %~dp0
 java -jar svarut-sak-import.jar
