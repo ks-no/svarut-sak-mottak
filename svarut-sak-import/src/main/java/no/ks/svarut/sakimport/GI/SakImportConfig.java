@@ -2,6 +2,7 @@ package no.ks.svarut.sakimport.GI;
 
 import no.ks.svarut.sakimport.KommandoParametre;
 import no.ks.svarut.sakimport.SvarUtCommandLineParser;
+import no.ks.svarut.sakimport.kryptering.Kryptering;
 import org.apache.commons.cli.CommandLine;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
@@ -243,5 +244,35 @@ public class SakImportConfig {
 
     public boolean isDebug() {
         return debug;
+    }
+
+    @Override
+    public String toString() {
+        return "SakImportConfig{" +
+                "sakBrukernavn='" + sakBrukernavn + '\'' +
+                ", sakPassord='" + sakPassord + '\'' +
+                ", sakUrl='" + sakUrl + '\'' +
+                ", sakImportHostname='" + sakImportHostname + '\'' +
+                ", sakDefaultSaksAar='" + sakDefaultSaksAar + '\'' +
+                ", sakDefaultSaksnr='" + sakDefaultSaksnr + '\'' +
+                ", debug=" + debug +
+                ", port=" + port +
+                ", urlSti='" + urlSti + '\'' +
+                ", host='" + host + '\'' +
+                ", protokoll='" + protokoll + '\'' +
+                ", sslContext=" + sslContext +
+                ", svarUtBrukernavn='" + svarUtBrukernavn + '\'' +
+                ", svarUtPassord='" + svarUtPassord + '\'' +
+                ", privateKeyFil='" + privateKeyFil + '\'' +
+                '}';
+    }
+
+    public void sjekkConfig() {
+        try{
+            new Kryptering(this).getPrivateKey();
+        } catch (Exception e) {
+            log.error("Failed to load private key",e);
+            System.exit(1);
+        }
     }
 }

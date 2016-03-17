@@ -9,9 +9,7 @@ import org.bouncycastle.util.io.pem.PemReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.security.KeyFactory;
-import java.security.NoSuchAlgorithmException;
-import java.security.PrivateKey;
+import java.security.*;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
 
@@ -19,10 +17,17 @@ public class Kryptering {
 
     private final SakImportConfig config;
     CMSDataKryptering cmsDataKryptering;
+    private Provider provider;
 
     public Kryptering(SakImportConfig config) {
         this.config = config;
+        provider = Security.getProvider("BC");
+        if(provider == null){
+            Security.addProvider(new BouncyCastleProvider());
+            provider = Security.getProvider("BC");
+        }
         cmsDataKryptering = new CMSDataKryptering();
+
     }
 
     public InputStream dekrypterForSvarUt(InputStream encryptedStream){
@@ -30,7 +35,7 @@ public class Kryptering {
 
         try {
             svarut = getPrivateKey();
-            return cmsDataKryptering.dekrypterData(encryptedStream, svarut, new BouncyCastleProvider());
+            return cmsDataKryptering.dekrypterData(encryptedStream, svarut, provider);
         } catch (IOException e) {
             e.printStackTrace();
         } catch (NoSuchAlgorithmException e) {
@@ -45,7 +50,7 @@ public class Kryptering {
         final PrivateKey svarut;
         try {
             svarut = getPrivateKey();
-            return cmsDataKryptering.dekrypterData(encryptedData, svarut, new BouncyCastleProvider());
+            return cmsDataKryptering.dekrypterData(encryptedData, svarut, provider);
         } catch (IOException e) {
             e.printStackTrace();
         } catch (NoSuchAlgorithmException e) {
@@ -56,13 +61,11 @@ public class Kryptering {
         return null;
     }
 
-    private PrivateKey getPrivateKey() throws IOException, NoSuchAlgorithmException, InvalidKeySpecException {
-        java.security.Security.addProvider(
-                new org.bouncycastle.jce.provider.BouncyCastleProvider()
-        );
+    public PrivateKey getPrivateKey() throws IOException, NoSuchAlgorithmException, InvalidKeySpecException {
 
         //bruk config
-        final PemReader pemReader = new PemReader(new InputStreamReader(FileLoadUtil.getInputStreamForFileFromClasspath(config.getPrivateKeyFil())));
+
+        final PemReader pemReader = new PemReader(new InputStreamReader(FileLoadUtil.getInputStreamForFileOrResource(config.getPrivateKeyFil())));
         final PemObject pemObject = pemReader.readPemObject();
         byte[] keyBytes = pemObject.getContent();
 

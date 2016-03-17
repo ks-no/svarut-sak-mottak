@@ -61,7 +61,7 @@ public class GIImportManager {
                 final Dokument dokument = importer.importerDokument(journalpost, forsendelse.getTittel(), fil.getFilename(), fil.getMimetype(), fil.getKryptertData(), true, forsendelse, () -> nedlaster.kvitterForsendelse(forsendelse));
                 log.info("Laget dokument {} for forsendelse {}", dokument.getDokumentnummer(), forsendelse.getId());
             }
-            forsendelseslog.info("Importerte forsendelse med tittel {},id {}, saksnr: {} og journalpostnummer {}.", forsendelse.getTittel(), forsendelse.getId(), journalpost.getSaksnr(), journalpost.getJournalpostnummer());
+            forsendelseslog.info("Importerte forsendelse med tittel {},id {}, saksnr: {} og journalpostnummer {}.", forsendelse.getTittel(), forsendelse.getId(), journalpost.getSaksnr().getSaksaar() +"/"+ journalpost.getSaksnr().getSakssekvensnummer(), journalpost.getJournalpostnummer());
         } catch (ValidationException e) {
             log.info("Forsendelse {} validerte ikke.", forsendelse.getId(), e);
         } catch (Exception e) {

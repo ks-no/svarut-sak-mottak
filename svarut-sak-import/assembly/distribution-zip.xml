@@ -21,6 +21,11 @@
             <outputDirectory></outputDirectory>
         </fileSet>
         <fileSet>
+            <!--Get lib filer resources-->
+            <directory>target/lib</directory>
+            <outputDirectory>lib</outputDirectory>
+        </fileSet>
+        <fileSet>
             <!--Get misc user files-->
             <directory>${project.basedir}</directory>
             <outputDirectory>/</outputDirectory>

@@ -11,13 +11,11 @@ import org.bouncycastle.cms.*;
 import org.bouncycastle.cms.jcajce.JceCMSContentEncryptorBuilder;
 import org.bouncycastle.cms.jcajce.JceKeyTransEnvelopedRecipient;
 import org.bouncycastle.cms.jcajce.JceKeyTransRecipientInfoGenerator;
-import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.operator.OutputEncryptor;
 
 import java.io.InputStream;
 import java.security.PrivateKey;
 import java.security.Provider;
-import java.security.Security;
 import java.security.cert.X509Certificate;
 
 public class CMSDataKryptering {
@@ -26,7 +24,6 @@ public class CMSDataKryptering {
     private final AlgorithmIdentifier keyEncryptionScheme;
 
     public CMSDataKryptering() {
-        Security.addProvider(new BouncyCastleProvider());
         this.keyEncryptionScheme = this.rsaesOaepIdentifier();
         this.cmsEncryptionAlgorithm = CMSAlgorithm.AES256_CBC;
     }
@@ -57,7 +54,6 @@ public class CMSDataKryptering {
     }
 
     public byte[] dekrypterData(byte[] data, PrivateKey key) {
-        Security.addProvider(new BouncyCastleProvider());
         byte[] cleardata = null;
         try {
             // Initialise parser

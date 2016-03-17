@@ -34,6 +34,10 @@ public class Forsendelsesnedlaster {
     }
 
     public List<Forsendelse> hentNyeForsendelser() {
+        if(config.isDebug()) {
+            log.info("Starter svarut-sak-mottak med config: {}", config);
+        }
+        config.sjekkConfig();
         HttpClient httpClient = config.httpClientForSvarUt();
         HttpResponse response = null;
 
@@ -63,7 +67,6 @@ public class Forsendelsesnedlaster {
             }
 
             String json = EntityUtils.toString(response.getEntity());
-            System.out.println("JSon " + json);
             List<Forsendelse> forsendelser = konverterTilObjekt(json);
             return forsendelser;
         } catch (Exception e) {
