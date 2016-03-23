@@ -64,7 +64,7 @@ public class Saksimporter {
         generertJournalpost.setSaksnr(lagSaksnummer(forsendelse.getMetadataForImport().getSakssekvensnummer()));
 
         NoarkMetadataForImport metadataForImport = forsendelse.getMetadataForImport();
-
+        lagMerknadMedNoarkMetadata(forsendelse, generertJournalpost);
         fyllInnMetadata(generertJournalpost, metadataForImport);
         try {
             return opprettEphorteJournalpost(generertJournalpost, service);
@@ -72,6 +72,16 @@ public class Saksimporter {
             log.info("Klarte ikke å opprette journalpost med saksnr {}, prøver med default saksnummer {}", forsendelse.getMetadataForImport().getSakssekvensnummer(), sakImportConfig.getDefaultSaksnr());
             return opprettEphorteJournalPostMedDefaultSaksnr(generertJournalpost);
         }
+    }
+
+    private void lagMerknadMedNoarkMetadata(Forsendelse forsendelse, Journalpost generertJournalpost) {
+        final Merknad noarkMetadata = new Merknad();
+        noarkMetadata.setSystemID("SVARUT");
+        noarkMetadata.setMerknadRegistrertAv("SVARUT");
+        noarkMetadata.setMerknadstekst(lagDeresReferanse(forsendelse.getSvarSendesTil(), forsendelse.getMetadataFraAvleverendeSystem()));
+        if(generertJournalpost.getMerknader() == null)
+            generertJournalpost.setMerknader(new MerknadListe());
+        generertJournalpost.getMerknader().getListe().add(noarkMetadata);
     }
 
     private void fyllInnMetadata(Journalpost generertJournalpost, NoarkMetadataForImport metadataForImport) {
@@ -132,7 +142,7 @@ public class Saksimporter {
     }
 
     private void fyllInnKorrespondanseparter(Forsendelse forsendelse, Journalpost generertJournalpost) {
-        Korrespondansepart avsender = lagAvsender(forsendelse.getAvsender(), forsendelse.getSvarSendesTil(), forsendelse.getMetadataFraAvleverendeSystem());
+        Korrespondansepart avsender = lagAvsender(forsendelse.getAvsender(), forsendelse.getSvarSendesTil(), forsendelse.getMetadataFraAvleverendeSystem(), forsendelse.getId());
         //Korrespondansepart mottaker = lagMottaker(forsendelse.getMottaker());
 
         KorrespondansepartListe korrespondansepartListe = new KorrespondansepartListe();
@@ -154,13 +164,39 @@ public class Saksimporter {
     }
 
 
-    Korrespondansepart lagAvsender(Avsender avsender, Mottaker svarSendesTil, NoarkMetadataFraAvleverendeSakssystem noarkMetadataFraAvleverendeSystem) {
+    Korrespondansepart lagAvsender(Avsender avsender, Mottaker svarSendesTil, NoarkMetadataFraAvleverendeSakssystem noarkMetadataFraAvleverendeSystem, String forsendelseid) {
         Korrespondansepart avsenderKorrespondent = new Korrespondansepart();
+        if(svarSendesTil != null && svarSendesTil.getNavn() != null && !"".equals(svarSendesTil.getNavn().trim())){
+            brukSvarSendesTilSomAvsender(forsendelseid, avsenderKorrespondent, svarSendesTil.getNavn(), lagEnkelAdresse(svarSendesTil));
+        }else {
+            brukAvsender(avsender, forsendelseid, avsenderKorrespondent);
+        }
+        return avsenderKorrespondent;
+    }
 
+    private void brukSvarSendesTilSomAvsender(String forsendelseid, Korrespondansepart avsenderKorrespondent, String navn, EnkelAdresse e) {
         final Korrespondanseparttype korrespondanseparttype = new Korrespondanseparttype();
         korrespondanseparttype.setKodeverdi("Avsender");
         avsenderKorrespondent.setKorrespondanseparttype(korrespondanseparttype);
-        //avsenderKorrespondent.setDeresReferanse(lagDeresReferanse(svarSendesTil, noarkMetadataFraAvleverendeSystem)); MAX 70 tegn
+
+        avsenderKorrespondent.setDeresReferanse(forsendelseid);
+        //avsenderKorrespondent.setKortnavn("Bergen kommune");
+        final Kontakt kontakt = new Kontakt();
+        kontakt.setNavn(navn);
+
+        final EnkelAdresseListe enkelAdresseListe = new EnkelAdresseListe();
+        enkelAdresseListe.getListe().add(e);
+        kontakt.setAdresser(enkelAdresseListe);
+        // sette på orgnr/fnr?
+        avsenderKorrespondent.setKontakt(kontakt);
+    }
+
+    private void brukAvsender(Avsender avsender, String forsendelseid, Korrespondansepart avsenderKorrespondent) {
+        final Korrespondanseparttype korrespondanseparttype = new Korrespondanseparttype();
+        korrespondanseparttype.setKodeverdi("Avsender");
+        avsenderKorrespondent.setKorrespondanseparttype(korrespondanseparttype);
+
+        avsenderKorrespondent.setDeresReferanse(forsendelseid);
         //avsenderKorrespondent.setKortnavn("Bergen kommune");
         final Kontakt kontakt = new Kontakt();
         kontakt.setNavn(avsender.getNavn());
@@ -168,7 +204,6 @@ public class Saksimporter {
         enkelAdresseListe.getListe().add(lagEnkelAdresse(avsender));
         kontakt.setAdresser(enkelAdresseListe);
         avsenderKorrespondent.setKontakt(kontakt);
-        return avsenderKorrespondent;
     }
 
     private String lagDeresReferanse(Mottaker svarSendesTil, NoarkMetadataFraAvleverendeSakssystem noarkMetadataFraAvleverendeSystem) {
