@@ -167,27 +167,30 @@ public class Saksimporter {
     Korrespondansepart lagAvsender(Avsender avsender, Mottaker svarSendesTil, NoarkMetadataFraAvleverendeSakssystem noarkMetadataFraAvleverendeSystem, String forsendelseid) {
         Korrespondansepart avsenderKorrespondent = new Korrespondansepart();
         if(svarSendesTil != null && svarSendesTil.getNavn() != null && !"".equals(svarSendesTil.getNavn().trim())){
-            brukSvarSendesTilSomAvsender(forsendelseid, avsenderKorrespondent, svarSendesTil.getNavn(), lagEnkelAdresse(svarSendesTil));
+            brukSvarSendesTilSomAvsender(forsendelseid, avsenderKorrespondent, svarSendesTil.getNavn(), lagEnkelAdresse(svarSendesTil), svarSendesTil.getOrgnr(), svarSendesTil.getFnr());
         }else {
             brukAvsender(avsender, forsendelseid, avsenderKorrespondent);
         }
         return avsenderKorrespondent;
     }
 
-    private void brukSvarSendesTilSomAvsender(String forsendelseid, Korrespondansepart avsenderKorrespondent, String navn, EnkelAdresse e) {
+    private void brukSvarSendesTilSomAvsender(String forsendelseid, Korrespondansepart avsenderKorrespondent, String navn, EnkelAdresse e, String orgnr, String fnr) {
         final Korrespondanseparttype korrespondanseparttype = new Korrespondanseparttype();
         korrespondanseparttype.setKodeverdi("Avsender");
         avsenderKorrespondent.setKorrespondanseparttype(korrespondanseparttype);
 
         avsenderKorrespondent.setDeresReferanse(forsendelseid);
-        //avsenderKorrespondent.setKortnavn("Bergen kommune");
+        if(orgnr != null && !"".equals(orgnr))
+            avsenderKorrespondent.setKortnavn(orgnr);
+        if(fnr != null && !"".equals(fnr))
+            avsenderKorrespondent.setKortnavn(fnr);
+
         final Kontakt kontakt = new Kontakt();
         kontakt.setNavn(navn);
 
         final EnkelAdresseListe enkelAdresseListe = new EnkelAdresseListe();
         enkelAdresseListe.getListe().add(e);
         kontakt.setAdresser(enkelAdresseListe);
-        // sette på orgnr/fnr?
         avsenderKorrespondent.setKontakt(kontakt);
     }
 
