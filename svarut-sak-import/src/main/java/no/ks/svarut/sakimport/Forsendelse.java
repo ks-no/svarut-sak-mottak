@@ -19,6 +19,7 @@ public class Forsendelse implements Comparable<Forsendelse> {
     private Mottaker mottaker;
     private List<FilMetadata> filmetadata;
     private Mottaker svarSendesTil;
+    private String svarPaForsendelse;
     public Forsendelse() {
     }
 
@@ -145,4 +146,11 @@ public class Forsendelse implements Comparable<Forsendelse> {
         return getDate().compareTo(forsendelse.getDate());
     }
 
+    public String getSvarPaForsendelse() {
+        return svarPaForsendelse;
+    }
+
+    public void setSvarPaForsendelse(String svarPaForsendelse) {
+        this.svarPaForsendelse = svarPaForsendelse;
+    }
 }

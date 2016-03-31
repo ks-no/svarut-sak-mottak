@@ -103,6 +103,11 @@ public class SvarUtCommandLineParser {
                 .withDescription("URL til GeointegrasjonWebservice i saksystemet")
                 .create(KommandoParametre.SAK_URL.getValue()));
 
+        options.add(OptionBuilder.withArgName(KommandoParametre.SAK_INNSYN_URL.getValue())
+                .hasArg()
+                .withDescription("URL til GeointegrasjonWebservice for innsyn i saksystemet")
+                .create(KommandoParametre.SAK_INNSYN_URL.getValue()));
+
         options.add(OptionBuilder.withArgName(KommandoParametre.SAK_BRUKERNAVN.getValue())
                 .hasArg()
                 .withDescription("Brukernavn til GeointegrasjonWebservice i saksystemet")

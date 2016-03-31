@@ -223,6 +223,10 @@
                                     <wsdl>${basedir}/src/main/resources/wsdl/giArkivOppdatering20120131.wsdl
                                     </wsdl>
                                 </wsdlOption>
+                                <wsdlOption>
+                                    <wsdl>${basedir}/src/main/resources/wsdl/giArkivInnsyn20120131.wsdl
+                                    </wsdl>
+                                </wsdlOption>
                             </wsdlOptions>
                         </configuration>
                         <goals>

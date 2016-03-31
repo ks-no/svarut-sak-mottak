@@ -33,6 +33,7 @@ public class Saksimporter {
 
 
     private final SakImportConfig sakImportConfig;
+    private final Innsyn innsyn;
     private String url;
     private String username;
     private String password;
@@ -49,6 +50,7 @@ public class Saksimporter {
         this.sakImportConfig = sakImportConfig;
 
         service = createSakarkivService();
+        innsyn = new Innsyn(sakImportConfig, arkivKontekst);
     }
 
     public ArkivKontekst getArkivKontekst() {
@@ -61,7 +63,7 @@ public class Saksimporter {
         fyllInnKorrespondanseparter(forsendelse, generertJournalpost);
 
         generertJournalpost.setReferanseEksternNoekkel(lagEksternNoekkel());
-        generertJournalpost.setSaksnr(lagSaksnummer(forsendelse.getMetadataForImport().getSakssekvensnummer()));
+        generertJournalpost.setSaksnr(finnSaksnummer(forsendelse));
 
         NoarkMetadataForImport metadataForImport = forsendelse.getMetadataForImport();
         lagMerknadMedNoarkMetadata(forsendelse, generertJournalpost);
@@ -284,15 +286,32 @@ public class Saksimporter {
         return eksternNoekkel;
     }
 
-    Saksnummer lagSaksnummer(int saksnr) {
+    Saksnummer finnSaksnummer(Forsendelse forsendelse) {
         Saksnummer saksnummer = new Saksnummer();
-        saksnummer.setSaksaar(new BigInteger(sakImportConfig.getDefaultSaksAar()));
-        if (saksnr != 0) {
-            saksnummer.setSakssekvensnummer(BigInteger.valueOf(saksnr));
+        if(forsendelse.getMetadataForImport() != null && forsendelse.getMetadataForImport().getSakssekvensnummer() != 0 && forsendelse.getMetadataForImport().getSaksaar() != 0){
+            saksnummer.setSaksaar(BigInteger.valueOf(forsendelse.getMetadataForImport().getSaksaar()));
+            saksnummer.setSakssekvensnummer(BigInteger.valueOf(forsendelse.getMetadataForImport().getSakssekvensnummer()));
+            return saksnummer;
+        } else if(forsendelse.getSvarPaForsendelse() != null && !"".equals(forsendelse.getSvarPaForsendelse())){
+            try {
+                final JournalpostListe liste = innsyn.sok(forsendelse.getSvarPaForsendelse());
+                if(liste.getListe().size()> 1){
+                    log.warn("Fann flere journalposter med id " + forsendelse.getSvarPaForsendelse() + " bruker første resultat");
+                }
+                if(liste.getListe().size() >0){
+                    final Saksnummer saksnr = liste.getListe().get(0).getSaksnr();
+                    log.info("Fann saksnr {} for forsendelse {} med svar på {}", saksnr.getSaksaar() +"/" + saksnr.getSakssekvensnummer() , forsendelse.getId(), forsendelse.getSvarPaForsendelse());
+                    return saksnr;
+                }
+            } catch(Exception e){
+                log.warn("Klarte ikke å finne sak for forsendelseid " + forsendelse.getSvarPaForsendelse(),e );
+            }
         } else {
+            saksnummer.setSaksaar(new BigInteger(sakImportConfig.getDefaultSaksAar()));
             saksnummer.setSakssekvensnummer(new BigInteger(sakImportConfig.getDefaultSaksnr()));
+            return saksnummer;
         }
-        return saksnummer;
+        throw new RuntimeException("Klarte ikke å lage saksnr");
     }
 
 

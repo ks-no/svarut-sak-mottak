@@ -48,6 +48,7 @@ public class SakImportConfig {
     private String svarUtBrukernavn;
     private String svarUtPassord;
     private String privateKeyFil;
+    private String sakInnsynUrl;
 
     public SakImportConfig(String... args) {
         SvarUtCommandLineParser parser = new SvarUtCommandLineParser(args);
@@ -63,6 +64,7 @@ public class SakImportConfig {
         sakBrukernavn = hentConfig(properties, cmdLine, KommandoParametre.SAK_BRUKERNAVN);
         sakPassord = hentConfig(properties, cmdLine, KommandoParametre.SAK_PASSORD);
         sakUrl = hentConfig(properties, cmdLine, KommandoParametre.SAK_URL);
+        sakInnsynUrl = hentConfig(properties, cmdLine, KommandoParametre.SAK_INNSYN_URL);
         sakImportHostname = hentConfig(properties, cmdLine, KommandoParametre.SAK_IMPORT_HOSTNAME);
         sakDefaultSaksAar = hentConfig(properties, cmdLine, KommandoParametre.SAK_DEFAULT_SAKSAAR);
         sakDefaultSaksnr = hentConfig(properties, cmdLine, KommandoParametre.SAK_DEFAULT_SAKSNR);
@@ -274,5 +276,9 @@ public class SakImportConfig {
             log.error("Failed to load private key",e);
             System.exit(1);
         }
+    }
+
+    public String getSakInnsynUrl() {
+        return sakInnsynUrl;
     }
 }
