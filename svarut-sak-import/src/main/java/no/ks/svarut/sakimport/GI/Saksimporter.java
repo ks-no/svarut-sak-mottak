@@ -6,8 +6,7 @@ import no.geointegrasjon.rep.arkiv.dokument.xml_schema._2012_01.Filreferanse;
 import no.geointegrasjon.rep.arkiv.dokument.xml_schema._2012_01.TilknyttetRegistreringSom;
 import no.geointegrasjon.rep.arkiv.felles.xml_schema._2012_01.Saksnummer;
 import no.geointegrasjon.rep.arkiv.kjerne.xml_schema._2012_01.*;
-import no.geointegrasjon.rep.arkiv.oppdatering.xml_wsdl._2012_01_31.SakArkivOppdateringPort;
-import no.geointegrasjon.rep.arkiv.oppdatering.xml_wsdl._2012_01_31.ValidationException;
+import no.geointegrasjon.rep.arkiv.oppdatering.xml_wsdl._2012_01_31.*;
 import no.geointegrasjon.rep.felles.adresse.xml_schema._2012_01.EnkelAdresse;
 import no.geointegrasjon.rep.felles.adresse.xml_schema._2012_01.EnkelAdresseListe;
 import no.geointegrasjon.rep.felles.adresse.xml_schema._2012_01.PostadministrativeOmraader;
@@ -149,7 +148,7 @@ public class Saksimporter {
 
         KorrespondansepartListe korrespondansepartListe = new KorrespondansepartListe();
         korrespondansepartListe.getListe().add(avsender);
-        //korrespondansepartListe.getListe().add(mottaker); Mottaker skal være saksbehandler
+        //korrespondansepartListe.getListe().add(mottaker); //Mottaker skal være saksbehandler men vi prøver alikevel
 
         generertJournalpost.setKorrespondansepart(korrespondansepartListe);
     }
@@ -337,5 +336,9 @@ public class Saksimporter {
 
 
         return serviceV3;
+    }
+
+    public Journalpost oppdaterEksternNoekkel(Forsendelse forsendelse, Journalnummer journalnummer) throws ApplicationException, ImplementationException, ValidationException, SystemException, FinderException, OperationalException {
+        return service.oppdaterJournalpostEksternNoekkel(lagEksternNoekkel(), journalnummer, arkivKontekst);
     }
 }

@@ -9,28 +9,49 @@
             <pattern>%date [%thread] %-5level %logger{25} - %msg%n</pattern>
         </encoder>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>logg/old/svarUtSakImport.%d{yyyy-MM-dd}.log.gz</fileNamePattern>
+            <fileNamePattern>logg/old/svarUtSakImport.%d{yyyy-MM-dd}.log.zip</fileNamePattern>
             <maxHistory>365</maxHistory>
         </rollingPolicy>
     </appender>
 
     <appender name="IMPORTLOG" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>logg/forsendelser.log</file>
-    <encoder>
-        <charset>UTF-8</charset>
-        <pattern>%d{yyyy-MM-dd HH:mm:ss};%msg%n</pattern>
-    </encoder>
-    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-        <fileNamePattern>logg/old/forsendelser.%d{yyyy-MM-dd}.log.gz</fileNamePattern>
-        <maxHistory>365</maxHistory>
-    </rollingPolicy>
+        <encoder>
+            <charset>UTF-8</charset>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss};%msg%n</pattern>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>logg/old/forsendelser.%d{yyyy-MM-dd}.log.zip</fileNamePattern>
+            <maxHistory>365</maxHistory>
+        </rollingPolicy>
+    </appender>
+
+    <appender name="FEILLOG" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>logg/feilkjoringer.log</file>
+        <encoder>
+            <charset>UTF-8</charset>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss};%msg%n</pattern>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+            <fileNamePattern>logg/feilkjoringer.%i.log.zip</fileNamePattern>
+            <minIndex>1</minIndex>
+            <maxIndex>2</maxIndex>
+        </rollingPolicy>
+
+        <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+            <maxFileSize>5MB</maxFileSize>
+        </triggeringPolicy>
     </appender>
 
     <logger name="forsendelser" level="INFO" additivity="false">
         <appender-ref ref="IMPORTLOG"/>
     </logger>
 
+    <logger name="errorlogger" level="ERROR" additivity="false">
+        <appender-ref ref="FEILLOG"/>
+    </logger>
+
     <root level="INFO">
-        <appender-ref ref="FILE" />
+        <appender-ref ref="FILE"/>
     </root>
 </configuration>

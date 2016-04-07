@@ -2,7 +2,7 @@ package no.ks.svarut.sakimport;
 
 import no.geointegrasjon.rep.arkiv.dokument.xml_schema._2012_01.Dokument;
 import no.geointegrasjon.rep.arkiv.kjerne.xml_schema._2012_01.Journalpost;
-import no.geointegrasjon.rep.arkiv.oppdatering.xml_wsdl._2012_01_31.ValidationException;
+import no.geointegrasjon.rep.arkiv.oppdatering.xml_wsdl._2012_01_31.*;
 import no.ks.svarut.sakimport.GI.DownloadHandler;
 import no.ks.svarut.sakimport.GI.SakImportConfig;
 import no.ks.svarut.sakimport.GI.Saksimporter;
@@ -20,11 +20,12 @@ public class GIImportManager {
     private static Logger forsendelseslog = LoggerFactory.getLogger("forsendelser");
     private final String[] args;
 
+
     public GIImportManager(String... args) {
         this.args = args;
     }
 
-    public void importerNyeForsendelser() {
+    public boolean importerNyeForsendelser() {
         log.info("Start import av forsendelser");
         try {
             SakImportConfig config = new SakImportConfig(args);
@@ -34,25 +35,35 @@ public class GIImportManager {
             Saksimporter importer = new Saksimporter(config);
             log.info("Importerer {} forsendelser", forsendelser != null ? forsendelser.size() : 0);
             forsendelseslog.info("{} nye forsendelser", forsendelser != null ? forsendelser.size() : 0);
+            boolean failed = false;
             for (Forsendelse forsendelse : forsendelser) {
                 log.info("Importerer forsendelse {} {}", forsendelse.getTittel(), forsendelse.getId());
-                importerEnForsendelse(nedlaster, importer, forsendelse);
+                try {
+                    importerEnForsendelse(nedlaster, importer, forsendelse);
+                } catch(Exception e){
+                    failed = true;
+                }
             }
             log.info("Importering til sakssystem er ferdig.");
             DownloadHandler.es.shutdown();
+            return failed;
         } catch (Exception e) {
             log.error("Noe gikk galt", e);
+            return true;
         }
     }
 
-    private void importerEnForsendelse(Forsendelsesnedlaster nedlaster, Saksimporter importer, Forsendelse forsendelse) {
+    private void importerEnForsendelse(Forsendelsesnedlaster nedlaster, Saksimporter importer, Forsendelse forsendelse) throws IOException, ApplicationException, FinderException, OperationalException, ImplementationException, SystemException {
         try (final Fil fil = nedlaster.hentForsendelseFil(forsendelse)) {
 
             final Journalpost journalpost = importer.importerJournalPost(forsendelse);
             if(journalpost == null)
                 log.error("Journalpost er null");
             if(journalpost != null)
-                log.info("Laget journalpost {} for forsendelse {}", journalpost.getJournalpostnummer(), forsendelse.getId());
+                log.info("Laget journalpost {} for forsendelse {}", journalpost.getJournalnummer().getJournalaar() + "/" + journalpost.getJournalnummer().getJournalsekvensnummer(), forsendelse.getId());
+
+            //fix for ephorte, eksternnøkkel blir ikke lagt inn
+            importer.oppdaterEksternNoekkel(forsendelse, journalpost.getJournalnummer());
 
             if (fil.getMimetype().contains("application/zip")) {
                 lagDokumentFraZipfil(importer, forsendelse, fil, journalpost);
@@ -61,12 +72,13 @@ public class GIImportManager {
                 final Dokument dokument = importer.importerDokument(journalpost, forsendelse.getTittel(), fil.getFilename(), fil.getMimetype(), fil.getKryptertData(), true, forsendelse, () -> nedlaster.kvitterForsendelse(forsendelse));
                 log.info("Laget dokument {} for forsendelse {}", dokument.getDokumentnummer(), forsendelse.getId());
             }
-            forsendelseslog.info("Importerte forsendelse med tittel {},id {}, saksnr: {} og journalpostnummer {}.", forsendelse.getTittel(), forsendelse.getId(), journalpost.getSaksnr().getSaksaar() +"/"+ journalpost.getSaksnr().getSakssekvensnummer(), journalpost.getJournalpostnummer());
+            forsendelseslog.info("Importerte forsendelse med tittel {},id {}, saksnr: {} og journalpostnummer {}.", forsendelse.getTittel(), forsendelse.getId(), journalpost.getSaksnr().getSaksaar() +"/"+ journalpost.getSaksnr().getSakssekvensnummer(),  journalpost.getJournalnummer().getJournalaar() + "/" + journalpost.getJournalnummer().getJournalsekvensnummer());
         } catch (ValidationException e) {
             log.info("Forsendelse {} validerte ikke.", forsendelse.getId(), e);
         } catch (Exception e) {
             forsendelseslog.info("Import av forsendelse {} med tittel {} feilet.", forsendelse.getId(), forsendelse.getTittel());
             log.info("Forsendelse {} ble ikke lagret.", forsendelse.getId(), e);
+            throw e;
         }
     }
 

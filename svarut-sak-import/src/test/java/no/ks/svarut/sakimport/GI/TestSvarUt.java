@@ -68,7 +68,7 @@ public class TestSvarUt {
 
     @Test
     public void testNormalRun() throws Exception {
-        Main.main(args);
+        Main.run(args);
     }
 
     private String[] lagArgs() {

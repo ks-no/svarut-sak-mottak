@@ -11,6 +11,6 @@ public class TestReelleDataFraTestSvarutTilTestGI {
     @Ignore
     public void testSvarutTestMotGEOTest() throws Exception {
         String[] args = new String[]{"-konfigurasjonsfil", "testConfig.properties"};
-        Main.main(args);
+        Main.run(args);
     }
 }
