@@ -28,8 +28,8 @@ må config.properties oppdateres. Følgende felter må fylles ut:
 
 Egen konfigurasjonsfil kan legges der du pakket opp zip fila og vil da kunne finnes automatisk av programmet eller du kan angi konfigurasjonsfila som kommandolinjeparameter:
 
-`java -jar svarut-sak-import.jar -konfigurasjonsfil <filnavn>`
 `java -jar svarut-sak-import.jar` laster da config.properties i samme mappe
+`java -jar svarut-sak-import.jar -konfigurasjonsfil <filnavn>`
 
 Alle parametre kan også gis som kommandolinjeparametre. For å sette default saksår:
 
@@ -63,6 +63,13 @@ Her er systembruker satt opp fordi jobben da vil kjøres uavhengig av tidspunkt.
 være pålogget konstant. For å slette den periodiske jobben:
 
 `schtasks /delete /tn "SvarUt Sakimport"`
+
+For å overvåke applikasjonen har vi laget noen loggfiler:
+logg/feilkjoringer.log får en ny linje hver gang importen feiler på en eller flere forsendelser.
+logg/forsendelser.log får en linje for hver importerte forsendelse.
+
+Noen kommuner har satt opp overvåking på når disse filene sist ble endret. Feilkjoringer.log skal ikke være endret siste 2 timer f.eks
+Forsendelser.log skal være endret for hver scheduled task, f.eks for ikke mindre enn 20 min siden.
 
 Nedlasting av siste versjon
 -----------------------------------
