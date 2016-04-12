@@ -20,7 +20,8 @@ må config.properties oppdateres. Følgende felter må fylles ut:
 3. svaruturl -- URL til SvarUt sin webservice for mottaksmodul
 4. sakbrukernavn -- Brukernavn for sakssystem
 5. sakpassord -- Passord for sakssystem
-6. sakurl -- URL til sakssystemets webservice
+6. sakurl -- URL til geointegrasjon SakArkivOppdateringService service
+4. sakinnsynurl -- URL til geointegrasjon SakArkivInnsynService service
 7. saksnr -- Default saksnummer for saker som ikke allerede eksisterer i sakssystemet
 8. saksaar -- Hvilket saksår forsendelsen legges inn med
 9. hostname -- hostname for serveren som sakImport kjører på
