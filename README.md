@@ -22,8 +22,8 @@ må config.properties oppdateres. Følgende felter må fylles ut:
 5. sakpassord -- Passord for sakssystem
 6. sakurl -- URL til geointegrasjon SakArkivOppdateringService service
 4. sakinnsynurl -- URL til geointegrasjon SakArkivInnsynService service
-7. saksnr -- Default saksnummer for saker som ikke allerede eksisterer i sakssystemet
-8. saksaar -- Hvilket saksår forsendelsen legges inn med
+7. saksnr -- Saksnummer til en fordelingssak, ger vil alle forsendelse som vi ikke hvet hvor skal havne.
+8. saksaar -- Saksår for samme sak.
 9. hostname -- hostname for serveren som sakImport kjører på
 9. privatekeyfil -- Sti og navn til privat nøkkel for å dekryptere nedlastede forsendelser
 
