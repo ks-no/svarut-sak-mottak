@@ -24,7 +24,7 @@ må config.properties oppdateres. Følgende felter må fylles ut:
 4. sakinnsynurl -- URL til geointegrasjon SakArkivInnsynService service
 7. saksnr -- Saksnummer til en fordelingssak, ger vil alle forsendelse som vi ikke hvet hvor skal havne.
 8. saksaar -- Saksår for samme sak.
-9. hostname -- hostname for serveren som sakImport kjører på
+9. hostname -- hostname for serveren som sakImport kjører på, dette må være hostname som GeoIntegrasjon får tilgang til.
 9. privatekeyfil -- Sti og navn til privat nøkkel for å dekryptere nedlastede forsendelser
 
 Egen konfigurasjonsfil kan legges der du pakket opp zip fila og vil da kunne finnes automatisk av programmet eller du kan angi konfigurasjonsfila som kommandolinjeparameter:
