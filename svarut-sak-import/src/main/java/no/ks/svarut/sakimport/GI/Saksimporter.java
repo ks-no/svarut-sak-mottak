@@ -65,7 +65,6 @@ public class Saksimporter {
         generertJournalpost.setSaksnr(finnSaksnummer(forsendelse));
 
         NoarkMetadataForImport metadataForImport = forsendelse.getMetadataForImport();
-        lagMerknadMedNoarkMetadata(forsendelse, generertJournalpost);
         fyllInnMetadata(generertJournalpost, metadataForImport);
         try {
             return opprettEphorteJournalpost(generertJournalpost, service);
@@ -75,14 +74,37 @@ public class Saksimporter {
         }
     }
 
-    private void lagMerknadMedNoarkMetadata(Forsendelse forsendelse, Journalpost generertJournalpost) {
+    private Merknad lagMerknadMedMottaker(Forsendelse forsendelse) {
+        final Merknad mottaker = new Merknad();
+        mottaker.setMerknadstype("SVARUT-MOT");
+        mottaker.setMerknadstekst(lagAdresse(forsendelse.getMottaker()));
+        return mottaker;
+    }
+
+    private String lagAdresse(Mottaker mottaker) {
+        String str =  "" + mottaker.getOrgnr() + "\n" + mottaker.getNavn() + "\n";
+        if(mottaker.getAdresse1() != null && !"".equals(mottaker.getAdresse1())){
+            str += mottaker.getAdresse1() + "\n";
+        }
+        if(mottaker.getAdresse2() != null && !"".equals(mottaker.getAdresse2())){
+            str += mottaker.getAdresse2() + "\n";
+        }
+        if(mottaker.getAdresse3() != null && !"".equals(mottaker.getAdresse3())){
+            str += mottaker.getAdresse3() + "\n";
+        }
+        str += mottaker.getPostnr() + "\n";
+        str += mottaker.getPoststed() + "\n";
+        if(mottaker.getLand() != null && !"".equals(mottaker.getLand())) {
+            str += mottaker.getLand();
+        }
+        return str;
+    }
+
+    private Merknad lagMerknadMedNoarkMetadata(Forsendelse forsendelse) {
         final Merknad noarkMetadata = new Merknad();
-        noarkMetadata.setSystemID("SVARUT");
-        noarkMetadata.setMerknadRegistrertAv("SVARUT");
+        noarkMetadata.setMerknadstype("SVARUT-MET");
         noarkMetadata.setMerknadstekst(lagDeresReferanse(forsendelse.getSvarSendesTil(), forsendelse.getMetadataFraAvleverendeSystem()));
-        if(generertJournalpost.getMerknader() == null)
-            generertJournalpost.setMerknader(new MerknadListe());
-        generertJournalpost.getMerknader().getListe().add(noarkMetadata);
+        return noarkMetadata;
     }
 
     private void fyllInnMetadata(Journalpost generertJournalpost, NoarkMetadataForImport metadataForImport) {
@@ -262,6 +284,7 @@ public class Saksimporter {
 
         final Filreferanse filinnhold = new Filreferanse();
         filinnhold.setFilnavn(filnavn);
+
         filinnhold.setMimeType(mimeType);
         filinnhold.setUri("http://" + sakImportConfig.getSakImportHostname() + ":9977/forsendelse/" + forsendelseId);
         filinnhold.setKvitteringUri("http://" + sakImportConfig.getSakImportHostname() + ":9977/kvitter/" + forsendelseId);
@@ -340,5 +363,12 @@ public class Saksimporter {
 
     public Journalpost oppdaterEksternNoekkel(Forsendelse forsendelse, Journalnummer journalnummer) throws ApplicationException, ImplementationException, ValidationException, SystemException, FinderException, OperationalException {
         return service.oppdaterJournalpostEksternNoekkel(lagEksternNoekkel(), journalnummer, arkivKontekst);
+    }
+
+    public void opprettMerknader(Forsendelse forsendelse, Journalpost journalpost) throws ApplicationException, ImplementationException, ValidationException, SystemException, FinderException, OperationalException {
+        final MerknadListe merknader = new MerknadListe();
+        merknader.getListe().add(lagMerknadMedNoarkMetadata(forsendelse));
+        merknader.getListe().add(lagMerknadMedMottaker(forsendelse));
+        service.nyJournalpostMerknad(merknader, journalpost.getJournalnummer(), arkivKontekst);
     }
 }

@@ -65,6 +65,8 @@ public class GIImportManager {
             //fix for ephorte, eksternnøkkel blir ikke lagt inn
             importer.oppdaterEksternNoekkel(forsendelse, journalpost.getJournalnummer());
 
+            importer.opprettMerknader(forsendelse, journalpost);
+
             if (fil.getMimetype().contains("application/zip")) {
                 lagDokumentFraZipfil(importer, forsendelse, fil, journalpost);
                 nedlaster.kvitterForsendelse(forsendelse);

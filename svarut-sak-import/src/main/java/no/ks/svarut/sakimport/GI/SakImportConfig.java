@@ -5,8 +5,11 @@ import no.ks.svarut.sakimport.SvarUtCommandLineParser;
 import no.ks.svarut.sakimport.kryptering.Kryptering;
 import org.apache.commons.cli.CommandLine;
 import org.apache.http.auth.AuthScope;
+import org.apache.http.auth.AuthenticationException;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.CredentialsProvider;
+import org.apache.http.client.methods.HttpRequestBase;
+import org.apache.http.impl.auth.BasicScheme;
 import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
@@ -97,14 +100,22 @@ public class SakImportConfig {
         HttpClientBuilder clientBuilder = HttpClientBuilder.create();
 
         AuthScope authScope = new AuthScope(this.host, this.port);
-        UsernamePasswordCredentials credentials = new UsernamePasswordCredentials(svarUtBrukernavn, svarUtPassord);
+        UsernamePasswordCredentials credentials = getSvarUtHttpCredentials();
 
         CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
         credentialsProvider.setCredentials(authScope, credentials);
 
+
         clientBuilder.setDefaultCredentialsProvider(credentialsProvider);
 
-        return settOppHttpKlient(clientBuilder);
+
+        final CloseableHttpClient closeableHttpClient = settOppHttpKlient(clientBuilder);
+
+        return closeableHttpClient;
+    }
+
+    private UsernamePasswordCredentials getSvarUtHttpCredentials() {
+        return new UsernamePasswordCredentials(svarUtBrukernavn, svarUtPassord);
     }
 
     private Properties getDefaultProperties(String propertiesFilsti) {
@@ -280,5 +291,13 @@ public class SakImportConfig {
 
     public String getSakInnsynUrl() {
         return sakInnsynUrl;
+    }
+
+    public void authenticate(HttpRequestBase request) {
+        try {
+            request.addHeader(new BasicScheme().authenticate(getSvarUtHttpCredentials(), request, null));
+        } catch (AuthenticationException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

@@ -42,6 +42,7 @@ public class Forsendelsesnedlaster {
         HttpResponse response = null;
 
             HttpGet get = new HttpGet(config.getSvarUtHost() + urlStiNyeForsendelser);
+            config.authenticate(get);
             log.info("Henter " + get.getURI());
         try {
             response = httpClient.execute(get);
@@ -98,6 +99,7 @@ public class Forsendelsesnedlaster {
 
     public Fil hentForsendelseFil(Forsendelse forsendelse) {
         final HttpGet httpGet = new HttpGet(forsendelse.getDownloadUrl());
+        config.authenticate(httpGet);
         final HttpResponse response;
         try (CloseableHttpClient httpClient = config.httpClientForSvarUt()){
             response = httpClient.execute(httpGet);
@@ -122,6 +124,7 @@ public class Forsendelsesnedlaster {
 
     public void kvitterForsendelse(Forsendelse forsendelse) {
         final HttpPost httpPost = new HttpPost(config.getSvarUtHost() + urlStiKvitterMottak + forsendelse.getId());
+        config.authenticate(httpPost);
         try {
             final HttpResponse execute = config.httpClientForSvarUt().execute(httpPost);
             if (execute.getStatusLine().getStatusCode() == HttpStatus.SC_OK) return;
