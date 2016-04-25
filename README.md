@@ -11,6 +11,9 @@ Nyeste versjon av sakimport kan lastes ned via SvarUt, en må ha tilgang til Sva
 
 Hvordan bruke Sakimport
 -----------------------------------
+
+Java 8 med unlimited strength cryptography må være installert.
+
 Sakimport distribueres som en zipfil. Denne inneholder denne readme-filen, applikasjonen (svarut-sak-import.jar), et
 bat-script som starter applikasjonen, samt en katalog med konfigurasjonsfiler. Før du kan begynne å bruke applikasjonen
 må config.properties oppdateres. Følgende felter må fylles ut:
@@ -47,12 +50,15 @@ deres lastes opp i SvarUt (samme sted som servicepassord genereres) med nivå 4-
 uten dette sertifikatet. I tillegg må det private sertifikatet (X509-sertifikat, .pem-filer) være tilgjengelig for
 Sakimport, slik at forsendelsene kan dekrypteres. For å generere RSA nøkkelpar med openSSL kan følgende kommando brukes:
 
-`openssl req -x509 -newkey rsa:2048 -nodes -keyout key.pem -out cert.pem -days 999`
+`openssl req -x509 -newkey rsa:2048 -nodes -keyout privatekey.pem -out public.pem -days 99999`
 
-Dette sertifikatparet vil være gyldig i 999 dager og er ikke låst med passord. Last opp cert.pem til SvarUt og gjør
-key.pem tilgjengelig for importmodulen.
+Dette sertifikatparet vil være gyldig i 99999 dager og er ikke låst med passord. Last opp public.pem til SvarUt og gjør
+privatekey.pem tilgjengelig for importmodulen.
 
-Forsendelser er tilgjengelig for sakimport i 2 timer og sakimport bør derfor settes opp som en gjentagende jobb
+For windows kan en laste ned: https://slproweb.com/products/Win32OpenSSL.html
+`openssl req -x509 -newkey rsa:2048 -nodes -keyout privatekey.pem -out public.pem -days 99999 -config c:\<opensslinstallmappe>\bin\openssl.cfg`
+
+Forsendelser er tilgjengelig for sakimport i 24 timer og sakimport bør derfor settes opp som en gjentagende jobb
 (cron-jobb eller en scheduled task). Forsendelser som ikke hentes innen tidsfristen blir sendt til Altinn og følger det
 normale løpet for forsendelser i SvarUt. I et Windows-basert system må task scheduler være aktivert. Denne kan
 konfigureres via kommandolinjen eller gjennom det grafiske brukergrensesnittet. For å sette opp en jobb som kjører
