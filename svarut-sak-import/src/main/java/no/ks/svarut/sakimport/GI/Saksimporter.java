@@ -234,7 +234,11 @@ public class Saksimporter {
 
     private String lagDeresReferanse(Mottaker svarSendesTil, NoarkMetadataFraAvleverendeSakssystem noarkMetadataFraAvleverendeSystem) {
         final DeresReferanse deresReferanse = new DeresReferanse(svarSendesTil, noarkMetadataFraAvleverendeSystem);
-        return new Gson().toJson(deresReferanse);
+        String s = new Gson().toJson(deresReferanse);
+        if(s.length() > 4000) {
+            s = "Metdata lenger enn 4000 tegn sjekk svarut for metadata.";
+        }
+        return s;
     }
 
     private EnkelAdresse lagEnkelAdresse(Avsender avsender) {
