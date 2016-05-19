@@ -9,24 +9,53 @@ logg-katalogen (genereres når loggene roteres).
 Nyeste versjon av sakimport kan lastes ned via SvarUt, en må ha tilgang til SvarUt for å få lov å laste ned filen.
 [Svarut-sak-import](https://svarut.ks.no/releases/svarut-sak-import-latest.zip)
 
-Hvordan bruke Sakimport
+Hvordan installere Sakimport
 -----------------------------------
 
-Java 8 med unlimited strength cryptography må være installert.
+Forbredelser:
+
+Sakimport må kjøre på en server som har tilgang til https://svarut.ks.no og saksystemet sin geointegrasjon webservice.
+
+1. Når server er valgt må java 8 installeres med unlimited strength cryptography.
+[Java8](http://www.oracle.com/technetwork/java/javase/downloads/index.html)
+[Java 8 unlimited strength crypto](http://www.oracle.com/technetwork/java/javase/downloads/jce8-download-2133166.html)
+
+2. For ephorte brukere, må det legges inn ny config/lisens fil, kontakt every for å få denne.
+
+3. Sakimport må ha en bruker som kan opprette journalposter i sakssystemet. Det må også opprettes en fordelings sak, hvor forsendelser som ikke
+kan puttes direkte på en sak havner.
+
+4. Kontakt svarut@ks.no for å få opprettet mottakersystem i SvarUt.
+
+5. Alle forsendelser som lastes ned med Sakimport er kryptert. For at dette skal fungere må det offentlige sertifikatet
+deres lastes opp i SvarUt (samme sted som servicepassord genereres) med nivå 4-innlogging. Sakimport kan ikke tas i bruk
+uten dette sertifikatet. I tillegg må det private sertifikatet (X509-sertifikat, .pem-filer) være tilgjengelig for
+Sakimport, slik at forsendelsene kan dekrypteres. For å generere RSA nøkkelpar med openSSL kan følgende kommando brukes:
+`openssl req -x509 -newkey rsa:2048 -nodes -keyout privatekey.pem -out public.pem -days 99999`
+Dette sertifikatparet vil være gyldig i 99999 dager og er ikke låst med passord. Last opp public.pem til SvarUt og gjør
+privatekey.pem tilgjengelig for importmodulen.
+For windows kan en laste ned: https://slproweb.com/products/Win32OpenSSL.html
+`openssl req -x509 -newkey rsa:2048 -nodes -keyout privatekey.pem -out public.pem -days 99999 -config c:\<opensslinstallmappe>\bin\openssl.cfg`
+public.pem lastet opp i svarut på mottakersystem.
+privatekey.pem er hemmelig og skal brukes av sakimport.
+
+6. Sakimport må ha urlene til geointegrasjon webservicen, vi trenger url for SakArkivOppdateringService og SakArkivInnsynService
+
+Installasjon:
 
 Sakimport distribueres som en zipfil. Denne inneholder denne readme-filen, applikasjonen (svarut-sak-import.jar), et
 bat-script som starter applikasjonen, samt en katalog med konfigurasjonsfiler. Før du kan begynne å bruke applikasjonen
 må config.properties oppdateres. Følgende felter må fylles ut:
 
-1. svarutbrukernavn -- Brukernavn for SvarUt
-2. svarutpassord -- Passord for SvarUt
-3. svaruturl -- URL til SvarUt sin webservice for mottaksmodul
+1. svarutbrukernavn -- Brukernavn for SvarUt (finnes under mottakersystem i svarut)
+2. svarutpassord -- Passord for SvarUt (finnes under mottakersystem i svarut)
+3. svaruturl -- URL til SvarUt sin webservice for mottaksmodul (https://svarut.ks.no/tjenester/svarinn/mottaker/hentNyeForsendelser for produksjon)
 4. sakbrukernavn -- Brukernavn for sakssystem
 5. sakpassord -- Passord for sakssystem
 6. sakurl -- URL til geointegrasjon SakArkivOppdateringService service
 4. sakinnsynurl -- URL til geointegrasjon SakArkivInnsynService service
-7. saksnr -- Saksnummer til en fordelingssak, ger vil alle forsendelse som vi ikke hvet hvor skal havne.
-8. saksaar -- Saksår for samme sak.
+7. saksnr -- Saksnummer til en fordelingssak
+8. saksaar -- Saksår for fordelingssak.
 9. hostname -- hostname for serveren som sakImport kjører på, dette må være hostname som GeoIntegrasjon får tilgang til.
 9. privatekeyfil -- Sti og navn til privat nøkkel for å dekryptere nedlastede forsendelser
 
@@ -44,19 +73,6 @@ først etter egendefinert konfigurasjonsfil angitt som beskrevet over. Dersom de
 config.properties. Hvis kommandolinjeparametre er satt ved oppstart vil disse bli brukt fremfor det som står i
 konfigurasjonsfilen. Det er ikke obligatorisk med alle felter i konfigurasjonsfilen, men dersom de ikke finnes der må
 de oppgis som kommandolinjeparametre. Redigér konfigurasjonsfilen i forhold til hva som passer best for deres system.
-
-Alle forsendelser som lastes ned med Sakimport er kryptert. For at dette skal fungere må det offentlige sertifikatet
-deres lastes opp i SvarUt (samme sted som servicepassord genereres) med nivå 4-innlogging. Sakimport kan ikke tas i bruk
-uten dette sertifikatet. I tillegg må det private sertifikatet (X509-sertifikat, .pem-filer) være tilgjengelig for
-Sakimport, slik at forsendelsene kan dekrypteres. For å generere RSA nøkkelpar med openSSL kan følgende kommando brukes:
-
-`openssl req -x509 -newkey rsa:2048 -nodes -keyout privatekey.pem -out public.pem -days 99999`
-
-Dette sertifikatparet vil være gyldig i 99999 dager og er ikke låst med passord. Last opp public.pem til SvarUt og gjør
-privatekey.pem tilgjengelig for importmodulen.
-
-For windows kan en laste ned: https://slproweb.com/products/Win32OpenSSL.html
-`openssl req -x509 -newkey rsa:2048 -nodes -keyout privatekey.pem -out public.pem -days 99999 -config c:\<opensslinstallmappe>\bin\openssl.cfg`
 
 Forsendelser er tilgjengelig for sakimport i 24 timer og sakimport bør derfor settes opp som en gjentagende jobb
 (cron-jobb eller en scheduled task). Forsendelser som ikke hentes innen tidsfristen blir sendt til Altinn og følger det
