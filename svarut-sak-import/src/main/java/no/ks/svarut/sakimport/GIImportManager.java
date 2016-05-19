@@ -18,6 +18,7 @@ public class GIImportManager {
 
     private static Logger log = LoggerFactory.getLogger(Main.class);
     private static Logger forsendelseslog = LoggerFactory.getLogger("forsendelser");
+    Logger errorlog = LoggerFactory.getLogger("errorlogger");
     private final String[] args;
 
 
@@ -65,7 +66,12 @@ public class GIImportManager {
             //fix for ephorte, eksternnøkkel blir ikke lagt inn
             importer.oppdaterEksternNoekkel(forsendelse, journalpost.getJournalnummer());
 
-            importer.opprettMerknader(forsendelse, journalpost);
+            try {
+                importer.opprettMerknader(forsendelse, journalpost);
+            } catch (Exception e){
+                log.error("Klarte ikke å lage merknader ", e);
+                errorlog.error("Klarte ikke å lagre merknader for journalpost {}", journalpost.getJournalnummer().getJournalaar() + "/" + journalpost.getJournalnummer().getJournalsekvensnummer());
+            }
 
             if (fil.getMimetype().contains("application/zip")) {
                 lagDokumentFraZipfil(importer, forsendelse, fil, journalpost);
