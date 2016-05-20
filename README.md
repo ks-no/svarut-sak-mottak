@@ -25,7 +25,7 @@ Sakimport må kjøre på en server som har tilgang til https://svarut.ks.no og s
 3. Sakimport må ha en bruker som kan opprette journalposter i sakssystemet. Det må også opprettes en fordelings sak, hvor forsendelser som ikke
 kan puttes direkte på en sak havner.
 
-4. Kontakt svarut@ks.no for å få opprettet mottakersystem i SvarUt.
+4. Kontakt svarut@ks.no for å få opprettet mottakersystem i SvarUt. Vi trenger fødselsnr og navn til person som skal konfigurere mottakersystemet.
 
 5. Alle forsendelser som lastes ned med Sakimport er kryptert. For at dette skal fungere må det offentlige sertifikatet
 deres lastes opp i SvarUt (samme sted som servicepassord genereres) med nivå 4-innlogging. Sakimport kan ikke tas i bruk
