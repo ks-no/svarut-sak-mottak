@@ -22,7 +22,7 @@ Sakimport må kjøre på en server som har tilgang til https://svarut.ks.no og s
 
 2. For ephorte brukere, må det legges inn ny config/lisens fil, kontakt every for å få denne.
 
-2. For ephorte må to merknadstyper legges inn SVARUT-MOT og SVARUT-MET.
+2. Ephorte må ha to merknadstyper SVARUT-MOT og SVARUT-MET, disse heter Informasjonstype i Ephorte.
 
 3. Sakimport må ha en bruker som kan opprette journalposter i sakssystemet. Det må også opprettes en fordelings sak, hvor forsendelser som ikke
 kan puttes direkte på en sak havner.
