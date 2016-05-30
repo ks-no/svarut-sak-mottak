@@ -85,7 +85,10 @@ hvert 15. minutt kan følgende kommando brukes:
 `schtasks /create /sc minute /mo 15 /ru SYSTEM /tn "SvarUt Sakimport" /tr \Sti\til\runSakimport.bat`
 
 Her er systembruker satt opp fordi jobben da vil kjøres uavhengig av tidspunkt. Dersom annen bruker benyttes må denne
-være pålogget konstant. For å slette den periodiske jobben:
+være pålogget konstant. Hvis scheduled task ikke fungerer kan det være lurt å endre action, og start in til mappa svarut sak import ligger
+.
+
+For å slette den periodiske jobben:
 
 `schtasks /delete /tn "SvarUt Sakimport"`
 
