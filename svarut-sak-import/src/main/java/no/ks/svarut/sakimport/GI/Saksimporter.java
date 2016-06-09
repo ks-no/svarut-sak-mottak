@@ -61,7 +61,7 @@ public class Saksimporter {
 
         fyllInnKorrespondanseparter(forsendelse, generertJournalpost);
 
-        generertJournalpost.setReferanseEksternNoekkel(lagEksternNoekkel());
+        generertJournalpost.setReferanseEksternNoekkel(lagEksternNoekkel(forsendelse.getId()));
         generertJournalpost.setSaksnr(finnSaksnummer(forsendelse));
 
         NoarkMetadataForImport metadataForImport = forsendelse.getMetadataForImport();
@@ -82,19 +82,19 @@ public class Saksimporter {
     }
 
     private String lagAdresse(Mottaker mottaker) {
-        String str =  "" + mottaker.getOrgnr() + "\n" + mottaker.getNavn() + "\n";
-        if(mottaker.getAdresse1() != null && !"".equals(mottaker.getAdresse1())){
+        String str = "" + mottaker.getOrgnr() + "\n" + mottaker.getNavn() + "\n";
+        if (mottaker.getAdresse1() != null && !"".equals(mottaker.getAdresse1())) {
             str += mottaker.getAdresse1() + "\n";
         }
-        if(mottaker.getAdresse2() != null && !"".equals(mottaker.getAdresse2())){
+        if (mottaker.getAdresse2() != null && !"".equals(mottaker.getAdresse2())) {
             str += mottaker.getAdresse2() + "\n";
         }
-        if(mottaker.getAdresse3() != null && !"".equals(mottaker.getAdresse3())){
+        if (mottaker.getAdresse3() != null && !"".equals(mottaker.getAdresse3())) {
             str += mottaker.getAdresse3() + "\n";
         }
         str += mottaker.getPostnr() + "\n";
         str += mottaker.getPoststed() + "\n";
-        if(mottaker.getLand() != null && !"".equals(mottaker.getLand())) {
+        if (mottaker.getLand() != null && !"".equals(mottaker.getLand())) {
             str += mottaker.getLand();
         }
         return str;
@@ -108,16 +108,16 @@ public class Saksimporter {
     }
 
     private void fyllInnMetadata(Journalpost generertJournalpost, NoarkMetadataForImport metadataForImport) {
-        if(metadataForImport == null) return;
-        if(metadataForImport.getDokumentetsDato() != null)
+        if (metadataForImport == null) return;
+        if (metadataForImport.getDokumentetsDato() != null)
             generertJournalpost.setDokumentetsDato(DateTimeUtil.toGregorianCalendar(metadataForImport.getDokumentetsDato()));
 
-        if(metadataForImport.getJournalposttype() != null && !"".equals(metadataForImport.getJournalposttype().trim())){
+        if (metadataForImport.getJournalposttype() != null && !"".equals(metadataForImport.getJournalposttype().trim())) {
             final Journalposttype value = new Journalposttype();
             value.setKodeverdi(metadataForImport.getJournalposttype());
             generertJournalpost.setJournalposttype(value);
         }
-        if(metadataForImport.getJournalstatus() != null && !"".equals(metadataForImport.getJournalstatus().trim()) ){
+        if (metadataForImport.getJournalstatus() != null && !"".equals(metadataForImport.getJournalstatus().trim())) {
             final Journalstatus value = new Journalstatus();
             value.setKodeverdi(metadataForImport.getJournalstatus());
             generertJournalpost.setJournalstatus(value);
@@ -189,11 +189,12 @@ public class Saksimporter {
 
     Korrespondansepart lagAvsender(Avsender avsender, Mottaker svarSendesTil, NoarkMetadataFraAvleverendeSakssystem noarkMetadataFraAvleverendeSystem, String forsendelseid) {
         Korrespondansepart avsenderKorrespondent = new Korrespondansepart();
-        if(svarSendesTil != null && svarSendesTil.getNavn() != null && !"".equals(svarSendesTil.getNavn().trim())){
+        if (svarSendesTil != null && svarSendesTil.getNavn() != null && !"".equals(svarSendesTil.getNavn().trim())) {
             brukSvarSendesTilSomAvsender(forsendelseid, avsenderKorrespondent, svarSendesTil.getNavn(), lagEnkelAdresse(svarSendesTil), svarSendesTil.getOrgnr(), svarSendesTil.getFnr());
-        }else {
+        } else {
             brukAvsender(avsender, forsendelseid, avsenderKorrespondent);
         }
+
         return avsenderKorrespondent;
     }
 
@@ -203,9 +204,9 @@ public class Saksimporter {
         avsenderKorrespondent.setKorrespondanseparttype(korrespondanseparttype);
 
         avsenderKorrespondent.setDeresReferanse(forsendelseid);
-        if(orgnr != null && !"".equals(orgnr))
+        if (orgnr != null && !"".equals(orgnr))
             avsenderKorrespondent.setKortnavn(orgnr);
-        if(fnr != null && !"".equals(fnr))
+        if (fnr != null && !"".equals(fnr))
             avsenderKorrespondent.setKortnavn(fnr);
 
         final Kontakt kontakt = new Kontakt();
@@ -235,7 +236,7 @@ public class Saksimporter {
     private String lagDeresReferanse(Mottaker svarSendesTil, NoarkMetadataFraAvleverendeSakssystem noarkMetadataFraAvleverendeSystem) {
         final DeresReferanse deresReferanse = new DeresReferanse(svarSendesTil, noarkMetadataFraAvleverendeSystem);
         String s = new Gson().toJson(deresReferanse);
-        if(s.length() > 4000) {
+        if (s.length() > 4000) {
             s = "Metdata lenger enn 4000 tegn sjekk svarut for metadata.";
         }
         return s;
@@ -305,39 +306,41 @@ public class Saksimporter {
     }
 
 
-    EksternNoekkel lagEksternNoekkel() {
+    EksternNoekkel lagEksternNoekkel(String forsendelseid) {
         EksternNoekkel eksternNoekkel = new EksternNoekkel();
-        eksternNoekkel.setFagsystem("SvarUt");
-        eksternNoekkel.setNoekkel("SVARUT");
+        eksternNoekkel.setFagsystem("SvarUt.Korrespondansepart.ConversationId");
+        eksternNoekkel.setNoekkel(forsendelseid);
         return eksternNoekkel;
     }
 
     Saksnummer finnSaksnummer(Forsendelse forsendelse) {
         Saksnummer saksnummer = new Saksnummer();
-        if(forsendelse.getMetadataForImport() != null && forsendelse.getMetadataForImport().getSakssekvensnummer() != 0 && forsendelse.getMetadataForImport().getSaksaar() != 0){
+        if (forsendelse.getMetadataForImport() != null && forsendelse.getMetadataForImport().getSakssekvensnummer() != 0 && forsendelse.getMetadataForImport().getSaksaar() != 0) {
             saksnummer.setSaksaar(BigInteger.valueOf(forsendelse.getMetadataForImport().getSaksaar()));
             saksnummer.setSakssekvensnummer(BigInteger.valueOf(forsendelse.getMetadataForImport().getSakssekvensnummer()));
             return saksnummer;
-        } else if(forsendelse.getSvarPaForsendelse() != null && !"".equals(forsendelse.getSvarPaForsendelse())){
+        } else if (forsendelse.getSvarPaForsendelse() != null && !"".equals(forsendelse.getSvarPaForsendelse())) {
             try {
                 final JournalpostListe liste = innsyn.sok(forsendelse.getSvarPaForsendelse());
-                if(liste.getListe().size()> 1){
+                if (liste.getListe().size() > 1) {
                     log.warn("Fann flere journalposter med id " + forsendelse.getSvarPaForsendelse() + " bruker første resultat");
                 }
-                if(liste.getListe().size() >0){
+                if (liste.getListe().size() > 0) {
                     final Saksnummer saksnr = liste.getListe().get(0).getSaksnr();
-                    log.info("Fann saksnr {} for forsendelse {} med svar på {}", saksnr.getSaksaar() +"/" + saksnr.getSakssekvensnummer() , forsendelse.getId(), forsendelse.getSvarPaForsendelse());
+                    log.info("Fann saksnr {} for forsendelse {} med svar på {}", saksnr.getSaksaar() + "/" + saksnr.getSakssekvensnummer(), forsendelse.getId(), forsendelse.getSvarPaForsendelse());
                     return saksnr;
                 }
-            } catch(Exception e){
-                log.warn("Klarte ikke å finne sak for forsendelseid " + forsendelse.getSvarPaForsendelse(),e );
+                if(liste.getListe().size() == 0){
+                    log.info("Fann ikke saksnr for forsendelse {}, bruker fordelingsak", forsendelse.getSvarPaForsendelse());
+                }
+            } catch (Exception e) {
+                log.warn("Klarte ikke å finne sak for forsendelseid " + forsendelse.getSvarPaForsendelse(), e);
             }
-        } else {
-            saksnummer.setSaksaar(new BigInteger(sakImportConfig.getDefaultSaksAar()));
-            saksnummer.setSakssekvensnummer(new BigInteger(sakImportConfig.getDefaultSaksnr()));
-            return saksnummer;
         }
-        throw new RuntimeException("Klarte ikke å lage saksnr");
+
+        saksnummer.setSaksaar(new BigInteger(sakImportConfig.getDefaultSaksAar()));
+        saksnummer.setSakssekvensnummer(new BigInteger(sakImportConfig.getDefaultSaksnr()));
+        return saksnummer;
     }
 
 
@@ -348,7 +351,7 @@ public class Saksimporter {
         factory.setAddress(url);
         factory.setUsername(username);
         factory.setPassword(password);
-        if(sakImportConfig.isDebug()) {
+        if (sakImportConfig.isDebug()) {
             factory.getInInterceptors().add(new LoggingInInterceptor());
             factory.getOutInterceptors().add(new LoggingOutInterceptor());
         }
@@ -366,7 +369,7 @@ public class Saksimporter {
     }
 
     public Journalpost oppdaterEksternNoekkel(Forsendelse forsendelse, Journalnummer journalnummer) throws ApplicationException, ImplementationException, ValidationException, SystemException, FinderException, OperationalException {
-        return service.oppdaterJournalpostEksternNoekkel(lagEksternNoekkel(), journalnummer, arkivKontekst);
+        return service.oppdaterJournalpostEksternNoekkel(lagEksternNoekkel(forsendelse.getId()), journalnummer, arkivKontekst);
     }
 
     public void opprettMerknader(Forsendelse forsendelse, Journalpost journalpost) throws ApplicationException, ImplementationException, ValidationException, SystemException, FinderException, OperationalException {

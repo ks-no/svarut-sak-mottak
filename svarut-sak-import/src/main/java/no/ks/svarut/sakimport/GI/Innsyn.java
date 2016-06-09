@@ -14,9 +14,11 @@ import org.apache.cxf.interceptor.LoggingOutInterceptor;
 import org.apache.cxf.jaxws.JaxWsProxyFactoryBean;
 import org.apache.cxf.transport.http.HTTPConduit;
 import org.apache.cxf.transports.http.configuration.HTTPClientPolicy;
+import org.slf4j.LoggerFactory;
 
 public class Innsyn {
 
+    private org.slf4j.Logger log = LoggerFactory.getLogger(Innsyn.class);
     private ArkivInnsynPort service;
 
     private SakImportConfig sakImportConfig;
@@ -32,14 +34,20 @@ public class Innsyn {
 
         final SoekskriterieListe sok = new SoekskriterieListe();
         final Soekskriterie soekskriterie = new Soekskriterie();
+
         final Soekefelt soekefelt = new Soekefelt();
-        soekefelt.setFeltnavn("ReferanseEksternNoekkel");
+        soekefelt.setFeltnavn("Korrespondansepart.conversationId");
         soekefelt.setFeltverdi(forsendelseid);
         soekskriterie.setKriterie(soekefelt);
         soekskriterie.setOperator(SoekeOperatorEnum.EQ);
         sok.getListe().add(soekskriterie);
-        final JournalpostListe journalpostListe = service.finnJournalposter(sok, true, false, false, false, arkivKontekst);
-        return journalpostListe;
+        try {
+            final JournalpostListe journalpostListe = service.finnJournalposter(sok, true, false, false, false, arkivKontekst);
+            return journalpostListe;
+        } catch(FinderException e){
+            log.warn("Klarte ikke å finne journalpost", e);
+            return new JournalpostListe();
+        }
     }
 
     private ArkivInnsynPort createInnsynService() {
