@@ -62,7 +62,17 @@ public class Saksimporter {
         fyllInnKorrespondanseparter(forsendelse, generertJournalpost);
 
         generertJournalpost.setReferanseEksternNoekkel(lagEksternNoekkel(forsendelse.getId()));
-        generertJournalpost.setSaksnr(finnSaksnummer(forsendelse));
+        final Object o = finnSaksnummer(forsendelse);
+        if(o instanceof Saksnummer)
+            generertJournalpost.setSaksnr((Saksnummer) o);
+        else if (o instanceof String){
+            //hack for ephorte
+            final SakSystemId value = new SakSystemId();
+            final SystemID value1 = new SystemID();
+            value1.setId((String) o);
+            value.setSystemID(value1);
+            generertJournalpost.setReferanseSakSystemID(value);
+        }
 
         NoarkMetadataForImport metadataForImport = forsendelse.getMetadataForImport();
         fyllInnMetadata(generertJournalpost, metadataForImport);
@@ -313,7 +323,7 @@ public class Saksimporter {
         return eksternNoekkel;
     }
 
-    Saksnummer finnSaksnummer(Forsendelse forsendelse) {
+    Object finnSaksnummer(Forsendelse forsendelse) {
         Saksnummer saksnummer = new Saksnummer();
         if (forsendelse.getMetadataForImport() != null && forsendelse.getMetadataForImport().getSakssekvensnummer() != 0 && forsendelse.getMetadataForImport().getSaksaar() != 0) {
             saksnummer.setSaksaar(BigInteger.valueOf(forsendelse.getMetadataForImport().getSaksaar()));
@@ -326,10 +336,15 @@ public class Saksimporter {
                     log.warn("Fann flere journalposter med id " + forsendelse.getSvarPaForsendelse() + " bruker første resultat");
                 }
                 if (liste.getListe().size() > 0) {
-                    log.info("fann liste med saker" + liste.getListe().get(0) );
-                    log.info("fann liste med saksnr" + liste.getListe().get(0).getSaksnr() );
-                    log.info("Journalpost" + liste.getListe().get(0).getJournalnummer().getJournalaar() + "/" +  liste.getListe().get(0).getJournalnummer().getJournalsekvensnummer());
-                    final Saksnummer saksnr = liste.getListe().get(0).getSaksnr();
+                    final Journalpost journalpost = liste.getListe().get(0);
+                    log.info("fann liste med saker" + journalpost);
+                    log.info("fann liste med saksnr" + journalpost.getSaksnr() );
+                    log.info("Journalpost" + journalpost.getJournalnummer().getJournalaar() + "/" +  journalpost.getJournalnummer().getJournalsekvensnummer());
+                    final Saksnummer saksnr = journalpost.getSaksnr();
+                    if(saksnr == null && journalpost.getReferanseSakSystemID() != null && journalpost.getReferanseSakSystemID().getSystemID() != null) {
+                        log.info("Saksnr er null, må bruke referanseSakSystemID {}", journalpost.getReferanseSakSystemID().getSystemID().getId());
+                        return journalpost.getReferanseSakSystemID().getSystemID().getId();
+                    }
                     log.info("Fann saksnr {} for forsendelse {} med svar på {}", saksnr.getSaksaar() + "/" + saksnr.getSakssekvensnummer(), forsendelse.getId(), forsendelse.getSvarPaForsendelse());
                     return saksnr;
                 }
