@@ -32,6 +32,7 @@ import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
 import java.util.Properties;
+import ch.qos.logback.classic.Level;
 
 public class SakImportConfig {
     private static Logger log = LoggerFactory.getLogger(SakImportConfig.class);
@@ -73,6 +74,12 @@ public class SakImportConfig {
         sakDefaultSaksnr = hentConfig(properties, cmdLine, KommandoParametre.SAK_DEFAULT_SAKSNR);
         privateKeyFil = hentConfig(properties, cmdLine, KommandoParametre.PRIVATE_KEY_FIL);
         debug = cmdLine.hasOption(KommandoParametre.DEBUG.getValue());
+
+        if(debug) {
+            log.info("Setting \"no\" logger to debug");
+            ch.qos.logback.classic.Logger root = (ch.qos.logback.classic.Logger) LoggerFactory.getLogger("no");
+            root.setLevel(Level.DEBUG);
+        }
     }
 
     private String settPropertiesFilsti(CommandLine cmdLine) {

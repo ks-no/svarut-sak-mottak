@@ -326,6 +326,9 @@ public class Saksimporter {
                     log.warn("Fann flere journalposter med id " + forsendelse.getSvarPaForsendelse() + " bruker første resultat");
                 }
                 if (liste.getListe().size() > 0) {
+                    log.info("fann liste med saker" + liste.getListe().get(0) );
+                    log.info("fann liste med saksnr" + liste.getListe().get(0).getSaksnr() );
+                    log.info("Journalpost" + liste.getListe().get(0).getJournalnummer().getJournalaar() + "/" +  liste.getListe().get(0).getJournalnummer().getJournalsekvensnummer());
                     final Saksnummer saksnr = liste.getListe().get(0).getSaksnr();
                     log.info("Fann saksnr {} for forsendelse {} med svar på {}", saksnr.getSaksaar() + "/" + saksnr.getSakssekvensnummer(), forsendelse.getId(), forsendelse.getSvarPaForsendelse());
                     return saksnr;
@@ -351,9 +354,15 @@ public class Saksimporter {
         factory.setAddress(url);
         factory.setUsername(username);
         factory.setPassword(password);
+        log.info("Creating sak arkiv service debug is {}", sakImportConfig.isDebug());
         if (sakImportConfig.isDebug()) {
-            factory.getInInterceptors().add(new LoggingInInterceptor());
-            factory.getOutInterceptors().add(new LoggingOutInterceptor());
+            log.debug("Adding debug logging for cxf");
+            LoggingInInterceptor loggingInInterceptor = new LoggingInInterceptor();
+            loggingInInterceptor.setPrettyLogging(true);
+            LoggingOutInterceptor loggingOutInterceptor = new LoggingOutInterceptor();
+            loggingOutInterceptor.setPrettyLogging(true);
+            factory.getInInterceptors().add(loggingInInterceptor);
+            factory.getOutInterceptors().add(loggingOutInterceptor);
         }
         SakArkivOppdateringPort serviceV3 = (SakArkivOppdateringPort) factory.create();
         Client proxy = ClientProxy.getClient(serviceV3);

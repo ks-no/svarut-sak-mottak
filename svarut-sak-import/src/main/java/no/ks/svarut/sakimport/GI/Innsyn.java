@@ -57,8 +57,13 @@ public class Innsyn {
         factory.setUsername(sakImportConfig.getSakBrukernavn());
         factory.setPassword(sakImportConfig.getSakPassord());
         if(sakImportConfig.isDebug()) {
-            factory.getInInterceptors().add(new LoggingInInterceptor());
-                  factory.getOutInterceptors().add(new LoggingOutInterceptor());
+            log.debug("Adding debug logging for cxf");
+            LoggingInInterceptor loggingInInterceptor = new LoggingInInterceptor();
+            loggingInInterceptor.setPrettyLogging(true);
+            LoggingOutInterceptor loggingOutInterceptor = new LoggingOutInterceptor();
+            loggingOutInterceptor.setPrettyLogging(true);
+            factory.getInInterceptors().add(loggingInInterceptor);
+            factory.getOutInterceptors().add(loggingOutInterceptor);
         }
         ArkivInnsynPort serviceV3 = (ArkivInnsynPort) factory.create();
         Client proxy = ClientProxy.getClient(serviceV3);
