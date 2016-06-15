@@ -106,6 +106,11 @@ Nedlasting av siste versjon
 
 [Eldre versjoner](https://svarut.ks.no/releases/)
 
+Versjoner:
+
+11. Første release
+12. Støtte for å kunne putte forsendelse på rett sak, om det er svar på en annen forsendelse. (for Ephorte krever dette versjon 1.0.4.2 av ephorte5GI og 5.3.0 av ncore)
+
 Utvikling av sakimport
 ===================================
 
