@@ -108,8 +108,14 @@ Nedlasting av siste versjon
 
 Versjoner:
 
-11. Første release
-12. Støtte for å kunne putte forsendelse på rett sak, om det er svar på en annen forsendelse. (for Ephorte krever dette versjon 1.0.4.2 av ephorte5GI og 5.3.0 av ncore)
+<ul>
+    <li>11. Første release</li>
+    <li>12. Støtte for å kunne putte forsendelse på rett sak, om det er svar på en annen forsendelse. (for Ephorte krever dette versjon 1.0.4.2 av ephorte5GI og 5.3.0 av ncore)</li>
+</ul>
+
+
+
+
 
 Utvikling av sakimport
 ===================================
