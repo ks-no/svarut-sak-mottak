@@ -110,8 +110,13 @@ Versjoner:
 
 <ul>
     <li>11. Første release</li>
-    <li>12. Støtte for å kunne putte forsendelse på rett sak, om det er svar på en annen forsendelse. (for Ephorte krever dette versjon 1.0.4.2 av ephorte5GI og 5.3.0 av ncore)</li>
+    <li>12. Støtte for å kunne svare på forsendelse og putte forsendelse på korrekt sak. (for Ephorte krever dette versjon 1.0.4.2 av ephorte5GI og 5.3.0 av ncore)
+    </li>
 </ul>
+
+Oppgraderings rutine:
+* Last ned zip fil
+* Erstatt eksisterende filer med de i zip filen.
 
 
 
