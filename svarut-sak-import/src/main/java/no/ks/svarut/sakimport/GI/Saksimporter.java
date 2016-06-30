@@ -77,10 +77,10 @@ public class Saksimporter {
         NoarkMetadataForImport metadataForImport = forsendelse.getMetadataForImport();
         fyllInnMetadata(generertJournalpost, metadataForImport);
         try {
-            return opprettEphorteJournalpost(generertJournalpost, service);
+            return opprettJournalpost(generertJournalpost, service);
         } catch (ValidationException e) {
             log.info("Klarte ikke å opprette journalpost med saksnr {}, prøver med default saksnummer {}", forsendelse.getMetadataForImport().getSakssekvensnummer(), sakImportConfig.getDefaultSaksnr());
-            return opprettEphorteJournalPostMedDefaultSaksnr(generertJournalpost);
+            return opprettJournalPostMedDefaultSaksnr(generertJournalpost);
         }
     }
 
@@ -134,11 +134,11 @@ public class Saksimporter {
         }
     }
 
-    private Journalpost opprettEphorteJournalPostMedDefaultSaksnr(Journalpost generertJournalpost) throws ValidationException {
+    private Journalpost opprettJournalPostMedDefaultSaksnr(Journalpost generertJournalpost) throws ValidationException {
         Saksnummer defaultSaksnr = new Saksnummer();
         defaultSaksnr.setSakssekvensnummer(new BigInteger(sakImportConfig.getDefaultSaksnr()));
         generertJournalpost.setSaksnr(defaultSaksnr);
-        return opprettEphorteJournalpost(generertJournalpost, service);
+        return opprettJournalpost(generertJournalpost, service);
     }
 
     public Dokument importerDokument(Journalpost journalpost, String tittel, String filnavn, String mimeType, InputStream dokumentData, boolean hoveddokument, Forsendelse forsendelse, Runnable kvittering) {
@@ -163,7 +163,7 @@ public class Saksimporter {
         return server;
     }
 
-    private Journalpost opprettEphorteJournalpost(Journalpost generertJournalpost, SakArkivOppdateringPort service) throws ValidationException {
+    private Journalpost opprettJournalpost(Journalpost generertJournalpost, SakArkivOppdateringPort service) throws ValidationException {
         Journalpost returnertJournalpost = null;
         try {
             returnertJournalpost = service.nyJournalpost(generertJournalpost, getArkivKontekst());
