@@ -42,7 +42,7 @@ public class Saksimporter {
     private org.slf4j.Logger log = LoggerFactory.getLogger(Saksimporter.class);
 
     public Saksimporter(SakImportConfig sakImportConfig) {
-        arkivKontekst.setKlientnavn("SVARUT");
+        arkivKontekst.setKlientnavn(sakImportConfig.getSakKlientnavn());
         url = sakImportConfig.getSakUrl();
         username = sakImportConfig.getSakBrukernavn();
         password = sakImportConfig.getSakPassord();

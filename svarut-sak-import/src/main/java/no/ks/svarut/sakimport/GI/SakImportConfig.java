@@ -53,6 +53,7 @@ public class SakImportConfig {
     private String svarUtPassord;
     private String privateKeyFil;
     private String sakInnsynUrl;
+    private String sakKlientnavn;
 
     public SakImportConfig(String... args) {
         SvarUtCommandLineParser parser = new SvarUtCommandLineParser(args);
@@ -72,6 +73,7 @@ public class SakImportConfig {
         sakImportHostname = hentConfig(properties, cmdLine, KommandoParametre.SAK_IMPORT_HOSTNAME);
         sakDefaultSaksAar = hentConfig(properties, cmdLine, KommandoParametre.SAK_DEFAULT_SAKSAAR);
         sakDefaultSaksnr = hentConfig(properties, cmdLine, KommandoParametre.SAK_DEFAULT_SAKSNR);
+        sakKlientnavn = hentConfig(properties, cmdLine, KommandoParametre.SAK_KLIENTNAVN, "SVARUT");
         privateKeyFil = hentConfig(properties, cmdLine, KommandoParametre.PRIVATE_KEY_FIL);
         debug = cmdLine.hasOption(KommandoParametre.DEBUG.getValue());
 
@@ -80,6 +82,14 @@ public class SakImportConfig {
             ch.qos.logback.classic.Logger root = (ch.qos.logback.classic.Logger) LoggerFactory.getLogger("no");
             root.setLevel(Level.DEBUG);
         }
+    }
+
+    private String hentConfig(Properties properties, CommandLine cmdLine, KommandoParametre kommandoParametre, String defaultVerdi) {
+        String verdi = hentConfig(properties, cmdLine, kommandoParametre);
+        if (verdi == null) {
+            return defaultVerdi;
+        }
+        return verdi;
     }
 
     private String settPropertiesFilsti(CommandLine cmdLine) {
@@ -241,6 +251,10 @@ public class SakImportConfig {
         return sakDefaultSaksnr;
     }
 
+    public String getSakKlientnavn() {
+        return sakKlientnavn;
+    }
+
     public String getPrivateKeyFil() {
         return privateKeyFil;
     }
@@ -275,6 +289,7 @@ public class SakImportConfig {
                 ", sakImportHostname='" + sakImportHostname + '\'' +
                 ", sakDefaultSaksAar='" + sakDefaultSaksAar + '\'' +
                 ", sakDefaultSaksnr='" + sakDefaultSaksnr + '\'' +
+                ", sakKlientnavn='" + sakKlientnavn + '\'' +
                 ", debug=" + debug +
                 ", port=" + port +
                 ", urlSti='" + urlSti + '\'' +
@@ -307,4 +322,5 @@ public class SakImportConfig {
             throw new RuntimeException(e);
         }
     }
+
 }

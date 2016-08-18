@@ -13,6 +13,7 @@ public enum KommandoParametre {
     SAK_IMPORT_HOSTNAME("hostname"),
     SAK_DEFAULT_SAKSAAR("saksaar"),
     SAK_DEFAULT_SAKSNR("saksnr"),
+    SAK_KLIENTNAVN("sakklientnavn"),
     PROPERTIES_FILSTI("konfigurasjonsfil"),
     PRIVATE_KEY_FIL("privatekeyfil"), DEBUG("debug"), SAK_INNSYN_URL("sakinnsynurl");
 
