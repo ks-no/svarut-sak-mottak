@@ -11,6 +11,7 @@ public enum KommandoParametre {
     SAK_BRUKERNAVN("sakbrukernavn"),
     SAK_PASSORD("sakpassord"),
     SAK_IMPORT_HOSTNAME("hostname"),
+    SAK_IMPORT_EKSTERN_PORT("eksternport"),
     SAK_DEFAULT_SAKSAAR("saksaar"),
     SAK_DEFAULT_SAKSNR("saksnr"),
     SAK_KLIENTNAVN("sakklientnavn"),

@@ -54,6 +54,7 @@ public class SakImportConfig {
     private String privateKeyFil;
     private String sakInnsynUrl;
     private String sakKlientnavn;
+    private String sakImportEksternPort;
 
     public SakImportConfig(String... args) {
         SvarUtCommandLineParser parser = new SvarUtCommandLineParser(args);
@@ -71,6 +72,7 @@ public class SakImportConfig {
         sakUrl = hentConfig(properties, cmdLine, KommandoParametre.SAK_URL);
         sakInnsynUrl = hentConfig(properties, cmdLine, KommandoParametre.SAK_INNSYN_URL);
         sakImportHostname = hentConfig(properties, cmdLine, KommandoParametre.SAK_IMPORT_HOSTNAME);
+        sakImportEksternPort = hentConfig(properties, cmdLine, KommandoParametre.SAK_IMPORT_EKSTERN_PORT, "9977");
         sakDefaultSaksAar = hentConfig(properties, cmdLine, KommandoParametre.SAK_DEFAULT_SAKSAAR);
         sakDefaultSaksnr = hentConfig(properties, cmdLine, KommandoParametre.SAK_DEFAULT_SAKSNR);
         sakKlientnavn = hentConfig(properties, cmdLine, KommandoParametre.SAK_KLIENTNAVN, "SVARUT");
@@ -287,6 +289,7 @@ public class SakImportConfig {
                 ", sakPassord='" + sakPassord + '\'' +
                 ", sakUrl='" + sakUrl + '\'' +
                 ", sakImportHostname='" + sakImportHostname + '\'' +
+                ", sakImportEksternPort='" + sakImportEksternPort + '\'' +
                 ", sakDefaultSaksAar='" + sakDefaultSaksAar + '\'' +
                 ", sakDefaultSaksnr='" + sakDefaultSaksnr + '\'' +
                 ", sakKlientnavn='" + sakKlientnavn + '\'' +
@@ -323,4 +326,7 @@ public class SakImportConfig {
         }
     }
 
+    public String getSakImportEksternPort() {
+        return sakImportEksternPort;
+    }
 }

@@ -73,7 +73,7 @@ public class TestParametre {
 
         return new String[]{"-svarutbrukernavn", brukernavn, "-svarutpassord", passord, "-svaruturl", url, "-sakurl", sakurl, "-sakinnsynurl", sakinnsynurl,
                 "-sakbrukernavn", "tull", "-sakpassord", "passord", "-sakklientnavn", "klient", "-hostname", "localhost", "-saksaar", "2014",
-                "-saksnr", "211", "-privatekeyfil", "sp-key.pem"};
+                "-saksnr", "211", "-privatekeyfil", "sp-key.pem", "-eksternport", "1234"};
     }
 
     @Test
