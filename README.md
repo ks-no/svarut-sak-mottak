@@ -112,6 +112,8 @@ Versjoner:
     <li>11. Første release</li>
     <li>12. Støtte for å kunne svare på forsendelse og putte forsendelse på korrekt sak. (for Ephorte krever dette versjon 1.0.4.2 av ephorte5GI og 5.3.0 av ncore)
     </li>
+    <li>13. Støtte for å spesifisere Journalstatus på importerte journalposter (M/J), Støtte for å endre klientnavn som sendes ved kall til GI. Støtte for å endre port for nedlasting av dokumenter.
+    </li>
 </ul>
 
 Oppgraderings rutine:
