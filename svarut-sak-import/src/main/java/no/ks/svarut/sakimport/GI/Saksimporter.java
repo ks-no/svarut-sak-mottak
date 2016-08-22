@@ -42,7 +42,7 @@ public class Saksimporter {
     private org.slf4j.Logger log = LoggerFactory.getLogger(Saksimporter.class);
 
     public Saksimporter(SakImportConfig sakImportConfig) {
-        arkivKontekst.setKlientnavn("SVARUT");
+        arkivKontekst.setKlientnavn(sakImportConfig.getSakKlientnavn());
         url = sakImportConfig.getSakUrl();
         username = sakImportConfig.getSakBrukernavn();
         password = sakImportConfig.getSakPassord();
@@ -299,10 +299,10 @@ public class Saksimporter {
 
         final Filreferanse filinnhold = new Filreferanse();
         filinnhold.setFilnavn(filnavn);
-
+        String nedlastingssti = "http://" + sakImportConfig.getSakImportHostname() + ":" + sakImportConfig.getSakImportEksternPort();
         filinnhold.setMimeType(mimeType);
-        filinnhold.setUri("http://" + sakImportConfig.getSakImportHostname() + ":9977/forsendelse/" + forsendelseId);
-        filinnhold.setKvitteringUri("http://" + sakImportConfig.getSakImportHostname() + ":9977/kvitter/" + forsendelseId);
+        filinnhold.setUri(nedlastingssti + "/forsendelse/" + forsendelseId);
+        filinnhold.setKvitteringUri(nedlastingssti + "/kvitter/" + forsendelseId);
         dokument.setFil(filinnhold);
         final TilknyttetRegistreringSom value = new TilknyttetRegistreringSom();
         if (hoveddokument)

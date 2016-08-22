@@ -53,6 +53,8 @@ public class SakImportConfig {
     private String svarUtPassord;
     private String privateKeyFil;
     private String sakInnsynUrl;
+    private String sakKlientnavn;
+    private String sakImportEksternPort;
 
     public SakImportConfig(String... args) {
         SvarUtCommandLineParser parser = new SvarUtCommandLineParser(args);
@@ -70,8 +72,10 @@ public class SakImportConfig {
         sakUrl = hentConfig(properties, cmdLine, KommandoParametre.SAK_URL);
         sakInnsynUrl = hentConfig(properties, cmdLine, KommandoParametre.SAK_INNSYN_URL);
         sakImportHostname = hentConfig(properties, cmdLine, KommandoParametre.SAK_IMPORT_HOSTNAME);
+        sakImportEksternPort = hentConfig(properties, cmdLine, KommandoParametre.SAK_IMPORT_EKSTERN_PORT, "9977");
         sakDefaultSaksAar = hentConfig(properties, cmdLine, KommandoParametre.SAK_DEFAULT_SAKSAAR);
         sakDefaultSaksnr = hentConfig(properties, cmdLine, KommandoParametre.SAK_DEFAULT_SAKSNR);
+        sakKlientnavn = hentConfig(properties, cmdLine, KommandoParametre.SAK_KLIENTNAVN, "SVARUT");
         privateKeyFil = hentConfig(properties, cmdLine, KommandoParametre.PRIVATE_KEY_FIL);
         debug = cmdLine.hasOption(KommandoParametre.DEBUG.getValue());
 
@@ -80,6 +84,14 @@ public class SakImportConfig {
             ch.qos.logback.classic.Logger root = (ch.qos.logback.classic.Logger) LoggerFactory.getLogger("no");
             root.setLevel(Level.DEBUG);
         }
+    }
+
+    private String hentConfig(Properties properties, CommandLine cmdLine, KommandoParametre kommandoParametre, String defaultVerdi) {
+        String verdi = hentConfig(properties, cmdLine, kommandoParametre);
+        if (verdi == null) {
+            return defaultVerdi;
+        }
+        return verdi;
     }
 
     private String settPropertiesFilsti(CommandLine cmdLine) {
@@ -241,6 +253,10 @@ public class SakImportConfig {
         return sakDefaultSaksnr;
     }
 
+    public String getSakKlientnavn() {
+        return sakKlientnavn;
+    }
+
     public String getPrivateKeyFil() {
         return privateKeyFil;
     }
@@ -273,8 +289,10 @@ public class SakImportConfig {
                 ", sakPassord='" + sakPassord + '\'' +
                 ", sakUrl='" + sakUrl + '\'' +
                 ", sakImportHostname='" + sakImportHostname + '\'' +
+                ", sakImportEksternPort='" + sakImportEksternPort + '\'' +
                 ", sakDefaultSaksAar='" + sakDefaultSaksAar + '\'' +
                 ", sakDefaultSaksnr='" + sakDefaultSaksnr + '\'' +
+                ", sakKlientnavn='" + sakKlientnavn + '\'' +
                 ", debug=" + debug +
                 ", port=" + port +
                 ", urlSti='" + urlSti + '\'' +
@@ -306,5 +324,9 @@ public class SakImportConfig {
         } catch (AuthenticationException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public String getSakImportEksternPort() {
+        return sakImportEksternPort;
     }
 }

@@ -140,6 +140,17 @@ public class SvarUtCommandLineParser {
         options.add(OptionBuilder.withArgName(KommandoParametre.DEBUG.getValue())
                 .withDescription("Skru på debug logging")
                 .create(KommandoParametre.DEBUG.getValue()));
+
+        options.add(OptionBuilder.withArgName(KommandoParametre.SAK_KLIENTNAVN.getValue())
+                .hasArg()
+                .withDescription("Klientnavn til GeointegrasjonWebservice i saksystemet")
+                .create(KommandoParametre.SAK_KLIENTNAVN.getValue()));
+
+        options.add(OptionBuilder.withArgName(KommandoParametre.SAK_IMPORT_EKSTERN_PORT.getValue())
+                .hasArg()
+                .withDescription("Ekstern port for server til svarut-sak-import som saksystem kan nå den på.")
+                .create(KommandoParametre.SAK_IMPORT_EKSTERN_PORT.getValue()));
+
         return options;
     }
 }

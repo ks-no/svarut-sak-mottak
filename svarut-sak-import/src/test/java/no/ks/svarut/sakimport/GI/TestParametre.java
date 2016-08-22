@@ -72,8 +72,8 @@ public class TestParametre {
         String sakinnsynurl = "http://localhost:8102/EphorteFakeService/innsynservice";
 
         return new String[]{"-svarutbrukernavn", brukernavn, "-svarutpassord", passord, "-svaruturl", url, "-sakurl", sakurl, "-sakinnsynurl", sakinnsynurl,
-                "-sakbrukernavn", "tull", "-sakpassord", "passord", "-hostname", "localhost", "-saksaar", "2014",
-                "-saksnr", "211", "-privatekeyfil", "sp-key.pem"};
+                "-sakbrukernavn", "tull", "-sakpassord", "passord", "-sakklientnavn", "klient", "-hostname", "localhost", "-saksaar", "2014",
+                "-saksnr", "211", "-privatekeyfil", "sp-key.pem", "-eksternport", "1234"};
     }
 
     @Test
