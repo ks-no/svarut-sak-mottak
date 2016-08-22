@@ -44,6 +44,7 @@ public class SakImportConfig {
     private final String sakDefaultSaksAar;
     private final String sakDefaultSaksnr;
     private final boolean debug;
+    private final String journalStatus;
     private int port;
     private String urlSti;
     private String host;
@@ -77,6 +78,8 @@ public class SakImportConfig {
         sakDefaultSaksnr = hentConfig(properties, cmdLine, KommandoParametre.SAK_DEFAULT_SAKSNR);
         sakKlientnavn = hentConfig(properties, cmdLine, KommandoParametre.SAK_KLIENTNAVN, "SVARUT");
         privateKeyFil = hentConfig(properties, cmdLine, KommandoParametre.PRIVATE_KEY_FIL);
+        journalStatus = hentConfig(properties, cmdLine, KommandoParametre.JOURNAL_STATUS);
+
         debug = cmdLine.hasOption(KommandoParametre.DEBUG.getValue());
 
         if(debug) {
@@ -92,6 +95,14 @@ public class SakImportConfig {
             return defaultVerdi;
         }
         return verdi;
+    }
+
+    public String getJournalStatus() {
+        return journalStatus;
+    }
+
+    public boolean harJournalStatus(){
+        return journalStatus != null && !"".equals(journalStatus);
     }
 
     private String settPropertiesFilsti(CommandLine cmdLine) {
@@ -263,7 +274,7 @@ public class SakImportConfig {
 
     public boolean harTilstrekkeligeParametre(CommandLine commandLine, Properties properties) {
         for (KommandoParametre parameter : KommandoParametre.values()) {
-            if (parameter != KommandoParametre.HJELP_STR && parameter != KommandoParametre.VERSJON_STR && parameter != KommandoParametre.PROPERTIES_FILSTI && parameter != KommandoParametre.DEBUG) {
+            if (parameter != KommandoParametre.HJELP_STR && parameter != KommandoParametre.VERSJON_STR && parameter != KommandoParametre.PROPERTIES_FILSTI && parameter != KommandoParametre.DEBUG && parameter != KommandoParametre.JOURNAL_STATUS) {
                 boolean harParameter = harProperty(commandLine, properties, parameter.getValue());
                 if (!harParameter) {
                     throw new RuntimeException("Kunne ikke finne parameter " + parameter.getValue() + " fra kommandolinje eller propertiesfil.");

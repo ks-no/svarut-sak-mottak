@@ -16,7 +16,8 @@ public enum KommandoParametre {
     SAK_DEFAULT_SAKSNR("saksnr"),
     SAK_KLIENTNAVN("sakklientnavn"),
     PROPERTIES_FILSTI("konfigurasjonsfil"),
-    PRIVATE_KEY_FIL("privatekeyfil"), DEBUG("debug"), SAK_INNSYN_URL("sakinnsynurl");
+    PRIVATE_KEY_FIL("privatekeyfil"), DEBUG("debug"), SAK_INNSYN_URL("sakinnsynurl"),
+    JOURNAL_STATUS("journalstatus");
 
     private final String value;
 

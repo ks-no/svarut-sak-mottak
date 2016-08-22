@@ -61,6 +61,8 @@ public class Saksimporter {
 
         fyllInnKorrespondanseparter(forsendelse, generertJournalpost);
 
+        settJournalStatus(generertJournalpost);
+
         generertJournalpost.setReferanseEksternNoekkel(lagEksternNoekkel(forsendelse.getId()));
         final Object o = finnSaksnummer(forsendelse);
         if(o instanceof Saksnummer)
@@ -81,6 +83,14 @@ public class Saksimporter {
         } catch (ValidationException e) {
             log.info("Klarte ikke å opprette journalpost med saksnr {}, prøver med default saksnummer {}", forsendelse.getMetadataForImport().getSakssekvensnummer(), sakImportConfig.getDefaultSaksnr());
             return opprettJournalPostMedDefaultSaksnr(generertJournalpost);
+        }
+    }
+
+    private void settJournalStatus(Journalpost generertJournalpost) {
+        if(sakImportConfig.harJournalStatus()){
+            final Journalstatus value = new Journalstatus();
+            value.setKodeverdi(sakImportConfig.getJournalStatus());
+            generertJournalpost.setJournalstatus(value);
         }
     }
 

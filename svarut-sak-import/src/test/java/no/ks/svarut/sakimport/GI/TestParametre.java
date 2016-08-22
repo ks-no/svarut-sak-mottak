@@ -85,4 +85,12 @@ public class TestParametre {
         sakImportConfig = new SakImportConfig(args2);
         assertFalse(sakImportConfig.isDebug());
     }
+
+    @Test
+    public void testJournalstatusParameter() throws Exception {
+        String[] args = {"-svarutpassord", passord, "-svaruturl", "http://url.av.no/slag", "-sakurl", "http://en.annen.no/url", "-sakbrukernavn", "tull", "-sakpassord", "passord", "-hostname", "localhost", "-saksaar", "2014", "-saksnr", "211", "-journalstatus", "M"};
+        SakImportConfig sakImportConfig = new SakImportConfig(args);
+        assertTrue(sakImportConfig.harJournalStatus());
+        assertEquals("M", sakImportConfig.getJournalStatus());
+    }
 }
