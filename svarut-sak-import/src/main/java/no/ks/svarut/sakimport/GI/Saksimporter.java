@@ -1,6 +1,8 @@
 package no.ks.svarut.sakimport.GI;
 
+import com.fatboyindustrial.gsonjodatime.Converters;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import no.geointegrasjon.rep.arkiv.dokument.xml_schema._2012_01.Dokument;
 import no.geointegrasjon.rep.arkiv.dokument.xml_schema._2012_01.Filreferanse;
 import no.geointegrasjon.rep.arkiv.dokument.xml_schema._2012_01.TilknyttetRegistreringSom;
@@ -253,9 +255,10 @@ public class Saksimporter {
         avsenderKorrespondent.setKontakt(kontakt);
     }
 
-    private String lagDeresReferanse(Mottaker svarSendesTil, NoarkMetadataFraAvleverendeSakssystem noarkMetadataFraAvleverendeSystem) {
+    String lagDeresReferanse(Mottaker svarSendesTil, NoarkMetadataFraAvleverendeSakssystem noarkMetadataFraAvleverendeSystem) {
         final DeresReferanse deresReferanse = new DeresReferanse(svarSendesTil, noarkMetadataFraAvleverendeSystem);
-        String s = new Gson().toJson(deresReferanse);
+        final Gson gson = Converters.registerDateTime(new GsonBuilder()).create();
+        String s = gson.toJson(deresReferanse);
         if (s.length() > 4000) {
             s = "Metdata lenger enn 4000 tegn sjekk svarut for metadata.";
         }
