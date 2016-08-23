@@ -119,8 +119,9 @@ Versjoner:
 </ul>
 
 Oppgraderings rutine:
-* Last ned zip fil
+* Last ned zip fil for siste versjon.
 * Erstatt eksisterende filer med de i zip filen.
+* Om ønskelig kan du legge til nye valgfri alternativer i config.properties
 
 
 
