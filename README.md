@@ -115,7 +115,9 @@ Versjoner:
     <li>13. Støtte for å spesifisere Journalstatus på importerte journalposter (M/J), Støtte for å endre klientnavn som sendes ved kall til GI. Støtte for å endre port for nedlasting av dokumenter.
     </li>
     <li>14. Fikset dokumentetsdato og andre datoer i metadata merknaden.
-        </li>
+    </li>
+    <li>15. Deresreferanse på avsender er fjernet, var forsendelseiden i svarut. 
+    </li>
 </ul>
 
 Oppgraderings rutine:
