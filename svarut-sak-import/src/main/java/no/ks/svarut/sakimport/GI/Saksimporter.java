@@ -225,7 +225,8 @@ public class Saksimporter {
         korrespondanseparttype.setKodeverdi("Avsender");
         avsenderKorrespondent.setKorrespondanseparttype(korrespondanseparttype);
 
-        avsenderKorrespondent.setDeresReferanse(forsendelseid);
+        //kommer fram på brevark i ephorte, må finne en bedre måte å legge den til på.
+        //avsenderKorrespondent.setDeresReferanse(forsendelseid);
         if (orgnr != null && !"".equals(orgnr))
             avsenderKorrespondent.setKortnavn(orgnr);
         if (fnr != null && !"".equals(fnr))
