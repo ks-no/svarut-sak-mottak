@@ -154,14 +154,20 @@ public class Saksimporter {
     }
 
     public Dokument importerDokument(Journalpost journalpost, String tittel, String filnavn, String mimeType, InputStream dokumentData, boolean hoveddokument, Forsendelse forsendelse, Runnable kvittering) {
+        Server server = null;
         try {
             final Dokument dokument = lagDokument(journalpost, tittel, filnavn, mimeType, hoveddokument, forsendelse.getId());
-            final Server server = startHttpServerForFileDownload(filnavn, mimeType, dokumentData, forsendelse.getId(), kvittering);
+            server = startHttpServerForFileDownload(filnavn, mimeType, dokumentData, forsendelse.getId(), kvittering);
             log.info("Startet jetty for mottak av forsendelse");
             final Dokument nyDokument = service.nyDokument(dokument, false, getArkivKontekst());
             server.join();
             return nyDokument;
         } catch (Exception e) {
+            if(server != null) try {
+                server.stop();
+            } catch (Exception e1) {
+                throw new RuntimeException(e1);
+            }
             throw new RuntimeException(e);
         }
     }
