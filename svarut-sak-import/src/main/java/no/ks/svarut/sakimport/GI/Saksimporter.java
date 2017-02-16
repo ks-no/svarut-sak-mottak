@@ -159,6 +159,7 @@ public class Saksimporter {
             final Dokument dokument = lagDokument(journalpost, tittel, filnavn, mimeType, hoveddokument, forsendelse.getId());
             server = startHttpServerForFileDownload(filnavn, mimeType, dokumentData, forsendelse.getId(), kvittering);
             log.info("Startet jetty for mottak av forsendelse");
+
             final Dokument nyDokument = service.nyDokument(dokument, false, getArkivKontekst());
             server.join();
             return nyDokument;
@@ -318,6 +319,9 @@ public class Saksimporter {
         dokument.setTittel(tittel);
 
         final Filreferanse filinnhold = new Filreferanse();
+        if(filnavn != null && "application/pdf".equals(mimeType) && !filnavn.toUpperCase().endsWith(".PDF")) {
+            filnavn += ".pdf";
+        }
         filinnhold.setFilnavn(filnavn);
         String nedlastingssti = "http://" + sakImportConfig.getSakImportHostname() + ":" + sakImportConfig.getSakImportEksternPort();
         filinnhold.setMimeType(mimeType);
