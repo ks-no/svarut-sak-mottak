@@ -118,6 +118,9 @@ Versjoner:
     </li>
     <li>15. Deresreferanse på avsender er fjernet, var forsendelseiden i svarut. 
     </li>
+    <li>16. Fikset import feil for pdf filer som ikke ender på .pdf. Disse filene får nå .pdf på slutten.
+            Når import av fil feilet fungerte ikke filimport for alle forsendelser etterpå. Skal nå være fikse slik at kun den forsendelsen som feilet feiler.
+    </li>
 </ul>
 
 Oppgraderings rutine:
