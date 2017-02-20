@@ -121,6 +121,8 @@ Versjoner:
     <li>16. Fikset import feil for pdf filer som ikke ender på .pdf. Disse filene får nå .pdf på slutten.
             Når import av fil feilet fungerte ikke filimport for alle forsendelser etterpå. Skal nå være fikse slik at kun den forsendelsen som feilet feiler.
     </li>
+    <li>17. Fikset logging, vi hadde noen tilfeller hvor den ikke logget feilmeldinger.
+    </li>
 </ul>
 
 Oppgraderings rutine:
