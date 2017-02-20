@@ -9,20 +9,27 @@ import java.security.Security;
 
 public class Main {
 
+    private static Logger log= LoggerFactory.getLogger(Main.class);
+
     private Main() {
     }
 
     public static void main(String... args) throws IOException {
-        Logger errorlog = LoggerFactory.getLogger("errorlogger");
+        try {
+            Logger errorlog = LoggerFactory.getLogger("errorlogger");
 
-        if(run(args)){
-            //run with errors
-            errorlog.error("Kjørte med feil");
-            System.exit(1);
+            if (run(args)) {
+                //run with errors
+                errorlog.error("Kjørte med feil");
+                System.exit(1);
 
-        } else {
-            // run without errors.
-            System.exit(0);
+            } else {
+                // run without errors.
+                System.exit(0);
+            }
+        }catch(Throwable e){
+            log.error("Run failed ", e);
+            throw e;
         }
     }
 
