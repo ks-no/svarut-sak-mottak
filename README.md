@@ -123,6 +123,8 @@ Versjoner:
     </li>
     <li>17. Fikset logging, vi hadde noen tilfeller hvor den ikke logget feilmeldinger.
     </li>
+    <li>18. Kapper tittel til 255 tegn slik at import til ephorte ikke skal feile på lange titler.
+        </li>
 </ul>
 
 Oppgraderings rutine:
