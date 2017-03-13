@@ -210,8 +210,13 @@ public class Saksimporter {
         Journalposttype journalPosttype = new Journalposttype();
         journalPosttype.setKodeverdi("I");
         journalpost.setJournalposttype(journalPosttype);
-
-        journalpost.setTittel(tittel);
+        String tittel2 = null;
+        if(tittel.length() > 255){
+            tittel2 = tittel.substring(0,255);
+        } else {
+            tittel2 = tittel;
+        }
+        journalpost.setTittel(tittel2);
         return journalpost;
     }
 
