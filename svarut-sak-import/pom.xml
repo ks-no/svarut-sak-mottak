@@ -23,7 +23,7 @@
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-compress</artifactId>
-            <version>1.14</version>
+            <version>1.18</version>
         </dependency>
         <dependency>
             <groupId>org.bouncycastle</groupId>
@@ -142,32 +142,7 @@
         </dependency>
 
     </dependencies>
-    <repositories>
-        <repository>
-            <id>oss-sonatype-snapshots</id>
-            <name>Sonatype-snapshots</name>
-            <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-            <releases>
-                <enabled>false</enabled>
-            </releases>
-        </repository>
-        <repository>
-            <id>libs-snapshot-local</id>
-            <name>http://jenkins.usrv.ubergenkom.no-snapshots</name>
-            <url>http://jenkins.usrv.ubergenkom.no/artifactory/libs-snapshot-local</url>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-        </repository>
-        <repository>
-            <id>JBoss repository</id>
-            <url>http://repository.jboss.org/nexus/content/groups/public/</url>
-        </repository>
 
-    </repositories>
     <build>
         <finalName>${project.artifactId}</finalName>
         <plugins>
