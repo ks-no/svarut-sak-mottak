@@ -55,7 +55,7 @@ public class GIImportManager {
     }
 
     private void importerEnForsendelse(Forsendelsesnedlaster nedlaster, Saksimporter importer, Forsendelse forsendelse) throws IOException, ApplicationException, FinderException, OperationalException, ImplementationException, SystemException {
-        try (final Fil fil = nedlaster.hentForsendelseFil(forsendelse)) {
+        try (Fil fil = nedlaster.hentForsendelseFil(forsendelse)) {
 
             final Journalpost journalpost = importer.importerJournalPost(forsendelse);
             if(journalpost == null)
@@ -91,7 +91,7 @@ public class GIImportManager {
     }
 
     private void lagDokumentFraZipfil(Saksimporter importer, Forsendelse forsendelse, Fil fil, Journalpost journalpost) throws IOException {
-        try (final ZipInputStream zis = new ZipInputStream(fil.getKryptertData())) {
+        try (ZipInputStream zis = new ZipInputStream(fil.getKryptertData())) {
             ZipEntry entry;
             boolean first = true;
             while ((entry = zis.getNextEntry()) != null) {
