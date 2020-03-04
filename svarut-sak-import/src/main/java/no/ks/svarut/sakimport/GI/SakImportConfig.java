@@ -127,7 +127,7 @@ public class SakImportConfig {
     }
 
     public CloseableHttpClient httpClientForSvarUt() {
-        HttpClientBuilder clientBuilder = HttpClientBuilder.create();
+        HttpClientBuilder clientBuilder = HttpClientBuilder.create().useSystemProperties();
 
         AuthScope authScope = new AuthScope(this.host, this.port);
         UsernamePasswordCredentials credentials = getSvarUtHttpCredentials();
